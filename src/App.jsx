@@ -1,10 +1,17 @@
-import React from 'react';
-import BigaCalculator from './BigaCalculator';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./components/LandingPage";
+import CreateRecipe from "./pages/CreateRecipe";
 
-export default function App() {
+function App() {
   return (
-    <div className="min-h-screen p-4 bg-gray-100">
-      <BigaCalculator />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/create-recipe" element={<CreateRecipe />} />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;

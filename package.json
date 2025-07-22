@@ -14,7 +14,8 @@
     "framer-motion": "^12.23.6",
     "html2pdf.js": "^0.10.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
