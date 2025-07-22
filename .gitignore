@@ -1,0 +1,64 @@
+# Dependency folders
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Local environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS-specific system files
+.DS_Store
+Thumbs.db
+
+# Editor-specific folders
+.vscode/
+.idea/
+
+# Test and coverage outputs
+coverage/
+*.test.js
+*.test.jsx
+*.test.ts
+*.test.tsx
+*.spec.js
+
+# SQLite database files (backend)
+*.sqlite
+*.db
+
+# Vite cache
+.vite/
+
+# Optional: MacOS .AppleDouble files
+.AppleDouble
+
+# Optional: Next.js/Vercel-style build artifacts
+.next/
+out/
+.vercel/
+.render/
+
+# Optional: backups or temp files
+*.bak
+*.tmp
+*.swp
+*~
+
+# Optional: Storybook/preview files
+storybook-static/
+
+# Optional: react-scripts cache (if not using Vite)
+.cache/
+

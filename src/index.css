@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @media print {
+    .print-details-open details {
+      display: block !important;
+    }
+    .print-hide-summary summary {
+      display: none;
+    }
+  }
+}
