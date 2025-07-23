@@ -73,3 +73,17 @@ export function calculateDoughYeast(doughTime, doughTemp, yeastType = 'idy') {
 
   return idyPercent * factor;
 }
+
+export function getLocalDateTimePlus24h() {
+  const date = new Date();
+  date.setHours(date.getHours() + 24); // add 24 hours
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  const MM = pad(date.getMonth() + 1);
+  const dd = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const mm = pad(date.getMinutes());
+  return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
+}
+

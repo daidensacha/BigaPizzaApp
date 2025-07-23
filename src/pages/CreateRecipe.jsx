@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
+import { getLocalDateTimePlus24h } from '../utils';
 import StepWrapper from '../components/GuidedInputFlow/StepWrapper';
 import Step1BasicInfo from '../components/GuidedInputFlow/Step1BasicInfo';
 import Step2Hydration from '../components/GuidedInputFlow/Step2Hydration';
 import Step3Fermentation from '../components/GuidedInputFlow/Step3Fermentation';
 import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
+import Step5RecipePreview from '../components/GuidedInputFlow/Step5RecipePreview';
 import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
 
 const steps = [
@@ -12,9 +14,11 @@ const steps = [
   { id: 2, label: 'Hydration', icon: <Droplet size={18} className="inline mr-1" /> },
   { id: 3, label: 'Fermentation', icon: <Timer size={18} className="inline mr-1" /> },
   { id: 4, label: 'Yeast Type', icon: <FlaskConical size={18} className="inline mr-1" /> },
+  { id: 5, label: "Preview" },
 ];
 
 export default function CreateRecipe() {
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     numPizzas: 6,
@@ -29,13 +33,14 @@ export default function CreateRecipe() {
     doughTime: 5,
     doughTemp: 22,
     yeastType: 'idy',
+    bakingDateTime: getLocalDateTimePlus24h(), // prefilled!
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'yeastType' ? value : parseFloat(value),
+      [name] : ['yeastType', 'bakingDateTime'].includes(name) ? value : parseFloat(value),
     }));
   };
 
@@ -57,6 +62,14 @@ export default function CreateRecipe() {
         return <Step3Fermentation data={formData} onChange={handleChange} />;
       case 4:
         return <Step4YeastType data={formData} onChange={handleChange} />;
+      case 5:
+        return (
+        <Step5RecipePreview
+          data={formData}
+          onCreateSchedule={() => setCurrentStep(6)} // or set a flag to show schedule form
+          onSkip={() => console.log('Skip to final review or export')}
+        />
+      );
       default:
         return null;
     }
