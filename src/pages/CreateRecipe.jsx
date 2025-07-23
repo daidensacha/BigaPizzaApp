@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
 import StepWrapper from '../components/GuidedInputFlow/StepWrapper';
 import Step1BasicInfo from '../components/GuidedInputFlow/Step1BasicInfo';
 import Step2Hydration from '../components/GuidedInputFlow/Step2Hydration';
@@ -7,10 +8,10 @@ import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
 import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
 
 const steps = [
-  { id: 1, label: 'Basic Info' },
-  { id: 2, label: 'Hydration' },
-  { id: 3, label: 'Fermentation' },
-  { id: 4, label: 'Yeast Type' },
+  { id: 1, label: 'Basic Info', icon: <Info size={18} className="inline mr-1" /> },
+  { id: 2, label: 'Hydration', icon: <Droplet size={18} className="inline mr-1" /> },
+  { id: 3, label: 'Fermentation', icon: <Timer size={18} className="inline mr-1" /> },
+  { id: 4, label: 'Yeast Type', icon: <FlaskConical size={18} className="inline mr-1" /> },
 ];
 
 export default function CreateRecipe() {
@@ -62,21 +63,23 @@ export default function CreateRecipe() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 flex flex-col justify-center items-center p-8 text-center">
-      <div className="max-w-2xl mx-auto p-6 space-y-6 ">
-        <h1 className="text-2xl font-bold text-gray-800">Create a New Pizza Dough Recipe</h1>
-        <ProgressBar steps={steps} currentStep={currentStep} />
 
-        <StepWrapper
-          step={currentStep}
-          totalSteps={steps.length}
-          onNext={nextStep}
-          onBack={prevStep}
-          isLastStep={currentStep === steps.length}
-        >
-          {renderStep()}
-        </StepWrapper>
-      </div>
-    </div>
+        <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 flex flex-col justify-center items-center p-8 text-center">
+          <div className="max-w-2xl w-full p-6 space-y-6 rounded-xl">
+            <h1 className="text-2xl font-bold text-gray-800">Create a New Pizza Dough Recipe</h1>
+            <ProgressBar steps={steps} currentStep={currentStep} />
+
+            <StepWrapper
+              step={currentStep}
+              totalSteps={steps.length}
+              onNext={nextStep}
+              onBack={prevStep}
+              isLastStep={currentStep === steps.length}
+            >
+              {renderStep()}
+            </StepWrapper>
+          </div>
+        </div>
   );
+
 }
