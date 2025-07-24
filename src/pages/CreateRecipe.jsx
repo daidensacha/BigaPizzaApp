@@ -14,7 +14,7 @@ const steps = [
   { id: 2, label: 'Hydration', icon: <Droplet size={18} className="inline mr-1" /> },
   { id: 3, label: 'Fermentation', icon: <Timer size={18} className="inline mr-1" /> },
   { id: 4, label: 'Yeast Type', icon: <FlaskConical size={18} className="inline mr-1" /> },
-  { id: 5, label: "Preview" },
+  { id: 5, label: 'Preview' },
 ];
 
 export default function CreateRecipe() {

@@ -14,9 +14,10 @@ export default function Step5RecipePreview({ data, onCreateSchedule, onSkip }) {
           <div><span className="font-medium text-gray-700">Pizzas:</span> {data.numPizzas}</div>
           <div><span className="font-medium text-gray-700">Ball Weight:</span> {data.ballWeight}g</div>
 
-          <div><span className="font-medium text-gray-700">Biga %:</span> {data.bigaPercent}%</div>
+          <div><span className="font-medium text-gray-700">Biga:</span> {data.bigaPercent}%</div>
           <div><span className="font-medium text-gray-700">Biga Hydration:</span> {data.bigaHydration}%</div>
 
+          <div><span className="font-medium text-gray-700">Total Dough:</span> {data.numPizzas * data.ballWeight}g</div>
           <div><span className="font-medium text-gray-700">Final Hydration:</span> {data.finalHydration}%</div>
           <div><span className="font-medium text-gray-700">Salt:</span> {data.saltPercent}%</div>
 
