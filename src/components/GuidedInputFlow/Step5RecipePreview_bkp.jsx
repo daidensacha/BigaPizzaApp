@@ -1,65 +1,6 @@
 import React from "react";
-import { calculateDough } from "../../utils";
 
 export default function Step5RecipePreview({ data, onCreateSchedule, onSkip }) {
-
-  function formatBakersPercent(value) {
-    const num = parseFloat(value);
-    if (isNaN(num)) return '–';
-    return num < 1 ? `${num.toFixed(2)}%` : `${num.toFixed(1)}%`;
-  }
-
-  const results = calculateDough(data);
-  const {
-  bigaYeast,
-  refreshYeast,
-  bakersYeastPercent,
-  totalFlour
-} = results;
-  const flourTotal = results.totalFlour;
-
-  const getPercent = (value) =>
-  value ? `${((value / flourTotal) * 100).toFixed(1)}%` : '-';
-
-  const previewRows = [
-    {
-      label: 'Flour',
-      biga: results.bigaFlour,
-      dough: results.finalFlour,
-      total: results.totalFlour,
-      percent: '100%',
-    },
-    {
-      label: 'Water',
-      biga: results.bigaWater,
-      dough: results.finalWater,
-      total: results.totalWater,
-      percent: getPercent(results.totalWater),
-    },
-    {
-      label: 'Salt',
-      biga: '-',
-      dough: results.totalSalt,
-      total: results.totalSalt,
-      percent: getPercent(results.totalSalt),
-    },
-    {
-      label: 'Malt',
-      biga: '-',
-      dough: results.totalMalt,
-      total: results.totalMalt,
-      percent: getPercent(results.totalMalt),
-    },
-    {
-      label: 'Yeast',
-      biga: results.bigaYeast,
-      dough: results.refreshYeast.toFixed(2),
-      total: (results.bigaYeast + results.refreshYeast).toFixed(2),
-      percent: formatBakersPercent(results.bakersYeastPercent),
-    },
-  ];
-
-
   return (
     <div className="space-y-6">
       {/* Title */}
@@ -109,39 +50,6 @@ export default function Step5RecipePreview({ data, onCreateSchedule, onSkip }) {
           </div>
         </div>
       </div>
-
-      {/* Ingredient Table */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">Ingredient Breakdown</h3>
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 border-b">Ingredient</th>
-                <th className="px-4 py-2 border-b">Biga</th>
-                <th className="px-4 py-2 border-b">Refresh</th>
-                <th className="px-4 py-2 border-b">Total</th>
-                <th className="px-4 py-2 border-b">Baker’s %</th>
-              </tr>
-            </thead>
-            <tbody>
-              {previewRows.map((row) => (
-                <tr key={row.label} className="border-t">
-                  <td className="px-4 py-2 font-medium text-gray-700">{row.label}</td>
-                  <td className="px-4 py-2">{row.biga !== '-' ? `${row.biga}g` : '-'}</td>
-                  <td className="px-4 py-2">{row.dough !== '-' ? `${row.dough}g` : '-'}</td>
-                  <td className="px-4 py-2">{row.total !== '-' ? `${row.total}g` : '-'}</td>
-                  <td className="px-4 py-2">{formatBakersPercent(row.percent)}</td>
-
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-
-
 
       {/* Schedule Prompt */}
       <div className="text-center mt-6">

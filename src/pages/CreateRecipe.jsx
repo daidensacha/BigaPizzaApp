@@ -21,16 +21,16 @@ export default function CreateRecipe() {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    numPizzas: 6,
+    numPizzas: 3,
     ballWeight: 280,
     bigaHydration: 50,
-    finalHydration: 65,
-    bigaPercent: 60,
-    saltPercent: 3,
+    finalHydration: 68,
+    bigaPercent: 50,
+    saltPercent: 3.4,
     maltPercent: 0.5,
     bigaTime: 24,
-    bigaTemp: 22,
-    doughTime: 5,
+    bigaTemp: 6,
+    doughTime: 6,
     doughTemp: 22,
     yeastType: 'idy',
     bakingDateTime: getLocalDateTimePlus24h(), // prefilled!
