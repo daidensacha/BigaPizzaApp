@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
-import { getLocalDateTimePlus24h } from '../utils';
+import { getLocalDateTimePlus24h, YEAST_CORRECTION_DEFAULTS } from '../utils';
 import StepWrapper from '../components/GuidedInputFlow/StepWrapper';
 import Step1BasicInfo from '../components/GuidedInputFlow/Step1BasicInfo';
 import Step2Hydration from '../components/GuidedInputFlow/Step2Hydration';
@@ -34,6 +34,8 @@ export default function CreateRecipe() {
     doughTemp: 22,
     yeastType: 'idy',
     bakingDateTime: getLocalDateTimePlus24h(), // prefilled!
+    shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
+    longCorrection: YEAST_CORRECTION_DEFAULTS.long,
   });
 
   const handleChange = (e) => {
@@ -65,7 +67,8 @@ export default function CreateRecipe() {
       case 5:
         return (
         <Step5RecipePreview
-          data={formData}
+          data={ formData }
+          setData={setFormData}
           onCreateSchedule={() => setCurrentStep(6)} // or set a flag to show schedule form
           onSkip={() => console.log('Skip to final review or export')}
         />

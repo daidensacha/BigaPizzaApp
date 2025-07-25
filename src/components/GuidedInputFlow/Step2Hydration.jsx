@@ -1,4 +1,6 @@
 import React from 'react';
+import tooltips from "../../constants/tooltips";
+import FormLabelWithTooltip from "../FormLabelWithTooltip";
 
 export default function Step2Hydration({ data, onChange }) {
   return (
@@ -6,9 +8,10 @@ export default function Step2Hydration({ data, onChange }) {
       {/* Biga Hydration */}
       <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
         <div>
-          <label className="block text-sm font-medium text-blue-700 mb-1">
-            Biga Hydration: <span className="font-bold">{data.bigaHydration}%</span>
-          </label>
+          <FormLabelWithTooltip
+            label={`Biga Hydration: ${data.bigaHydration}%`}
+            tooltip={tooltips.bigaHydration}
+          />
           <input
             type="range"
             name="bigaHydration"
@@ -25,9 +28,13 @@ export default function Step2Hydration({ data, onChange }) {
       {/* Final Dough Hydration */}
       <div className="p-4 rounded-lg bg-green-50 border border-green-200">
         <div>
-          <label className="block text-sm font-medium text-green-700 mb-1">
+          <FormLabelWithTooltip
+            label={`Final Dough Hydration: ${data.finalHydration}%`}
+            tooltip={tooltips.finalHydration}
+          />
+          {/* <label className="block text-sm font-medium text-green-700 mb-1">
             Final Dough Hydration: <span className="font-bold">{data.finalHydration}%</span>
-          </label>
+          </label> */}
           <input
             type="range"
             name="finalHydration"
@@ -44,9 +51,13 @@ export default function Step2Hydration({ data, onChange }) {
       {/* Salt Percentage */}
       <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
         <div>
-          <label className="block text-sm font-medium text-yellow-700 mb-1">
+          <FormLabelWithTooltip
+            label={`Salt Percentage:  ${data.saltPercent}%`}
+            tooltip={tooltips.saltPercent}
+          />
+          {/* <label className="block text-sm font-medium text-yellow-700 mb-1">
             Salt Percentage: <span className="font-bold">{data.saltPercent}%</span>
-          </label>
+          </label> */}
           <input
             type="range"
             name="saltPercent"
@@ -63,9 +74,13 @@ export default function Step2Hydration({ data, onChange }) {
       {/* Malt Percentage (Optional) */}
       <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
         <div>
-          <label className="block text-sm font-medium text-purple-700 mb-1">
+          <FormLabelWithTooltip
+            label={`Malt Percentage (optional):  ${data.maltPercent}%`}
+            tooltip={tooltips.maltPercent}
+          />
+          {/* <label className="block text-sm font-medium text-purple-700 mb-1">
             Malt Percentage (optional): <span className="font-bold">{data.maltPercent}%</span>
-          </label>
+          </label> */}
           <input
             type="range"
             name="maltPercent"

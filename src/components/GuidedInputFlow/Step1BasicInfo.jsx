@@ -1,5 +1,7 @@
 import React from "react";
 import { Clock } from 'lucide-react';
+import tooltips from "../../constants/tooltips";
+import FormLabelWithTooltip from "../FormLabelWithTooltip";
 
 export default function Step1BasicInfo({ data, onChange }) {
 
@@ -36,9 +38,10 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Ball Weight */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          {data.ballWeight} g per ball
-        </label>
+        <FormLabelWithTooltip
+          label={`${data.ballWeight}g per ball`}
+          tooltip={tooltips.ballWeight}
+        />
         <input
           type="range"
           name="ballWeight"
@@ -52,9 +55,10 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Biga % */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          {data.bigaPercent} % Biga pizza dough
-        </label>
+        <FormLabelWithTooltip
+          label={`${data.bigaPercent}% Biga pizza dough`}
+          tooltip={tooltips.bigaPercent}
+        />
         <input
           type="range"
           name="bigaPercent"
@@ -68,9 +72,10 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Baking Date & Time */}
       <div className="relative">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Baking Date and Time
-        </label>
+        <FormLabelWithTooltip
+          label={`Baking Date and Time`}
+          tooltip={tooltips.bakingDateTime}
+        />
         <Clock className="absolute left-3 top-11 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
           type="datetime-local"

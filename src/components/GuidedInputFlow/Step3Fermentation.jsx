@@ -1,4 +1,6 @@
 import React from 'react';
+import tooltips from "../../constants/tooltips";
+import FormLabelWithTooltip from "../FormLabelWithTooltip";
 
 export default function Step3Fermentation({ data, onChange }) {
   return (
@@ -9,7 +11,11 @@ export default function Step3Fermentation({ data, onChange }) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-blue-700">Duration: {data.bigaTime} hours</label>
+            <FormLabelWithTooltip
+              label={`Duration: ${data.bigaTime} hours`}
+              tooltip={tooltips.bigaTime}
+            />
+            {/* <label className="block text-sm font-medium text-blue-700">Duration: {data.bigaTime} hours</label> */}
             <input
               type="range"
               name="bigaTime"
@@ -23,7 +29,11 @@ export default function Step3Fermentation({ data, onChange }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-blue-700">Temperature: {data.bigaTemp}°C</label>
+            <FormLabelWithTooltip
+              label={`Temperature: ${data.bigaTemp}°C`}
+              tooltip={tooltips.bigaTemp}
+            />
+            {/* <label className="block text-sm font-medium text-blue-700">Temperature: {data.bigaTemp}°C</label> */}
             <input
               type="range"
               name="bigaTemp"
@@ -44,7 +54,11 @@ export default function Step3Fermentation({ data, onChange }) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-green-700">Duration: {data.doughTime} hours</label>
+            <FormLabelWithTooltip
+              label={`Duration:  ${data.doughTime} hours`}
+              tooltip={tooltips.doughTime}
+            />
+            {/* <label className="block text-sm font-medium text-green-700">Duration: {data.doughTime} hours</label> */}
             <input
               type="range"
               name="doughTime"
@@ -58,7 +72,11 @@ export default function Step3Fermentation({ data, onChange }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-green-700">Temperature: {data.doughTemp}°C</label>
+            <FormLabelWithTooltip
+              label={`Temperature: ${data.doughTemp}°C`}
+              tooltip={tooltips.doughTemp}
+            />
+            {/* <label className="block text-sm font-medium text-green-700">Temperature: {data.doughTemp}°C</label> */}
             <input
               type="range"
               name="doughTemp"

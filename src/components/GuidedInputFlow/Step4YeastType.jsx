@@ -1,9 +1,16 @@
+import tooltips from "../../constants/tooltips";
+import FormLabelWithTooltip from "../FormLabelWithTooltip";
+
 export default function Step4YeastType({ data, onChange }) {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Step 4: Yeast Type</h2>
       <div>
-        <label className="block text-sm">Select Yeast Type</label>
+        <FormLabelWithTooltip
+          label={`Select Yeast Type: ${data.yeastType}`}
+          tooltip={tooltips.yeastType}
+        />
+        {/* <label className="block text-sm">Select Yeast Type</label> */}
         <select
           name="yeastType"
           value={data.yeastType || ''}
