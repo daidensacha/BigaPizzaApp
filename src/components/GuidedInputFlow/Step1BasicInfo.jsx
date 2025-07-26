@@ -38,10 +38,9 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Ball Weight */}
       <div>
-        <FormLabelWithTooltip
-          label={`${data.ballWeight}g per ball`}
-          tooltip={tooltips.ballWeight}
-        />
+        <FormLabelWithTooltip tooltip={tooltips.ballWeight}>
+            {data.ballWeight}g per ball
+        </FormLabelWithTooltip>
         <input
           type="range"
           name="ballWeight"
@@ -55,10 +54,9 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Biga % */}
       <div>
-        <FormLabelWithTooltip
-          label={`${data.bigaPercent}% Biga pizza dough`}
-          tooltip={tooltips.bigaPercent}
-        />
+        <FormLabelWithTooltip tooltip={tooltips.bigaPercent}>
+            {data.bigaPercent}% Biga pizza dough
+        </FormLabelWithTooltip>
         <input
           type="range"
           name="bigaPercent"
@@ -72,10 +70,9 @@ export default function Step1BasicInfo({ data, onChange }) {
 
       {/* Baking Date & Time */}
       <div className="relative">
-        <FormLabelWithTooltip
-          label={`Baking Date and Time`}
-          tooltip={tooltips.bakingDateTime}
-        />
+        <FormLabelWithTooltip tooltip={tooltips.bakingDateTime}>
+          Baking Date and Time
+        </FormLabelWithTooltip>
         <Clock className="absolute left-3 top-11 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
           type="datetime-local"

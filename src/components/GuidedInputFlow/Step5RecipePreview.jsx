@@ -170,19 +170,9 @@ const handleReset = () => {
 
       {/* Ingredient Table */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center justify-center gap-2">
           Ingredient Breakdown
-          <FormLabelWithTooltip
-                    // label={`Ingredient Breakdown${data.ingredientBreakdown}`}
-                    tooltip={tooltips.ingredientBreakdown}
-                  />
-          {/* Ingredient Breakdown */}
-          {/* <span
-            className="text-sm text-blue-500 cursor-help"
-            title="Yeast % is estimated based on temp, time, and yeast type. Biga and Refresh yeast are calculated separately."
-          >
-            ℹ️
-          </span> */}
+          <FormLabelWithTooltip tooltip={tooltips.ingredientBreakdown}/>
         </h3>
 
         <div className="overflow-x-auto rounded-lg border border-gray-200">
