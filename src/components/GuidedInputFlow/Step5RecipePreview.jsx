@@ -1,5 +1,5 @@
 import React from "react";
-import { calculateDough, YEAST_CORRECTION_DEFAULTS } from "../../utils";
+import { calculateDough, YEAST_CORRECTION_DEFAULTS } from "../../utils/utils";
 import tooltips from "../../constants/tooltips";
 import FormLabelWithTooltip from "../FormLabelWithTooltip";
 

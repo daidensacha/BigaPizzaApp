@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PrepScheduleTabs from './PrepScheduleTabs'; // ✅ NEW
-import { calculateDough, calculateDoughYeast } from './utils';
+import { calculateDough, calculateDoughYeast } from './utils/utils';
 
 export default function BigaCalculator() {
   const [inputs, setInputs] = useState({

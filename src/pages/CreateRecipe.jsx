@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
-import { getLocalDateTimePlus24h, YEAST_CORRECTION_DEFAULTS } from '../utils';
+import { getLocalDateTimePlus24h, YEAST_CORRECTION_DEFAULTS } from '../utils/utils';
 import StepWrapper from '../components/GuidedInputFlow/StepWrapper';
 import Step1BasicInfo from '../components/GuidedInputFlow/Step1BasicInfo';
 import Step2Hydration from '../components/GuidedInputFlow/Step2Hydration';
 import Step3Fermentation from '../components/GuidedInputFlow/Step3Fermentation';
 import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
 import Step5RecipePreview from '../components/GuidedInputFlow/Step5RecipePreview';
+import Step6PrepSchedule from '../components/GuidedInputFlow/Step6PrepSchedule';
 import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
 
 const steps = [
@@ -15,6 +16,7 @@ const steps = [
   { id: 3, label: 'Fermentation', icon: <Timer size={18} className="inline mr-1" /> },
   { id: 4, label: 'Yeast Type', icon: <FlaskConical size={18} className="inline mr-1" /> },
   { id: 5, label: 'Preview' },
+  { id: 6, label: "Prep Schedule" },
 ];
 
 export default function CreateRecipe() {
@@ -66,17 +68,27 @@ export default function CreateRecipe() {
         return <Step4YeastType data={formData} onChange={handleChange} />;
       case 5:
         return (
-        <Step5RecipePreview
-          data={ formData }
-          setData={setFormData}
-          onCreateSchedule={() => setCurrentStep(6)} // or set a flag to show schedule form
-          onSkip={() => console.log('Skip to final review or export')}
-        />
-      );
+          <Step5RecipePreview
+            data={formData}
+            setData={setFormData}
+            onCreateSchedule={() => setCurrentStep(6)}
+            onSkip={() => console.log("Skip to final review or export")}
+          />
+        );
+      case 6:
+        return (
+          <Step6PrepSchedule
+            data={formData}
+            onChange={handleChange}
+            onCreateSchedule={() => setCurrentStep(7)}
+            onSkip={() => setCurrentStep(7)}
+          />
+        );
       default:
         return null;
     }
   };
+
 
   return (
 

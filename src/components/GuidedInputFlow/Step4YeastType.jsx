@@ -9,11 +9,6 @@ export default function Step4YeastType({ data, onChange }) {
         <FormLabelWithTooltip tooltip={tooltips.yeastType}>
           Select Yeast Type (Fresh, IDY, ADY): {data.yeastType}
         </FormLabelWithTooltip>
-        {/* <FormLabelWithTooltip
-          label={`Select Yeast Type: ${data.yeastType}`}
-          tooltip={tooltips.yeastType}
-        /> */}
-        {/* <label className="block text-sm">Select Yeast Type</label> */}
         <select
           name="yeastType"
           value={data.yeastType || ''}
