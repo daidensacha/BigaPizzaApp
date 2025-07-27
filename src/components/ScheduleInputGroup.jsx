@@ -4,7 +4,7 @@ export default function ScheduleInputGroup({ title, inputs }) {
       {/* <h3 className="text-md font-semibold text-stone-200 mb-2">{title}</h3> */}
       {inputs.map((input) => (
         <div key={input.name} className="flex flex-col space-y-1">
-          <label htmlFor={input.name} className="text-sm text-yellow-500">
+          <label htmlFor={input.name} className="text-sm text-yellow-600">
             {input.label}
           </label>
           <div className="flex items-center space-x-2">

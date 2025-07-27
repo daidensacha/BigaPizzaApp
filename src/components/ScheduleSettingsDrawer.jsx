@@ -87,7 +87,7 @@ export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange
                   {scheduleSections.map((section, index) => (
                     <div key={section.title} className="border border-stone-600 rounded-lg">
                       <button
-                        className="flex justify-between w-full px-4 py-2 text-left text-sm font-medium text-orange-700 bg-stone-800 rounded-t-lg hover:bg-red-950"
+                        className="flex justify-between w-full px-4 py-2 text-left text-sm font-medium text-yellow-700 bg-stone-800 rounded-t-lg hover:bg-red-950"
                         onClick={() =>
                           setOpenIndex((prev) => (prev === index ? -1 : index))
                         }
