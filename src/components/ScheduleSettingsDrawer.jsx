@@ -10,7 +10,7 @@ const scheduleSections = [
     title: "Biga",
     inputs: [
       { label: "Prep time (min)", name: "bigaPrepTime", unit: "min" },
-      { label: "Rising time (hrs)", name: "bigaRisingTime", unit: "h" },
+      { label: "Fermentation time (hrs)", name: "bigaRisingTime", unit: "h" },
       // { label: "Fermentation Temp (°C)", name: "bigaTemp", unit: "°C" },
     ],
   },
@@ -25,7 +25,7 @@ const scheduleSections = [
     title: "Pizza Dough",
     inputs: [
       { label: "Prep time (min)", name: "doughPrepTime", unit: "min" },
-      { label: "Rising time (hrs)", name: "doughRisingTime", unit: "h" },
+      { label: "Bulk Proofing (hrs)", name: "doughRisingTime", unit: "h" },
       // { label: "Fermentation Temp (°C)", name: "doughTemp", unit: "°C" },
     ],
   },
@@ -79,7 +79,7 @@ export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange
               leaveTo="translate-x-full"
             >
               <Dialog.Panel className="relative w-full max-w-md bg-stone-700 shadow-xl p-6 overflow-y-auto">
-                <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-200">
+                <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
                   Schedule Settings
                 </Dialog.Title>
 
@@ -128,7 +128,7 @@ export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange
                         });
                       }
                     }}
-                    className="text-red-800 border border-red-950 bg-stone-800 px-4 py-2 mr-1 rounded hover:text-stone-300 hover:bg-red-900 hover:border-stone-800"
+                    className="text-red-700 border border-red-950 bg-stone-800 px-4 py-2 mr-1 rounded hover:text-stone-300 hover:bg-red-900 hover:border-stone-800"
                   >
                     Reset
                   </button>
