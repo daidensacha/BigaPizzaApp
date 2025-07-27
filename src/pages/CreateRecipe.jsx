@@ -9,6 +9,7 @@ import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
 import Step5RecipePreview from '../components/GuidedInputFlow/Step5RecipePreview';
 import Step6PrepSchedule from '../components/GuidedInputFlow/Step6PrepSchedule';
 import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
+import { useRecipe } from "../context/RecipeContext";
 
 const steps = [
   { id: 1, label: 'Basic Info', icon: <Info size={18} className="inline mr-1" /> },
@@ -22,23 +23,7 @@ const steps = [
 export default function CreateRecipe() {
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    numPizzas: 3,
-    ballWeight: 280,
-    bigaHydration: 50,
-    finalHydration: 68,
-    bigaPercent: 50,
-    saltPercent: 3.4,
-    maltPercent: 0.5,
-    bigaTime: 24,
-    bigaTemp: 6,
-    doughTime: 6,
-    doughTemp: 22,
-    yeastType: 'idy',
-    bakingDateTime: getLocalDateTimePlus24h(), // prefilled!
-    shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
-    longCorrection: YEAST_CORRECTION_DEFAULTS.long,
-  });
+  const { formData, setFormData } = useRecipe();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

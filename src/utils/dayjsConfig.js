@@ -21,3 +21,7 @@ const userLocale = navigator.language || 'en';
 dayjs.locale(userLocale);
 
 export default dayjs;
+
+export function getLocalDateTimePlus24h() {
+  return dayjs().add(24, "hour").format("YYYY-MM-DDTHH:mm");
+}

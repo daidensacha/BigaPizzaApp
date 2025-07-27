@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useRecipe } from "../context/RecipeContext";
 
 export default function Navbar() {
+
+  const { setSettingsDrawerOpen } = useRecipe();
+
   return (
     <nav className="bg-white shadow px-4 py-3 flex justify-between items-center sticky top-0 z-50">
       <Link to="/" className="text-xl font-bold text-red-600">
@@ -13,6 +17,12 @@ export default function Navbar() {
         <Link to="/create-recipe" className="text-gray-700 hover:text-red-600">
           Create Recipe
         </Link>
+        <button
+          onClick={() => setSettingsDrawerOpen(true)}
+          className="text-gray-700 hover:text-red-600"
+        >
+          Settings
+        </button>
         {/* Future links like: */}
         {/* <Link to="/schedule">Schedule</Link> */}
       </div>

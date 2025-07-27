@@ -4,42 +4,59 @@ export default function ScheduleInputGroup({ title, inputs }) {
       {/* <h3 className="text-md font-semibold text-stone-200 mb-2">{title}</h3> */}
       {inputs.map((input) => (
         <div key={input.name} className="flex flex-col space-y-1">
-          <label htmlFor={input.name} className="text-sm text-yellow-600">
+          <label htmlFor={input.name} className="text-sm text-yellow-500">
             {input.label}
           </label>
+
           <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              className="px-2 py-1 border border-gray-700 bg-stone-800 text-stone-400 rounded"
-              onClick={() => {
-                const newValue = Math.max(parseInt(input.value || 0) - 1, 0);
-                input.onChange({ target: { name: input.name, value: newValue } });
-              }}
-            >
-              −
-            </button>
+          {input.type === "datetime-local" ? (
             <input
-              type="number"
+              type="datetime-local"
               id={input.name}
               name={input.name}
               value={input.value || ''}
               onChange={input.onChange}
-              className="w-24 rounded border-stone-700 bg-stone-800 text-stone-400 px-2 py-1"
+              className="w-full rounded border border-stone-700 bg-stone-800 text-stone-300 px-2 py-1 focus:outline-none focus:ring-1 focus:ring-yellow-700 focus:border-yellow-700"
             />
-            <button
-              type="button"
-              className="px-2 py-1 border border-gray-700 bg-stone-800 text-stone-400 rounded"
-              onClick={() => {
-                const newValue = parseInt(input.value || 0) + 1;
-                input.onChange({ target: { name: input.name, value: newValue } });
-              }}
-            >
-              +
-            </button>
-            {input.unit && (
-              <span className="text-sm text-stone-400 ml-1">{input.unit}</span>
-            )}
-          </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="px-2 py-1 border border-gray-700 bg-stone-800 text-stone-400 rounded hover:bg-stone-700 focus:ring-1 focus:ring-yellow-700"
+                onClick={() => {
+                  const newValue = Math.max(parseInt(input.value || 0) - 1, 0);
+                  input.onChange({ target: { name: input.name, value: newValue } });
+                }}
+              >
+                −
+              </button>
+              <input
+                type={input.type || "number"}
+                id={input.name}
+                name={input.name}
+                value={input.value || ''}
+                onChange={input.onChange}
+                className="w-24 rounded border border-stone-700 bg-stone-800 text-stone-300 px-2 py-1 focus:outline-none focus:ring-1 focus:ring-yellow-700 focus:border-yellow-700"
+              />
+              <button
+                type="button"
+                className="px-2 py-1 border border-gray-700 bg-stone-800 text-stone-400 rounded hover:bg-stone-700 focus:ring-1 focus:ring-yellow-700"
+                onClick={() => {
+                  const newValue = parseInt(input.value || 0) + 1;
+                  input.onChange({ target: { name: input.name, value: newValue } });
+                }}
+              >
+                +
+              </button>
+              {input.unit && (
+                <span className="text-sm text-stone-400 ml-1">{input.unit}</span>
+              )}
+            </>
+          )}
+        </div>
+
+
+
         </div>
       ))}
     </div>
