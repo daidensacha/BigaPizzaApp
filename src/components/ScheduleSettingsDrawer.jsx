@@ -3,7 +3,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ChevronUp } from "lucide-react";
 import ScheduleInputGroup from "./ScheduleInputGroup";
 import { useRecipe } from "../context/RecipeContext";
-import YeastTypeSelector from "./ui/YeastTypeSelector";
+import YeastTypeToggleGroup from "./ui/YeastTypeToggleGroup";
+import YeastTypePopoverSelector from "./ui/YeastTypePopoverSelector";
 import toast from "react-hot-toast";
 
 const pizzaSettingsSections = [
@@ -161,13 +162,10 @@ export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange
                            {section.title === "General" && (
                               <div>
                                 <label className="text-sm pt-4 text-yellow-500 block mb-2">Yeast Type</label>
-                                <YeastTypeSelector
+                                <YeastTypeToggleGroup
                                   value={formData.yeastType}
                                   onChange={handleFormChange}
                                   theme="dark"
-                                  name="yeastType"
-                                  // name="yeastType-drawer"
-                                  showLabel={false}
                                 />
                               </div>
                             )}
