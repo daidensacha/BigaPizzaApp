@@ -5,107 +5,71 @@ import ScheduleInputGroup from "./ScheduleInputGroup";
 import { useRecipe } from "../context/RecipeContext";
 import YeastTypeToggleGroup from "./ui/YeastTypeToggleGroup";
 import toast from "react-hot-toast";
-
-const settingsSections = [
-  {
-    group: "Pizza Settings",
-    sections: [
-      {
-        title: "General",
-        inputs: [
-          { label: "Baking Date and Time", name: "bakingDateTime", type: "datetime-local" },
-          { label: "Recipe for (pizzas)", name: "numPizzas", unit: "pcs" },
-          { label: "Ball weight (g)", name: "ballWeight", unit: "g" },
-          { label: "Dough Biga %", name: "bigaPercent", unit: "%" }
-        ]
-      },
-      {
-        title: "Biga",
-        inputs: [
-          { label: "Biga Hydration", name: "bigaHydration", unit: "%" },
-          { label: "Duration (hrs)", name: "bigaTime", unit: "h" },
-          { label: "Temperature (°C)", name: "bigaTemp", unit: "°C" }
-        ]
-      },
-      {
-        title: "Dough Refresh",
-        inputs: [
-          { label: "Final Dough Hydration", name: "finalHydration", unit: "%" },
-          { label: "Salt (%)", name: "saltPercent", unit: "%" },
-          { label: "Malt (%)", name: "maltPercent", unit: "%" },
-          { label: "Duration (hrs)", name: "doughTime", unit: "h" },
-          { label: "Temperature (°C)", name: "doughTemp", unit: "°C" }
-        ]
-      },
-      {
-        title: "Advanced Options",
-        inputs: [
-          { label: "Short Ferment Correction", name: "shortCorrection" },
-          { label: "Long Ferment Correction", name: "longCorrection" }
-        ]
-      }
-    ]
-  },
-  {
-    group: "Schedule Settings",
-    sections: [
-      {
-        title: "Biga",
-        inputs: [
-          { label: "Prep time (min)", name: "bigaPrepTime", unit: "min" },
-          { label: "Fermentation time (hrs)", name: "bigaRisingTime", unit: "h" }
-        ]
-      },
-      {
-        title: "Autolyze",
-        inputs: [
-          { label: "Prep time (min)", name: "autolyzeRefreshPrep", unit: "min" },
-          { label: "Rest time (min)", name: "autolyzeRefreshRest", unit: "min" }
-        ]
-      },
-      {
-        title: "Pizza Dough",
-        inputs: [
-          { label: "Prep time (min)", name: "doughPrepTime", unit: "min" },
-          { label: "Bulk Proofing (hrs)", name: "doughRisingTime", unit: "h" }
-        ]
-      },
-      {
-        title: "Dough Balls",
-        inputs: [
-          { label: "Prep time (min)", name: "ballsPrepTime", unit: "min" },
-          { label: "Rising time (hrs)", name: "ballsRisingTime", unit: "h" }
-        ]
-      },
-      {
-        title: "Food Prep",
-        inputs: [
-          { label: "Food prep time (min)", name: "toppingsPrepTime", unit: "min" }
-        ]
-      },
-      {
-        title: "Preheat",
-        inputs: [
-          { label: "Preheat Oven (min)", name: "preheatOvenDuration", unit: "min" }
-        ]
-      }
-    ]
-  }
-];
+import { pizzaSettingsSections, scheduleSections } from "../constants/settingsConfig";
 
 export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange, onReset }) {
-  const { resetScheduleData, formData, setFormData } = useRecipe();
-  const [openSection, setOpenSection] = useState("Pizza Settings:General");
+  const [activeSectionKey, setActiveSectionKey] = useState("pizza:General");
+  const { formData, setFormData, resetScheduleData } = useRecipe();
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleToggle = (group, title) => {
-    const id = `${group}:${title}`;
-    setOpenSection((prev) => (prev === id ? null : id));
-  };
+  const renderAccordionSection = (section, type) => {
+  const sectionKey = `${type}:${section.title}`;
+  const isOpen = activeSectionKey === sectionKey;
+
+  const isPizza = type === "pizza";
+  const state = isPizza ? formData : data;
+  const handleChange = isPizza ? handleFormChange : onChange;
+
+  return (
+    <div key={sectionKey} className={`border border-stone-600 rounded-lg ${isOpen ? "bg-stone-700 border-1 border-yellow-800" : ""}`}>
+      <button
+        className={`flex justify-between w-full px-4 py-2 text-left text-sm font-medium text-yellow-700 bg-stone-800 hover:bg-red-950 ${
+          isOpen ? "bg-stone-700" : ""
+        }`}
+        onClick={() =>
+          setActiveSectionKey((prev) => (prev === sectionKey ? null : sectionKey))
+        }
+      >
+        <span>{section.title}</span>
+        <ChevronUp
+          className={`${isOpen ? "rotate-180" : ""} h-5 w-5 text-stone-200 transition-transform`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="px-4 pt-4 pb-2 bg-stone-600">
+          <ScheduleInputGroup
+            title={section.title}
+            inputs={section.inputs.map((input) => ({
+              ...input,
+              value: state[input.name] ?? "",
+              onChange: handleChange
+            }))}
+          />
+          {isPizza && section.title === "General" && (
+            <div>
+              <label className="text-sm pt-4 text-yellow-500 block mb-2">Yeast Type</label>
+              <YeastTypeToggleGroup
+                value={formData.yeastType}
+                onChange={handleFormChange}
+                theme="dark"
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -134,54 +98,23 @@ export default function ScheduleSettingsDrawer({ isOpen, onClose, data, onChange
               leaveTo="translate-x-full"
             >
               <Dialog.Panel className="relative w-full max-w-md bg-stone-700 shadow-xl p-6 overflow-y-auto">
-                {settingsSections.map(({ group, sections }) => (
-                  <div key={group} className="mb-6">
-                    <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
-                      {group}
-                    </Dialog.Title>
-                    <div className="space-y-2">
-                      {sections.map((section) => {
-                        const sectionId = `${group}:${section.title}`;
-                        const isOpen = openSection === sectionId;
-                        return (
-                          <div key={section.title} className="border border-stone-600 rounded-lg">
-                            <button
-                              className="flex justify-between w-full px-4 py-2 text-left text-sm font-medium text-yellow-700 bg-stone-800 rounded-t-lg hover:bg-red-950"
-                              onClick={() => handleToggle(group, section.title)}
-                            >
-                              <span>{section.title}</span>
-                              <ChevronUp
-                                className={`${isOpen ? "rotate-180" : ""} h-5 w-5 text-stone-200 transition-transform`}
-                              />
-                            </button>
-                            {isOpen && (
-                              <div className="px-4 pt-4 pb-2 bg-stone-600">
-                                <ScheduleInputGroup
-                                  title={section.title}
-                                  inputs={section.inputs.map((input) => ({
-                                    ...input,
-                                    value: formData[input.name] ?? data[input.name] ?? "",
-                                    onChange: formData[input.name] !== undefined ? handleFormChange : onChange
-                                  }))}
-                                />
-                                {section.title === "General" && group === "Pizza Settings" && (
-                                  <div>
-                                    <label className="text-sm pt-4 text-yellow-500 block mb-2">Yeast Type</label>
-                                    <YeastTypeToggleGroup
-                                      value={formData.yeastType}
-                                      onChange={handleFormChange}
-                                      theme="dark"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
+                <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
+                  Pizza Settings
+                </Dialog.Title>
+
+                <div className="space-y-2 mb-6">
+                  {pizzaSettingsSections.map((section) => renderAccordionSection(section, "pizza"))}
+                </div>
+
+                <div className="border-t border-stone-500 my-6" />
+
+                <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
+                  Schedule Settings
+                </Dialog.Title>
+
+                <div className="space-y-2">
+                  {scheduleSections.map((section) => renderAccordionSection(section, "schedule"))}
+                </div>
 
                 <div className="mt-6 flex justify-end">
                   <button
