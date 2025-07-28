@@ -152,16 +152,17 @@ const handleReset = () => {
               ? (() => {
                   const date = new Date(data.bakingDateTime);
                   const datePart = date.toLocaleDateString(undefined, {
+                    weekday: "short",
                     day: "2-digit",
                     month: "short",
-                    year: "numeric",
+                    // year: "numeric",
                   });
                   const timePart = date.toLocaleTimeString(undefined, {
                     hour: "2-digit",
                     minute: "2-digit",
-                    hour12: false,
+                    hour12: true,
                   });
-                  return `${datePart} @ ${timePart}`;
+                  return `${datePart} ${timePart}`;
                 })()
               : "Not set"}
           </div>

@@ -55,13 +55,19 @@ export function calculatePrepSchedule(data) {
     toMinutes(bigaPrepTime) + toMinutes(bigaRisingTime, "h");
   const prepBigaTime = autolyzeRefreshTime.subtract(totalBigaTime, "minute");
 
+  const totalDuration = dayjs.isDayjs(bakingTime) && dayjs.isDayjs(prepBigaTime)
+    ? bakingTime.diff(prepBigaTime, "minute")
+    : null;
+
+
   return {
-    prepBigaTime,
-    autolyzeRefreshTime,
-    prepDoughTime,
-    prepBallsTime,
-    preheatOvenTime,
-    prepToppingsTime,
-    bakePizza: bakingTime,
+  prepBigaTime,
+  autolyzeRefreshTime,
+  prepDoughTime,
+  prepBallsTime,
+  preheatOvenTime,
+  prepToppingsTime,
+  bakePizza: bakingTime,
+  totalDuration,
   };
 }
