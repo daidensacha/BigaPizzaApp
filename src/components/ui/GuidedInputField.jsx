@@ -15,24 +15,28 @@ export default function GuidedInputField({
 }) {
   const isDateTime = type === "datetime-local";
 
-  // console.log("GuidedInputField props:", {name, min, max, step});
-
   return (
     <div className="flex flex-col space-y-1">
-      <label
-        htmlFor={name}
-        className="text-sm text-gray-800 dark:text-yellow-500 flex items-center"
-      >
-        {label}
-        {(min !== undefined || max !== undefined) && (
-          <InputTooltip
-            min={min}
-            max={max}
-            step={step}
-            theme="dark"
-          />
+
+      <div className="group relative w-fit">
+        <label
+          htmlFor={name}
+          className="text-sm text-gray-800 dark:text-yellow-500 cursor-pointer"
+        >
+          {label}
+        </label>
+
+        {(min !== undefined && max !== undefined) && (
+
+          <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-xs text-white bg-black rounded shadow z-10
+               opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap max-w-xs">
+            Min: {min} • Max: {max}
+            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-black z-[-1]">
+            </span>
+
+          </span>
         )}
-      </label>
+      </div>
 
       {isDateTime ? (
         <input

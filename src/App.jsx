@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import CreateRecipe from "./pages/CreateRecipe";
+import PizzaMenu from "./pages/PizzaMenu";
 import Navbar from './components/Navbar';
 import { useRecipe } from "./context/RecipeContext";
 import ScheduleSettingsDrawer from "./components/ScheduleSettingsDrawer";
@@ -26,7 +27,6 @@ function App() {
 
   return (
   <Router>
-    {/* <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800 transition-colors duration-500"> */}
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 transition-colors duration-500">
       <Navbar />
 
@@ -35,6 +35,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/create-recipe" element={<CreateRecipe />} />
+            <Route path="/menu" element={<PizzaMenu />} />
           </Routes>
         </div>
       </main>

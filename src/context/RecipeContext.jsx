@@ -10,8 +10,8 @@ const defaultFormData = {
   bigaHydration: 50,
   finalHydration: 68,
   bigaPercent: 50,
-  saltPercent: 3.4,
-  maltPercent: 0.5,
+  saltPercent: 3.4, // only in dough refresh
+  maltPercent: 0.5, // only in dough refresh
   bigaTime: 24,
   bigaTemp: 6,
   doughTime: 6,
@@ -44,6 +44,9 @@ export const RecipeProvider = ({ children }) => {
 
   const [isSettingsDrawerOpen, setSettingsDrawerOpen] = useState(false);
 
+  const [isTimelineConfirmed, setTimelineConfirmed] = useState(false);
+
+
   return (
     <RecipeContext.Provider
       value={{
@@ -55,6 +58,8 @@ export const RecipeProvider = ({ children }) => {
         resetScheduleData,
         isSettingsDrawerOpen,
         setSettingsDrawerOpen,
+        isTimelineConfirmed,
+        setTimelineConfirmed
       }}
     >
       {children}

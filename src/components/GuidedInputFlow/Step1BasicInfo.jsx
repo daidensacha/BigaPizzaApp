@@ -34,6 +34,17 @@ export default function Step1BasicInfo() {
 
 
         {/* Ball Weight */}
+        {/* TEST TOOLTIP */}
+        {/* <div className="group relative inline-block text-sm text-gray-800 dark:text-yellow-500">
+          <label className="cursor-pointer">
+            Ball Weight
+          </label>
+          <span className="absolute left-full top-1/2 ml-2 w-48 transform -translate-y-1/2 scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg z-50 pointer-events-none">
+            Min: 250 • Max: 300
+          </span>
+        </div> */}
+        {/* END TEST TOOLTIP */}
+
         <GuidedInputField
           name="ballWeight"
           value={formData.ballWeight}

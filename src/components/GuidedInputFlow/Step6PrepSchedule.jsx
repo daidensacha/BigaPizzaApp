@@ -6,7 +6,13 @@ import labelMap from "../../utils/scheduleLabels";
 import { useRecipe } from "../../context/RecipeContext";
 
 export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
-  const { scheduleData, resetScheduleData, formData } = useRecipe();
+  const {
+    scheduleData,
+    setScheduleData,
+    resetScheduleData,
+    formData,
+    setTimelineConfirmed
+  } = useRecipe();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const schedule = calculatePrepSchedule({
@@ -59,14 +65,22 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
       </div>
 
       <div className="mt-6 flex space-x-4 justify-center">
+        {/* Confirm Timeline button */}
         <button
-          onClick={onCreateSchedule}
+            onClick={() => {
+              setTimelineConfirmed(true);
+              onCreateSchedule();
+            }}
           className="bg-green-600 dark:bg-green-900 text-white dark:text-yellow-200 dark:hover:bg-green-800 px-4 py-2 rounded-md hover:bg-green-700"
         >
           Confirm Timeline
         </button>
+        {/* Skip Schedule button */}
         <button
-          onClick={onSkip}
+          onClick={() => {
+            setTimelineConfirmed(false);
+            onSkip();
+          }}
           className="border border-gray-300 px-4 py-2 dark:text-yellow-600 dark:bg-red-950 dark:hover:bg-red-900 dark:border-none rounded-md hover:bg-gray-100"
         >
           Skip Schedule

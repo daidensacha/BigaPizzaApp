@@ -8,6 +8,7 @@ import Step3Fermentation from '../components/GuidedInputFlow/Step3Fermentation';
 import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
 import Step5RecipePreview from '../components/GuidedInputFlow/Step5RecipePreview';
 import Step6PrepSchedule from '../components/GuidedInputFlow/Step6PrepSchedule';
+import Step7FinalRecipe from '../components/GuidedInputFlow/Step7FinalRecipe';
 import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
 import { useRecipe } from "../context/RecipeContext";
 
@@ -18,12 +19,13 @@ const steps = [
   { id: 4, label: 'Yeast Type', icon: <FlaskConical size={18} className="inline mr-1" /> },
   { id: 5, label: 'Preview' },
   { id: 6, label: "Prep Schedule" },
+  { id: 7, label: "Biga Pizza Recipe" },
 ];
 
 export default function CreateRecipe() {
 
   const [currentStep, setCurrentStep] = useState(1);
-  const { formData, setFormData } = useRecipe();
+  const { formData, setFormData, isTimelineConfirmed } = useRecipe();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,6 +67,8 @@ export default function CreateRecipe() {
             onSkip={() => setCurrentStep(7)}
           />
         );
+      case 7:
+        return <Step7FinalRecipe setCurrentStep={setCurrentStep} />;
       default:
         return null;
     }

@@ -146,7 +146,7 @@ export default function Step5RecipePreview({
 
         {/* Advanced Sliders */}
         {showAdvanced && (
-          <div className="mt-6 space-y-4 bg-gray-50 dark:bg-stone-900 border border-gray-200 dark:border-stone-800 p-4 rounded">
+          <div className="mt-6 space-y-4 rounded-lg bg-gray-50 dark:bg-stone-900 border border-gray-200 dark:border-stone-600 p-4 rounded">
             <h4 className="font-semibold text-gray-700 dark:text-yellow-700">Yeast Correction Factors</h4>
             <div className="space-y-2">
               <div>
