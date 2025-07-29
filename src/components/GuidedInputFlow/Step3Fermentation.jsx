@@ -1,86 +1,74 @@
 import React from 'react';
-import tooltips from "../../constants/tooltips";
-import FormLabelWithTooltip from "../FormLabelWithTooltip";
+import inputConfig from "../../constants/inputConfig";
+import GuidedInputField from "../ui/GuidedInputField";
+import { useRecipe } from "../../context/RecipeContext";
 
-export default function Step3Fermentation({ data, onChange }) {
+export default function Step3Fermentation() {
+
+   const { formData, setFormData } = useRecipe();
+
+    const handleChange = (e) => {
+      const { name, value, type } = e.target;
+      const parsedValue = type === "number" ? parseFloat(value) : value;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: parsedValue,
+      }));
+    };
+
   return (
     <div className="space-y-6">
+      <h2 className="text-xl font-semibold">Step 3: Fermentation</h2>
       {/* Biga Fermentation */}
-      <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
-        <h2 className="text-lg font-semibold text-blue-700 mb-2">Biga Fermentation</h2>
+      <div className="p-4 mt-5 rounded-lg bg-blue-50 dark:bg-blue-700 dark:bg-opacity-40 border border-blue-200 dark:border-blue-600">
+        <h2 className="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-2">Biga</h2>
 
-        <div className="space-y-4">
-          <div>
-            <FormLabelWithTooltip tooltip={tooltips.bigaTime}>
-              Duration: {data.bigaTime} hours
-            </FormLabelWithTooltip>
-            <input
-              type="range"
-              name="bigaTime"
-              value={data.bigaTime}
-              onChange={onChange}
-              className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-              min="16"
-              max="48"
-              unit="hours"
-            />
-          </div>
-
-          <div>
-            <FormLabelWithTooltip tooltip={tooltips.bigaTemp}>
-              Temperature: {data.bigaTemp}°C
-            </FormLabelWithTooltip>
-            <input
-              type="range"
-              name="bigaTemp"
-              value={data.bigaTemp}
-              onChange={onChange}
-              className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-              min="4"
-              max="24"
-              unit="C"
-            />
-          </div>
-        </div>
-      </div>
+          <GuidedInputField
+            name="bigaTime"
+            value={formData.bigaTime}
+            onChange={handleChange}
+            label={`Fermentation Time: ${formData.bigaTime}h`}
+            min={inputConfig.bigaTime.min}
+            max={inputConfig.bigaTime.max}
+            step={inputConfig.bigaTime.step}
+            unit={inputConfig.bigaTime.unit}
+          />
+          <GuidedInputField
+            name="bigaTemp"
+            value={formData.bigaTemp}
+            onChange={handleChange}
+            label={`Fermentation Temp: ${formData.bigaTemp}°C`}
+            min={inputConfig.bigaTemp.min}
+            max={inputConfig.bigaTemp.max}
+            step={inputConfig.bigaTemp.step}
+            unit={inputConfig.bigaTemp.unit}
+          />
+     </div>
 
       {/* Final Dough Fermentation */}
-      <div className="p-4 rounded-lg bg-green-50 border border-green-200">
-        <h2 className="text-lg font-semibold text-green-700 mb-2">Final Dough Fermentation</h2>
+      <div className="p-4 rounded-lg bg-green-50 dark:bg-green-700 dark:bg-opacity-40 border border-green-200 dark:border-green-700">
+        <h2 className="text-lg font-semibold text-green-700 dark:text-green-500 mb-2">Dough</h2>
+        <GuidedInputField
+            name="doughTime"
+            value={formData.doughTime}
+            onChange={handleChange}
+            label={`Fermentation Time: ${formData.doughTime}h`}
+            min={inputConfig.doughTime.min}
+            max={inputConfig.doughTime.max}
+            step={inputConfig.doughTime.step}
+            unit={inputConfig.doughTime.unit}
+          />
 
-        <div className="space-y-4">
-          <div>
-            <FormLabelWithTooltip tooltip={tooltips.doughTime}>
-              Duration: {data.doughTime} hours
-            </FormLabelWithTooltip>
-            <input
-              type="range"
-              name="doughTime"
-              value={data.doughTime}
-              onChange={onChange}
-              className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-              min="5"
-              max="72"
-              unit="hours"
-            />
-          </div>
-
-          <div>
-            <FormLabelWithTooltip tooltip={tooltips.doughTemp}>
-              Temperature: {data.doughTemp}°C
-            </FormLabelWithTooltip>
-            <input
-              type="range"
-              name="doughTemp"
-              value={data.doughTemp}
-              onChange={onChange}
-              className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-              min="4"
-              max="24"
-              unit="C"
-            />
-          </div>
-        </div>
+          <GuidedInputField
+            name="doughTemp"
+            value={formData.doughTemp}
+            onChange={handleChange}
+            label={`Fermentation Temp: ${formData.doughTemp}°C`}
+            min={inputConfig.doughTemp.min}
+            max={inputConfig.doughTemp.max}
+            step={inputConfig.doughTemp.step}
+            unit={inputConfig.doughTemp.unit}
+          />
       </div>
     </div>
   );

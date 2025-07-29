@@ -4,6 +4,7 @@ import App from './App';
 import './index.css';
 import { RecipeProvider } from "./context/RecipeContext";
 import { Toaster } from "react-hot-toast";
+import "./styles/global.css";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

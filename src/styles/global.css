@@ -1,0 +1,4 @@
+flex-colinput[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.8;
+}

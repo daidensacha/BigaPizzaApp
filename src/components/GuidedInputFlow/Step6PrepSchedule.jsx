@@ -6,23 +6,15 @@ import labelMap from "../../utils/scheduleLabels";
 import { useRecipe } from "../../context/RecipeContext";
 
 export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
-  const { scheduleData, setScheduleData, resetScheduleData, formData } = useRecipe();
+  const { scheduleData, resetScheduleData, formData } = useRecipe();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const schedule = calculatePrepSchedule({
     ...scheduleData,
-    bakingDateTime: formData.bakingDateTime, // ← inject correct value
+    bakingDateTime: formData.bakingDateTime,
   });
 
   const { totalDuration, ...timelineEvents } = schedule;
-
-  const handleScheduleChange = (e) => {
-    const { name, value } = e.target;
-    setScheduleData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const formatDuration = (minutes) => {
     const h = Math.floor(minutes / 60);
@@ -34,10 +26,12 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold text-center">Preparation Timeline</h2>
 
-      <div className="bg-white rounded-xl shadow p-6 border border-gray-200 space-y-4">
+      <div className="bg-white dark:bg-stone-900 dark:border-stone-800 rounded-xl shadow p-6 border border-gray-200 space-y-4">
         {Object.entries(timelineEvents).map(([key, time]) => (
           <div key={key} className="grid grid-cols-2 gap-4 text-sm">
-            <div className="font-medium text-gray-700">{labelMap[key] || key}:</div>
+            <div className="font-medium text-gray-700 dark:text-amber-400">
+              {labelMap[key] || key}:
+            </div>
             <div>
               {dayjs.isDayjs(time)
                 ? time.format("ddd, MMM D • h:mm a")
@@ -46,15 +40,16 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
           </div>
         ))}
         {totalDuration && (
-            <div className="flex justify-center text-sm text-gray-600 bg-yellow-100 border border-yellow-300 px-3 py-1 rounded-full inline-block shadow-sm">
-              Total Duration: {formatDuration(totalDuration)}
-            </div>
+          <div className="flex justify-center text-sm text-gray-600 bg-yellow-100 dark:bg-stone-600 dark:text-stone-400 border border-yellow-300 dark:border-stone-900 px-3 py-1 rounded-full inline-block shadow-sm">
+            Total Duration: {formatDuration(totalDuration)}
+          </div>
         )}
-
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <p className="text-gray-700">Need to adjust prep durations?</p>
+        <p className="text-gray-700 dark:text-stone-300 mr-2">
+          Need to adjust prep durations?
+        </p>
         <button
           onClick={() => setDrawerOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
@@ -66,13 +61,13 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
       <div className="mt-6 flex space-x-4 justify-center">
         <button
           onClick={onCreateSchedule}
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+          className="bg-green-600 dark:bg-green-900 text-white dark:text-yellow-200 dark:hover:bg-green-800 px-4 py-2 rounded-md hover:bg-green-700"
         >
           Confirm Timeline
         </button>
         <button
           onClick={onSkip}
-          className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100"
+          className="border border-gray-300 px-4 py-2 dark:text-yellow-600 dark:bg-red-950 dark:hover:bg-red-900 dark:border-none rounded-md hover:bg-gray-100"
         >
           Skip Schedule
         </button>
@@ -81,8 +76,6 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
       <ScheduleSettingsDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        data={scheduleData}
-        onChange={handleScheduleChange}
         onReset={resetScheduleData}
       />
     </div>

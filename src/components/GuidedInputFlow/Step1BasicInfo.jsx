@@ -1,85 +1,69 @@
 import React from "react";
-import { Clock } from 'lucide-react';
-import tooltips from "../../constants/tooltips";
-import FormLabelWithTooltip from "../FormLabelWithTooltip";
+import { useRecipe } from "../../context/RecipeContext";
+import inputConfig from "../../constants/inputConfig";
+import GuidedInputField from "../ui/GuidedInputField";
 
-export default function Step1BasicInfo({ data, onChange }) {
+export default function Step1BasicInfo() {
 
-  function formatDateTime(datetimeStr) {
-  const date = new Date(datetimeStr);
-  const pad = (n) => n.toString().padStart(2, "0");
+  const { formData, setFormData } = useRecipe();
 
-  const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1);
-  const day = pad(date.getDate());
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    const parsedValue = type === "number" ? parseFloat(value) : value;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: parsedValue,
+    }));
+  };
 
   return (
     <div className="space-y-4">
+      <h2 className="text-xl font-semibold">Step 1: Basic Info</h2>
       {/* Number of Pizzas */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Recipe for {data.numPizzas === 1 ? "1 pizza" : `${data.numPizzas} pizzas`}
-        </label>
-        <input
-          type="range"
+      <div className="p-4 mt-5 rounded-lg bg-orange-50 dark:bg-gray-500 dark:bg-opacity-40 border border-orange-100 dark:border-stone-700">
+        <GuidedInputField
           name="numPizzas"
-          value={data.numPizzas || ""}
-          onChange={onChange}
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-          min="1"
-          max="50"
+          label={`Recipe for ${formData.numPizzas} ${formData.numPizzas === 1 ? 'pizza' : 'pizzas'}`}
+          value={formData.numPizzas}
+          onChange={handleChange}
+          min={inputConfig.numPizzas.min}
+          max={inputConfig.numPizzas.max}
+          step={inputConfig.numPizzas.step}
+          unit={inputConfig.numPizzas.unit}
         />
-      </div>
 
-      {/* Ball Weight */}
-      <div>
-        <FormLabelWithTooltip tooltip={tooltips.ballWeight}>
-            {data.ballWeight}g per ball
-        </FormLabelWithTooltip>
-        <input
-          type="range"
+
+        {/* Ball Weight */}
+        <GuidedInputField
           name="ballWeight"
-          value={data.ballWeight || ""}
-          onChange={onChange}
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-          min="250"
-          max="300"
+          value={formData.ballWeight}
+          onChange={handleChange}
+          label={`${formData.ballWeight}g per ball`}
+          min={inputConfig.ballWeight.min}
+          max={inputConfig.ballWeight.max}
+          step={inputConfig.ballWeight.step}
+          unit={inputConfig.ballWeight.unit}
         />
-      </div>
 
-      {/* Biga % */}
-      <div>
-        <FormLabelWithTooltip tooltip={tooltips.bigaPercent}>
-            {data.bigaPercent}% Biga pizza dough
-        </FormLabelWithTooltip>
-        <input
-          type="range"
+        {/* Biga Percent */}
+        <GuidedInputField
           name="bigaPercent"
-          value={data.bigaPercent || ""}
-          onChange={onChange}
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm sm:text-sm"
-          min="20"
-          max="100"
+          value={formData.bigaPercent}
+          onChange={handleChange}
+          label={`${formData.bigaPercent}% Biga pizza dough`}
+          min={inputConfig.bigaPercent.min}
+          max={inputConfig.bigaPercent.max}
+          step={inputConfig.bigaPercent.step}
+          unit={inputConfig.bigaPercent.unit}
         />
-      </div>
 
-      {/* Baking Date & Time */}
-      <div className="relative">
-        <FormLabelWithTooltip tooltip={tooltips.bakingDateTime}>
-          Baking Date and Time
-        </FormLabelWithTooltip>
-        <Clock className="absolute left-3 top-11 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        <input
-          type="datetime-local"
+        {/* Baking Date & Time */}
+        <GuidedInputField
           name="bakingDateTime"
-          value={data.bakingDateTime || ''}
-          onChange={onChange}
-          className="pl-10 pr-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-700"
+          value={formData.bakingDateTime}
+          onChange={handleChange}
+          label="Baking Date and Time"
+          type={inputConfig.bakingDateTime.type}
         />
       </div>
     </div>

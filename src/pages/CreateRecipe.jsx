@@ -44,18 +44,16 @@ export default function CreateRecipe() {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1BasicInfo data={formData} onChange={handleChange} />;
+        return <Step1BasicInfo />;
       case 2:
-        return <Step2Hydration data={formData} onChange={handleChange} />;
+        return <Step2Hydration />;
       case 3:
-        return <Step3Fermentation data={formData} onChange={handleChange} />;
+        return <Step3Fermentation />;
       case 4:
-        return <Step4YeastType data={formData} onChange={handleChange} />;
+        return <Step4YeastType />;
       case 5:
         return (
           <Step5RecipePreview
-            data={formData}
-            setData={setFormData}
             onCreateSchedule={() => setCurrentStep(6)}
             onSkip={() => console.log("Skip to final review or export")}
           />
@@ -63,8 +61,6 @@ export default function CreateRecipe() {
       case 6:
         return (
           <Step6PrepSchedule
-            data={formData}
-            onChange={handleChange}
             onCreateSchedule={() => setCurrentStep(7)}
             onSkip={() => setCurrentStep(7)}
           />
@@ -78,6 +74,7 @@ export default function CreateRecipe() {
   return (
 
         <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 flex flex-col justify-center items-center p-8 text-center">
+
           <div className="max-w-2xl w-full p-6 space-y-6 rounded-xl">
             <h1 className="text-2xl font-bold text-gray-800">Create a New Pizza Dough Recipe</h1>
             <ProgressBar steps={steps} currentStep={currentStep} />
