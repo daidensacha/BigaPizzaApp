@@ -34,7 +34,7 @@ export default function ProgressBar({ steps, currentStep }) {
               >
                 {step.id}
               </div>
-              <div className="mt-2 text-xs text-gray-700">{step.label}</div>
+              <div className="mt-2 text-xs text-gray-700 dark:text-stone-300">{step.label}</div>
             </div>
           );
         })}

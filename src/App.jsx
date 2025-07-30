@@ -27,7 +27,8 @@ function App() {
 
   return (
   <Router>
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 transition-colors duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
+      {/* <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 transition-colors duration-500"> */}
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 py-8">

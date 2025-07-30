@@ -77,10 +77,12 @@ export default function CreateRecipe() {
 
   return (
 
-        <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 flex flex-col justify-center items-center p-8 text-center">
+        <div className="min-h-screen flex flex-col justify-center items-center p-8 text-center">
+          {/* Remove background gradient */}
+          {/* <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 flex flex-col justify-center items-center p-8 text-center"> */}
 
           <div className="max-w-2xl w-full p-6 space-y-6 rounded-xl">
-            <h1 className="text-2xl font-bold text-gray-800">Create a New Pizza Dough Recipe</h1>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-orange-700">Create a New Pizza Dough Recipe</h1>
             <ProgressBar steps={steps} currentStep={currentStep} />
 
             <StepWrapper
