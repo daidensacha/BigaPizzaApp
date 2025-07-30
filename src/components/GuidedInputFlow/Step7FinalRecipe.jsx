@@ -21,7 +21,7 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
       </p>
 
       {/* Ingredient Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
         {/* Biga Column */}
         <div className="bg-white dark:bg-stone-800 p-4 rounded shadow border border-gray-200 dark:border-stone-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-yellow-400 mb-2">Biga Ingredients</h3>
@@ -73,21 +73,28 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
             <p>Combine biga with the refresh dough, yeast, salt, and malt. Knead until smooth and elastic.</p>
           </li>
           <li>
-            <strong>4. Preheat Oven</strong>
+            <strong>4. Prepare Balls</strong>
+            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
+              {isTimelineConfirmed && schedule.prepBallsTime ? formatScheduleTime(schedule.prepBallsTime) : '• TBD'}
+            </p>
+            <p>Turn your dough out onto a clean surface. DIvide and weigh into your preferred ball weight. Form into balls, place into your lightly oiled proofing container/s. Cover and leave to proof, until they are double in size. At this point you can bake, or refrigerate. Remove from fridge at least an hour before baking so they can coem to room temp. </p>
+          </li>
+          <li>
+            <strong>5. Preheat Oven</strong>
             <p className="text-sm text-gray-600 dark:text-stone-400 italic">
               {isTimelineConfirmed && schedule.preheatOvenTime ? formatScheduleTime(schedule.preheatOvenTime) : '• TBD'}
             </p>
             <p>Preheat your oven and pizza stone/steel to the maximum temperature available.</p>
           </li>
           <li>
-            <strong>5. Prepare Toppings</strong>
+            <strong>6. Prepare Toppings</strong>
             <p className="text-sm text-gray-600 dark:text-stone-400 italic">
               {isTimelineConfirmed && schedule.prepToppingsTime ? formatScheduleTime(schedule.prepToppingsTime) : '• TBD'}
             </p>
             <p>Prepare and portion your toppings so they’re ready when the dough is.</p>
           </li>
           <li>
-            <strong>6. Bake Pizza</strong>
+            <strong>7. Bake Pizza</strong>
             <p className="text-sm text-gray-600 dark:text-stone-400 italic">
               {formData.bakingDateTime ? formatScheduleTime(schedule.bakePizza) : '• TBD'}
             </p>

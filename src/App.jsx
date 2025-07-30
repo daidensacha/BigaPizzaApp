@@ -31,7 +31,9 @@ function App() {
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="dark:bg-stone-900 text-yellow-100 rounded-xl transition-colors duration-500">
+        {/* Remove dark theme - dark back ground */}
+        {/* <div className="dark:bg-stone-900 text-yellow-100 rounded-xl transition-colors duration-500"> */}
+        <div className="text-yellow-100 rounded-xl transition-colors duration-500">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/create-recipe" element={<CreateRecipe />} />

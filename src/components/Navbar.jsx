@@ -18,11 +18,11 @@ export default function Navbar() {
         <Link to="/" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
           Home
         </Link>
+        <Link to="/menu" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
+          Pizza's
+        </Link>
         <Link to="/create-recipe" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
           Create Recipe
-        </Link>
-        <Link to="/menu" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
-          Menu
         </Link>
         <button
           onClick={() => setSettingsDrawerOpen(true)}
