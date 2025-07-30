@@ -6,8 +6,11 @@ import PizzaMenu from "./pages/PizzaMenu";
 import Navbar from './components/Navbar';
 import { useRecipe } from "./context/RecipeContext";
 import ScheduleSettingsDrawer from "./components/ScheduleSettingsDrawer";
+import AuthModal from "./components/Auth/AuthModal";
+import { useAuthModal } from "./context/AuthModalContext";
 
 function App() {
+  const { isModalOpen, closeAuthModal } = useAuthModal();
 
     const {
     isSettingsDrawerOpen,
@@ -50,7 +53,9 @@ function App() {
         onChange={handleScheduleChange}
         onReset={resetScheduleData}
       />
+      <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
     </div>
+
   </Router>
 );
 
