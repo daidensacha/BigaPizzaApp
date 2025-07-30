@@ -57,7 +57,7 @@ export default function CreateRecipe() {
         return (
           <Step5RecipePreview
             onCreateSchedule={() => setCurrentStep(6)}
-            onSkip={() => console.log("Skip to final review or export")}
+            onSkip={() => setCurrentStep(7)}
           />
         );
       case 6:

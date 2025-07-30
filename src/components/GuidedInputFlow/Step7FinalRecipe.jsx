@@ -1,4 +1,6 @@
 import React from "react";
+import { toast } from 'react-hot-toast';
+import { useEffect } from "react";
 import { useRecipe } from "../../context/RecipeContext";
 import { calculateDough } from "../../utils/utils";
 import { calculatePrepSchedule } from "../../utils/scheduleCalculator";
@@ -9,6 +11,10 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
   const { formData, scheduleData, isTimelineConfirmed } = useRecipe();
   const results = calculateDough(formData);
   const schedule = calculatePrepSchedule({ ...scheduleData, bakingDateTime: formData.bakingDateTime });
+
+  // useEffect(() => {
+  //   toast.success("Your recipe is created, enjoy!");
+  //  }, []);
 
   return (
     <div className="space-y-6">

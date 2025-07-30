@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from 'react-hot-toast';
 import { calculatePrepSchedule } from "../../utils/scheduleCalculator";
 import ScheduleSettingsDrawer from "../ScheduleSettingsDrawer";
 import dayjs from "../../utils/dayjsConfig";
@@ -79,6 +80,7 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
         <button
           onClick={() => {
             setTimelineConfirmed(false);
+            toast("Heres your recipe - schedule skipped.");
             onSkip();
           }}
           className="border border-gray-300 px-4 py-2 dark:text-yellow-600 dark:bg-red-950 dark:hover:bg-red-900 dark:border-none rounded-md hover:bg-gray-100"

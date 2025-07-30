@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from 'react-hot-toast';
 import { calculateDough, YEAST_CORRECTION_DEFAULTS } from "../../utils/utils";
 import { useRecipe } from "../../context/RecipeContext";
 import {
@@ -208,7 +209,10 @@ export default function Step5RecipePreview({
           </button>
           <button
             className="border border-gray-300 px-4 py-2 rounded-md text-gray-700 dark:text-yellow-600 dark:bg-red-950 hover:bg-gray-100 dark:hover:bg-red-900 dark:border-none transition"
-            onClick={onSkip}
+            onClick={() => {
+              toast("Heres your recipe - timeline skipped.");
+              onSkip();
+            }}
           >
             No thanks
           </button>
