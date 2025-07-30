@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @media print {
+    .print-details-open details {
+      display: block !important;
+    }
+    .print-hide-summary summary {
+      display: none;
+    }
+  }
+}
+
+/* Dark theme styling for spin buttons in Chrome-based browsers */
+input[type='number']::-webkit-inner-spin-button {
+  background-color: #1c1917; /* Tailwind stone-800 */
+  color: #facc15; /* Tailwind yellow-400 */
+  border: none;
+  border-radius: 0.25rem;
+}
+
+input[type='number']::-webkit-outer-spin-button {
+  background-color: #1c1917;
+}
+
+/* Firefox: keep native look (no styling support) */
+input[type='number'] {
+  color-scheme: dark;
+}
+
