@@ -1,15 +1,14 @@
-import React from "react";
-import { useRecipe } from "../../context/RecipeContext";
-import inputConfig from "../../constants/inputConfig";
-import GuidedInputField from "../ui/GuidedInputField";
+import React from 'react';
+import { useRecipe } from '../../context/RecipeContext';
+import inputConfig from '../../constants/inputConfig';
+import GuidedInputField from '../ui/GuidedInputField';
 
 export default function Step1BasicInfo() {
-
   const { formData, setFormData } = useRecipe();
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    const parsedValue = type === "number" ? parseFloat(value) : value;
+    const parsedValue = type === 'number' ? parseFloat(value) : value;
     setFormData((prev) => ({
       ...prev,
       [name]: parsedValue,
@@ -23,7 +22,9 @@ export default function Step1BasicInfo() {
       <div className="p-4 mt-5 rounded-lg bg-orange-50 dark:bg-gray-500 dark:bg-opacity-40 border border-orange-100 dark:border-stone-700">
         <GuidedInputField
           name="numPizzas"
-          label={`Recipe for ${formData.numPizzas} ${formData.numPizzas === 1 ? 'pizza' : 'pizzas'}`}
+          label={`Recipe for ${formData.numPizzas} ${
+            formData.numPizzas === 1 ? 'pizza' : 'pizzas'
+          }`}
           value={formData.numPizzas}
           onChange={handleChange}
           min={inputConfig.numPizzas.min}
@@ -31,7 +32,6 @@ export default function Step1BasicInfo() {
           step={inputConfig.numPizzas.step}
           unit={inputConfig.numPizzas.unit}
         />
-
 
         {/* Ball Weight */}
         {/* TEST TOOLTIP */}

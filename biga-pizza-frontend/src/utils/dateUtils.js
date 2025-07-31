@@ -1,11 +1,11 @@
 import dayjs from './dayjsConfig';
 
-export function formatScheduleTime(time, format = "ddd, MMM D • h:mm A") {
-  return dayjs.isDayjs(time) ? time.format(format) : "–";
+export function formatScheduleTime(time, format = 'ddd, MMM D • h:mm A') {
+  return dayjs.isDayjs(time) ? time.format(format) : '–';
 }
 
 export function formatDateTime(date) {
-  const pad = (n) => n.toString().padStart(2, "0");
+  const pad = (n) => n.toString().padStart(2, '0');
 
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1);
@@ -15,7 +15,3 @@ export function formatDateTime(date) {
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
-
-
-
-

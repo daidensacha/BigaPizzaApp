@@ -8,10 +8,10 @@ export const YEAST_CORRECTION_DEFAULTS = {
 };
 
 export function predictYeastPercent({
-  stage = "biga", // or "refresh"
+  stage = 'biga', // or "refresh"
   temp,
   time,
-  yeastType = "idy",
+  yeastType = 'idy',
   bigaPercent = 0.5, // only for refresh
   correction, // <== new
 }) {
@@ -21,7 +21,7 @@ export function predictYeastPercent({
   const reference = {
     temp: 6,
     time: 24,
-    idyPercent: 0.2
+    idyPercent: 0.2,
   };
 
   const tempFactor = reference.temp / temp;
@@ -30,10 +30,11 @@ export function predictYeastPercent({
   // If correction is provided (from slider), use that. Else use defaults.
   if (correction === undefined) {
     correction = 1.0;
-    if (stage === "refresh") {
-      correction = time <= 12
-  ? YEAST_CORRECTION_DEFAULTS.short
-  : YEAST_CORRECTION_DEFAULTS.long;
+    if (stage === 'refresh') {
+      correction =
+        time <= 12
+          ? YEAST_CORRECTION_DEFAULTS.short
+          : YEAST_CORRECTION_DEFAULTS.long;
       if (bigaPercent >= 0.4) correction *= 0.85;
       if (bigaPercent >= 0.6) correction *= 0.75;
     }
@@ -41,8 +42,8 @@ export function predictYeastPercent({
 
   let percent = reference.idyPercent * tempFactor * timeFactor * correction;
 
-  if (yeastType === "ady") percent *= 1.25;
-  if (yeastType === "fresh") percent *= 3.3;
+  if (yeastType === 'ady') percent *= 1.25;
+  if (yeastType === 'fresh') percent *= 3.3;
 
   return percent;
 }
@@ -69,7 +70,9 @@ export function calculateDough(data) {
   } = data;
 
   const totalDough = numPizzas * ballWeight;
-  const totalFlour = totalDough / (1 + finalHydration / 100 + (saltPercent + (maltPercent || 0)) / 100);
+  const totalFlour =
+    totalDough /
+    (1 + finalHydration / 100 + (saltPercent + (maltPercent || 0)) / 100);
 
   const bigaFlour = totalFlour * (bigaPercent / 100);
   const finalFlour = totalFlour - bigaFlour;
@@ -82,7 +85,7 @@ export function calculateDough(data) {
   const totalMalt = totalFlour * ((maltPercent || 0) / 100);
 
   const bigaYeastPercent = predictYeastPercent({
-    stage: "biga",
+    stage: 'biga',
     temp: bigaTemp,
     time: bigaTime,
     yeastType,
@@ -90,7 +93,7 @@ export function calculateDough(data) {
   });
 
   const refreshYeastPercent = predictYeastPercent({
-    stage: "refresh",
+    stage: 'refresh',
     temp: doughTemp,
     time: doughTime,
     yeastType,
@@ -121,9 +124,6 @@ export function calculateDough(data) {
     bakersYeastPercent: (totalYeast / totalFlour) * 100,
   };
 }
-
-
-
 
 // ========================
 // Schedule Utility

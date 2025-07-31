@@ -1,20 +1,19 @@
 // import tooltips from "../../constants/tooltips";
 // import FormLabelWithTooltip from "../FormLabelWithTooltip";
-import { useRecipe } from "../../context/RecipeContext";
-import YeastTypeToggleGroup from "../ui/YeastTypeToggleGroup";
+import { useRecipe } from '../../context/RecipeContext';
+import YeastTypeToggleGroup from '../ui/YeastTypeToggleGroup';
 
 export default function Step4YeastType() {
+  const { formData, setFormData } = useRecipe();
 
-   const { formData, setFormData } = useRecipe();
-
-      const handleChange = (e) => {
-        const { name, value, type } = e.target;
-        const parsedValue = type === "number" ? parseFloat(value) : value;
-        setFormData((prev) => ({
-          ...prev,
-          [name]: parsedValue,
-        }));
-      };
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    const parsedValue = type === 'number' ? parseFloat(value) : value;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: parsedValue,
+    }));
+  };
 
   return (
     <div className="flex justify-center">

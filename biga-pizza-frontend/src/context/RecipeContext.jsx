@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
-import { getLocalDateTimePlus24h } from "../utils/dayjsConfig";
-import { YEAST_CORRECTION_DEFAULTS } from "../utils/utils";
+import React, { createContext, useContext, useState } from 'react';
+import { getLocalDateTimePlus24h } from '../utils/dayjsConfig';
+import { YEAST_CORRECTION_DEFAULTS } from '../utils/utils';
 
 const RecipeContext = createContext();
 
@@ -16,7 +16,7 @@ const defaultFormData = {
   bigaTemp: 6,
   doughTime: 6,
   doughTemp: 22,
-  yeastType: "idy",
+  yeastType: 'idy',
   bakingDateTime: getLocalDateTimePlus24h(),
   shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
   longCorrection: YEAST_CORRECTION_DEFAULTS.long,
@@ -46,7 +46,6 @@ export const RecipeProvider = ({ children }) => {
 
   const [isTimelineConfirmed, setTimelineConfirmed] = useState(false);
 
-
   return (
     <RecipeContext.Provider
       value={{
@@ -59,7 +58,7 @@ export const RecipeProvider = ({ children }) => {
         isSettingsDrawerOpen,
         setSettingsDrawerOpen,
         isTimelineConfirmed,
-        setTimelineConfirmed
+        setTimelineConfirmed,
       }}
     >
       {children}

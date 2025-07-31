@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useAuthModal } from "../context/AuthModalContext";
-import { useRecipe } from "../context/RecipeContext";
-import ThemeToggle from "./ui/ThemeToggle";
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuthModal } from '../context/AuthModalContext';
+import { useRecipe } from '../context/RecipeContext';
+import ThemeToggle from './ui/ThemeToggle';
 
 // Inside a header/nav/top-right corner
-
 
 export default function Navbar() {
   const { openAuthModal } = useAuthModal();
@@ -17,16 +16,28 @@ export default function Navbar() {
         BigaPizza
       </Link>
       <div className="flex items-center space-x-4">
-        <Link to="/" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
+        <Link
+          to="/"
+          className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+        >
           Home
         </Link>
-        <Link to="/menu" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
+        <Link
+          to="/menu"
+          className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+        >
           Pizza's
         </Link>
-        <Link to="/create-recipe" className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
+        <Link
+          to="/create-recipe"
+          className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+        >
           Create Recipe
         </Link>
-        <button onClick={openAuthModal} className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200">
+        <button
+          onClick={openAuthModal}
+          className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+        >
           Login / Register
         </button>
         <button

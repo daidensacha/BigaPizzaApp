@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast';
 
 export const showLoadingToast = (msg) => toast.loading(msg, { id });
 export const showSuccessToast = (msg) => toast.loading(msg, { id });

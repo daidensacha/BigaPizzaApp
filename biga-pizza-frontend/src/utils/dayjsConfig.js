@@ -25,5 +25,5 @@ dayjs.locale(userLocale);
 export default dayjs;
 
 export function getLocalDateTimePlus24h() {
-  return dayjs().add(24, "hour").format("YYYY-MM-DDTHH:mm");
+  return dayjs().add(24, 'hour').format('YYYY-MM-DDTHH:mm');
 }

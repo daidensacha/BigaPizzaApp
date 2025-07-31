@@ -2,9 +2,7 @@ import React from 'react';
 
 export default function ProgressBar({ steps, currentStep }) {
   const progressPercent =
-    steps.length > 1
-      ? ((currentStep - 1) / (steps.length - 1)) * 100
-      : 0;
+    steps.length > 1 ? ((currentStep - 1) / (steps.length - 1)) * 100 : 0;
 
   return (
     <div className="relative w-full mb-6">
@@ -29,12 +27,18 @@ export default function ProgressBar({ steps, currentStep }) {
                 className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm transition-all
                   ${isCompleted ? 'bg-green-500 text-white' : ''}
                   ${isActive ? 'bg-blue-500 text-white' : ''}
-                  ${!isCompleted && !isActive ? 'bg-white border-2 border-gray-300 text-gray-700' : ''}
+                  ${
+                    !isCompleted && !isActive
+                      ? 'bg-white border-2 border-gray-300 text-gray-700'
+                      : ''
+                  }
                 `}
               >
                 {step.id}
               </div>
-              <div className="mt-2 text-xs text-gray-700 dark:text-stone-300">{step.label}</div>
+              <div className="mt-2 text-xs text-gray-700 dark:text-stone-300">
+                {step.label}
+              </div>
             </div>
           );
         })}

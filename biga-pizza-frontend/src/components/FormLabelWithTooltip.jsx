@@ -1,6 +1,6 @@
-import React from "react";
-import Tooltip from "./ui/Tooltip";
-import { Info } from "lucide-react";
+import React from 'react';
+import Tooltip from './ui/Tooltip';
+import { Info } from 'lucide-react';
 
 const FormLabelWithTooltip = ({ tooltip, children }) => {
   if (!tooltip) {
@@ -13,7 +13,9 @@ const FormLabelWithTooltip = ({ tooltip, children }) => {
 
   return (
     <Tooltip content={tooltip.tooltip}>
-      <label className={`flex items-center justify-center gap-1 text-sm font-medium ${tooltip.textColor}`}>
+      <label
+        className={`flex items-center justify-center gap-1 text-sm font-medium ${tooltip.textColor}`}
+      >
         {children}
         <Info className="w-4 h-4 text-blue-400 hover:text-blue-600 cursor-pointer" />
       </label>

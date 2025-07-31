@@ -1,23 +1,22 @@
-import React from "react";
-import InputTooltip from "./InputTooltip";
-import inputConfig from "../../constants/inputConfig";
+import React from 'react';
+import InputTooltip from './InputTooltip';
+import inputConfig from '../../constants/inputConfig';
 
 export default function GuidedInputField({
   name,
   label,
   value,
   onChange,
-  type = "number",
+  type = 'number',
   min,
   max,
   step,
   unit,
 }) {
-  const isDateTime = type === "datetime-local";
+  const isDateTime = type === 'datetime-local';
 
   return (
     <div className="flex flex-col space-y-1">
-
       <div className="group relative w-fit">
         <label
           htmlFor={name}
@@ -26,14 +25,13 @@ export default function GuidedInputField({
           {label}
         </label>
 
-        {(min !== undefined && max !== undefined) && (
-
-          <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-xs text-white bg-black rounded shadow z-10
-               opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap max-w-xs">
+        {min !== undefined && max !== undefined && (
+          <span
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-xs text-white bg-black rounded shadow z-10
+               opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap max-w-xs"
+          >
             Min: {min} • Max: {max}
-            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-black z-[-1]">
-            </span>
-
+            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-black z-[-1]"></span>
           </span>
         )}
       </div>
@@ -53,7 +51,10 @@ export default function GuidedInputField({
             type="button"
             className="px-2 py-1 border border-gray-300 dark:border-stone-700 bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-stone-300 rounded hover:bg-gray-200 dark:hover:bg-stone-700 focus:ring-1 focus:ring-yellow-600"
             onClick={() => {
-              const newValue = Math.max(parseFloat(value || 0) - (step ?? 1), min ?? 0);
+              const newValue = Math.max(
+                parseFloat(value || 0) - (step ?? 1),
+                min ?? 0
+              );
               onChange({ target: { name, value: newValue } });
             }}
           >
@@ -76,7 +77,10 @@ export default function GuidedInputField({
             type="button"
             className="px-2 py-1 border border-gray-300 dark:border-stone-700 bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-stone-300 rounded hover:bg-gray-200 dark:hover:bg-stone-700 focus:ring-1 focus:ring-yellow-600"
             onClick={() => {
-              const newValue = Math.min(parseFloat(value || 0) + (step ?? 1), max ?? Infinity);
+              const newValue = Math.min(
+                parseFloat(value || 0) + (step ?? 1),
+                max ?? Infinity
+              );
               onChange({ target: { name, value: newValue } });
             }}
           >
@@ -84,7 +88,9 @@ export default function GuidedInputField({
           </button>
 
           {unit && (
-            <span className="text-sm text-gray-600 dark:text-stone-400 ml-1">{unit}</span>
+            <span className="text-sm text-gray-600 dark:text-stone-400 ml-1">
+              {unit}
+            </span>
           )}
         </div>
       )}
