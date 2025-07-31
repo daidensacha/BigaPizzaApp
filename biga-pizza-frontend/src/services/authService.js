@@ -1,36 +1,60 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
-export const registerUser = async (userData) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.message || 'Registration failed');
-    return data;
-  } catch (error) {
-    throw error;
-  }
+// DEFAULT OPTIONS
+const defaultOptions = {
+  credentials: 'include', // ⬅️ include cookies
+  headers: {
+    'Content-Type': 'application/json',
+  },
 };
 
+// REGISTER USER
+export const registerUser = async (userData) => {
+  const res = await fetch(`${API_BASE}/api/auth/register`, {
+    ...defaultOptions,
+    method: 'POST',
+    body: JSON.stringify(userData),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Registration failed.');
+  return data;
+};
+
+// LOGIN USER
 export const loginUser = async (userData) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    ...defaultOptions,
+    method: 'POST',
+    body: JSON.stringify(userData),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Login failed.');
+  return data;
+};
 
-    if (!res.ok) throw new Error(data.message || 'Login failed');
-    return data;
-  } catch (error) {
-    throw error;
-  }
+// LOGOUT USER
+export const logoutUser = async () => {
+  const res = await fetch(`${API_BASE}/api/auth/logout`, {
+    ...defaultOptions,
+    method: 'POST',
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Logout failed.');
+  return data;
+};
+
+// CHECK SESSION
+export const checkSession = async () => {
+  const res = await fetch(`${API_BASE}/api/auth/check-session`, {
+    ...defaultOptions,
+    method: 'GET',
+  });
+
+  if (res.status === 401) return null; // not logged in
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Session check failed.');
+  return data;
 };

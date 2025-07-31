@@ -3,12 +3,27 @@ import { useState } from 'react';
 import { useAuthModal } from '../context/AuthModalContext';
 import { useRecipe } from '../context/RecipeContext';
 import ThemeToggle from './ui/ThemeToggle';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 // Inside a header/nav/top-right corner
 
 export default function Navbar() {
   const { openAuthModal } = useAuthModal();
   const { setSettingsDrawerOpen } = useRecipe();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  console.log('user:', { user });
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // this clears state + hits API
+      navigate('/');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   return (
     <nav className="bg-white dark:bg-stone-900 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-stone-700 px-4 py-3 shadow flex justify-between items-center sticky top-0 z-50">
@@ -34,12 +49,26 @@ export default function Navbar() {
         >
           Create Recipe
         </Link>
-        <button
-          onClick={openAuthModal}
-          className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
-        >
-          Login / Register
-        </button>
+        {/* start register/login/logout */}
+        {user ? (
+          <>
+            {/* <span className="text-sm text-gray-600">Welcome, {user.name}</span> */}
+            <button
+              onClick={handleLogout}
+              className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={openAuthModal}
+            className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+          >
+            Login / Register
+          </button>
+        )}
+        {/* end register/login/logout */}
         <button
           onClick={() => setSettingsDrawerOpen(true)}
           className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
