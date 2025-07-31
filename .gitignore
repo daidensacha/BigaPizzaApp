@@ -62,3 +62,10 @@ storybook-static/
 # Optional: react-scripts cache (if not using Vite)
 .cache/
 
+# Root cleanup
+node_modules/
+backup_root_files/
+logs/
+temp/
+.DS_Store
+
