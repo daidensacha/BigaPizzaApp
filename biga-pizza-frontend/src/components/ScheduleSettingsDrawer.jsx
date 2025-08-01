@@ -1,14 +1,14 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ChevronUp } from 'lucide-react';
-import ScheduleInputGroup from './ScheduleInputGroup';
-import { useRecipe } from '../context/RecipeContext';
-import YeastTypeToggleGroup from './ui/YeastTypeToggleGroup';
+import ScheduleInputGroup from '@components/ScheduleInputGroup';
+import { useRecipe } from '@context/RecipeContext';
+import YeastTypeToggleGroup from '@ui/YeastTypeToggleGroup';
 import toast from 'react-hot-toast';
 import {
   pizzaSettingsSections,
   scheduleSections,
-} from '../constants/settingsConfig';
+} from '@constants/settingsConfig';
 
 export default function ScheduleSettingsDrawer({
   isOpen,

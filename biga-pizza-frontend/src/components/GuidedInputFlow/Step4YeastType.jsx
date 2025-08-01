@@ -1,7 +1,7 @@
-// import tooltips from "../../constants/tooltips";
-// import FormLabelWithTooltip from "../FormLabelWithTooltip";
-import { useRecipe } from '../../context/RecipeContext';
-import YeastTypeToggleGroup from '../ui/YeastTypeToggleGroup';
+// import tooltips from '@/constants/tooltips";
+// import FormLabelWithTooltip from '@/FormLabelWithTooltip";
+import { useRecipe } from '@/context/RecipeContext';
+import YeastTypeToggleGroup from '@/components/ui/YeastTypeToggleGroup';
 
 export default function Step4YeastType() {
   const { formData, setFormData } = useRecipe();

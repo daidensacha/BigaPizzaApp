@@ -1,4 +1,4 @@
-import inputConfig from './inputConfig';
+import inputConfig from '@constants/inputConfig';
 
 const withUnitAndMeta = (name, label, type) => ({
   label,

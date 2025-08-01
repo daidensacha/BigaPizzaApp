@@ -1,4 +1,4 @@
-import dayjs from './dayjsConfig'; // your configured dayjs instance
+import dayjs from '@utils/dayjsConfig'; // your configured dayjs instance
 
 // Convert setting data to safe numebr to avoid Nan or undefined errors
 const safeNumber = (n) => Number(n) || 0;

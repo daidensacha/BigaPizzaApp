@@ -1,12 +1,12 @@
 import React from 'react';
 import { toast } from 'react-hot-toast';
-import { calculateDough, YEAST_CORRECTION_DEFAULTS } from '../../utils/utils';
-import { useRecipe } from '../../context/RecipeContext';
+import { calculateDough, YEAST_CORRECTION_DEFAULTS } from '@/utils/utils';
+import { useRecipe } from '@/context/RecipeContext';
 import {
   formatGrams,
   formatBakersPercent,
   generatePreviewRows,
-} from '../../utils/previewHelpers';
+} from '@/utils/previewHelpers';
 
 export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
   const { formData, setFormData } = useRecipe();

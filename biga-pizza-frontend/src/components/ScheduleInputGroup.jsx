@@ -1,5 +1,5 @@
-import inputConfig from '../constants/inputConfig';
-import InputTooltip from './ui/InputTooltip';
+import inputConfig from '@constants/inputConfig';
+import InputTooltip from '@ui/InputTooltip';
 
 export default function ScheduleInputGroup({ title, inputs }) {
   return (

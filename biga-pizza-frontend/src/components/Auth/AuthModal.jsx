@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../../context/AuthContext';
-import { registerUser, loginUser } from '../../services/authService';
+import { useAuth } from '@context/AuthContext';
+import { registerUser, loginUser } from '@services/authService';
 
 export default function AuthModal({ isOpen, onClose }) {
   const [activeDisclosure, setActiveDisclosure] = useState('login');

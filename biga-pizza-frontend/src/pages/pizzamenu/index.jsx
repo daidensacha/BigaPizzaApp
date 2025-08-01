@@ -1,6 +1,6 @@
 import React from 'react';
-import pizzaMenu from '../data/pizzaMenu'; // Correct import for named export
-import PizzaCard from '../components/PizzaMenu/PizzaCard';
+import pizzaMenu from '@/data/pizzaMenu'; // Correct import for named export
+import PizzaCard from '@/components/pizzas/PizzaCard';
 
 export default function PizzaMenu() {
   return (

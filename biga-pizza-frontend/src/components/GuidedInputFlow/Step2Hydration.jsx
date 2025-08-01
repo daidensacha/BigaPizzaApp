@@ -1,7 +1,7 @@
 import React from 'react';
-import inputConfig from '../../constants/inputConfig';
-import GuidedInputField from '../ui/GuidedInputField';
-import { useRecipe } from '../../context/RecipeContext';
+import inputConfig from '@/constants/inputConfig';
+import GuidedInputField from '@/components/ui/GuidedInputField';
+import { useRecipe } from '@/context/RecipeContext';
 
 export default function Step2Hydration() {
   const { formData, setFormData } = useRecipe();

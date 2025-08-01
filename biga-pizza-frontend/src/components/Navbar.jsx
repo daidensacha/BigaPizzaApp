@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuthModal } from '../context/AuthModalContext';
-import { useRecipe } from '../context/RecipeContext';
-import ThemeToggle from './ui/ThemeToggle';
+import { useAuthModal } from '@context/AuthModalContext';
+import { useRecipe } from '@context/RecipeContext';
+import ThemeToggle from '@ui/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 
 // Inside a header/nav/top-right corner
 
@@ -49,6 +49,7 @@ export default function Navbar() {
         >
           Create Recipe
         </Link>
+
         {/* start register/login/logout */}
         {user ? (
           <>
@@ -68,6 +69,34 @@ export default function Navbar() {
             Login / Register
           </button>
         )}
+        {user && (
+          <>
+            <Link
+              to="/account"
+              className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+            >
+              Account
+            </Link>
+            {/* )} */}
+            {/* {user && ( */}
+            {/* <> */}
+            {/* <Link
+              to="/account"
+              className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+            >
+              Account
+            </Link> */}
+            {user.role === 'admin' && (
+              <Link
+                to="/admin"
+                className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
+              >
+                Admin
+              </Link>
+            )}
+          </>
+        )}
+
         {/* end register/login/logout */}
         <button
           onClick={() => setSettingsDrawerOpen(true)}

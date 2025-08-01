@@ -1,4 +1,4 @@
-import dayjs from './dayjsConfig';
+import dayjs from '@utils/dayjsConfig';
 
 export function formatScheduleTime(time, format = 'ddd, MMM D • h:mm A') {
   return dayjs.isDayjs(time) ? time.format(format) : '–';

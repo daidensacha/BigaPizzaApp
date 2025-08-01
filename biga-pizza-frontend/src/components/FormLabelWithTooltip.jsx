@@ -1,5 +1,5 @@
 import React from 'react';
-import Tooltip from './ui/Tooltip';
+import Tooltip from '@/ui/Tooltip';
 import { Info } from 'lucide-react';
 
 const FormLabelWithTooltip = ({ tooltip, children }) => {

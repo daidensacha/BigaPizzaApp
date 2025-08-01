@@ -3,17 +3,17 @@ import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
 import {
   getLocalDateTimePlus24h,
   YEAST_CORRECTION_DEFAULTS,
-} from '../utils/utils';
-import StepWrapper from '../components/GuidedInputFlow/StepWrapper';
-import Step1BasicInfo from '../components/GuidedInputFlow/Step1BasicInfo';
-import Step2Hydration from '../components/GuidedInputFlow/Step2Hydration';
-import Step3Fermentation from '../components/GuidedInputFlow/Step3Fermentation';
-import Step4YeastType from '../components/GuidedInputFlow/Step4YeastType';
-import Step5RecipePreview from '../components/GuidedInputFlow/Step5RecipePreview';
-import Step6PrepSchedule from '../components/GuidedInputFlow/Step6PrepSchedule';
-import Step7FinalRecipe from '../components/GuidedInputFlow/Step7FinalRecipe';
-import ProgressBar from '../components/GuidedInputFlow/ProgressBar';
-import { useRecipe } from '../context/RecipeContext';
+} from '@/utils/utils';
+import StepWrapper from '@guidedinputflow/StepWrapper';
+import Step1BasicInfo from '@guidedinputflow/Step1BasicInfo';
+import Step2Hydration from '@guidedinputflow/Step2Hydration';
+import Step3Fermentation from '@guidedinputflow/Step3Fermentation';
+import Step4YeastType from '@guidedinputflow/Step4YeastType';
+import Step5RecipePreview from '@guidedinputflow/Step5RecipePreview';
+import Step6PrepSchedule from '@guidedinputflow/Step6PrepSchedule';
+import Step7FinalRecipe from '@guidedinputflow/Step7FinalRecipe';
+import ProgressBar from '@guidedinputflow/ProgressBar';
+import { useRecipe } from '@/context/RecipeContext';
 
 const steps = [
   {

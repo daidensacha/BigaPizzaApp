@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRecipe } from '../../context/RecipeContext';
-import inputConfig from '../../constants/inputConfig';
-import GuidedInputField from '../ui/GuidedInputField';
+import { useRecipe } from '@context/RecipeContext';
+import inputConfig from '@constants/inputConfig';
+import GuidedInputField from '@ui/GuidedInputField';
 
 export default function Step1BasicInfo() {
   const { formData, setFormData } = useRecipe();

@@ -1,4 +1,4 @@
-import { formatDateTime } from '../utils/dateUtils';
+import { formatDateTime } from '@/utils/dateUtils';
 
 const inputConfig = {
   // 🍕 Pizza Settings

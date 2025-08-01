@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { getLocalDateTimePlus24h } from '../utils/dayjsConfig';
-import { YEAST_CORRECTION_DEFAULTS } from '../utils/utils';
+import { getLocalDateTimePlus24h } from '@utils/dayjsConfig';
+import { YEAST_CORRECTION_DEFAULTS } from '@utils/utils';
 
 const RecipeContext = createContext();
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { calculatePrepSchedule } from '../../utils/scheduleCalculator';
-import ScheduleSettingsDrawer from '../ScheduleSettingsDrawer';
-import dayjs from '../../utils/dayjsConfig';
-import labelMap from '../../utils/scheduleLabels';
-import { useRecipe } from '../../context/RecipeContext';
+import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
+import ScheduleSettingsDrawer from '@/components/ScheduleSettingsDrawer';
+import dayjs from '@/utils/dayjsConfig';
+import labelMap from '@/utils/scheduleLabels';
+import { useRecipe } from '@/context/RecipeContext';
 
 export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
   const {
