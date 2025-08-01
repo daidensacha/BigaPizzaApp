@@ -1,0 +1,25 @@
+{
+  "name": "bigapizzaproject",
+  "version": "1.0.0",
+  "description": "App for creating biga pizza dough recipes for wood fired pizza enthusiasts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daidensacha/BigaPizzaApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daidensacha/BigaPizzaApp/issues"
+  },
+  "homepage": "https://github.com/daidensacha/BigaPizzaApp#readme",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
