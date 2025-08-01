@@ -1,6 +1,21 @@
+# Frontend ignores
+biga-pizza-frontend/node_modules/
+biga-pizza-frontend/dist/
+biga-pizza-frontend/.env
+biga-pizza-frontend/.env.*
+biga-pizza-frontend/.DS_Store
+
+# Backend ignores
+biga-pizza-backend/node_modules/
+biga-pizza-backend/logs/
+biga-pizza-backend/.env
+biga-pizza-backend/.DS_Store
+
+# Root-level ignores
 node_modules/
 dist/
 .env
+.env.*
+.vscode/
 .DS_Store
 *.log
-.vscode/
