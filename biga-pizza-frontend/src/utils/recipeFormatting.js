@@ -1,4 +1,4 @@
-// utils/recipeFormatting.js
+import dayjs from 'dayjs';
 
 export function formatGrams(value, type = 'default') {
   const num = parseFloat(value);
@@ -63,3 +63,10 @@ export function generatePreviewRows(results) {
     },
   ];
 }
+
+export const generateRecipeTitle = (formData) => {
+  const date = dayjs(formData.bakingDateTime).format('YYYY-MM-DD');
+  const biga = formData.bigaPercent;
+  const hydration = formData.finalHydration;
+  return `${date} - ${biga}% Biga Dough Hydration - ${hydration}%`;
+};

@@ -31,7 +31,13 @@ export const loginUser = async (userData) => {
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Login failed.');
+
+  // ✅ Merge token into the user object
   return data;
+  // return {
+  //   ...data.user,
+  //   token: data.token,
+  // };
 };
 
 // LOGOUT USER

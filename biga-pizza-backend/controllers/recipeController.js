@@ -1,14 +1,17 @@
 import Recipe from '../models/Recipe.js';
 
-// Create new recipe
 const createRecipe = async (req, res) => {
   try {
+    console.log('Models: Saving recipe for user:', req.user); // still useful
+
     const newRecipe = new Recipe({
       ...req.body,
-      user: req.user._id, // from protect middleware
+      user: req.user.id, // ✅ fix here
     });
 
     const saved = await newRecipe.save();
+
+    console.log(`✅ Recipe saved - ID: ${saved._id}`);
     res.status(201).json(saved);
   } catch (err) {
     console.error('Create Recipe Error:', err);
@@ -50,7 +53,7 @@ const updateRecipe = async (req, res) => {
     const updated = await Recipe.findOneAndUpdate(
       { _id: req.params.id, user: req.user._id },
       req.body,
-      { new: true },
+      { new: true }
     );
     if (!updated) return res.status(404).json({ message: 'Recipe not found' });
     res.status(200).json(updated);

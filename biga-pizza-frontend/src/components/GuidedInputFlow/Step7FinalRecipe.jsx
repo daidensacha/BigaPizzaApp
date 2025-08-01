@@ -6,8 +6,12 @@ import { calculateDough } from '@/utils/utils';
 import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
 import { formatScheduleTime } from '@/utils/dateUtils';
 import { formatGrams } from '@/utils/recipeFormatting';
+import { useAuth } from '@context/AuthContext';
+import { saveRecipe } from '@services/recipeService';
+import { generateRecipeTitle } from '@/utils/recipeFormatting';
 
 export default function Step7FinalRecipe({ setCurrentStep }) {
+  const { user } = useAuth();
   const { formData, scheduleData, isTimelineConfirmed } = useRecipe();
   const results = calculateDough(formData);
   const schedule = calculatePrepSchedule({
@@ -15,9 +19,28 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
     bakingDateTime: formData.bakingDateTime,
   });
 
-  // useEffect(() => {
-  //   toast.success("Your recipe is created, enjoy!");
-  //  }, []);
+  const handleSaveRecipe = async () => {
+    console.log('🧪 Save button clicked');
+    console.log('👤 User object:', user);
+    if (!user?.token) {
+      toast.error('You must be logged in to save your recipe.');
+      return;
+    }
+
+    const recipePayload = {
+      title: generateRecipeTitle(formData), // ✅ auto title
+      formData,
+      scheduleData,
+    };
+
+    try {
+      await saveRecipe(recipePayload, user.token);
+      toast.success('Recipe saved successfully!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to save recipe.');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -182,9 +205,19 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
         <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
           Print Recipe
         </button>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-          Save Recipe
-        </button>
+        {user ? (
+          <button
+            onClick={handleSaveRecipe}
+            className="mt-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
+          >
+            Save Recipe
+          </button>
+        ) : (
+          <p className="mt-6 text-sm text-gray-500 italic">
+            Log in to save your recipe
+          </p>
+        )}
+
         <button className="border border-gray-400 px-4 py-2 rounded-md hover:bg-gray-100 dark:border-stone-700 dark:text-yellow-500 dark:hover:bg-stone-700 transition">
           Edit / Back
         </button>

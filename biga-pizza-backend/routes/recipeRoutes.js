@@ -1,18 +1,18 @@
 import express from 'express';
-import protect from '../middleware/authMiddleware.js';
 import {
   createRecipe,
   getRecipeById,
-  // (add others later)
+  // Add more routes like update/delete later
 } from '../controllers/recipeController.js';
+
+import protect from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Other routes
+// Create new recipe (only for authenticated users)
+router.post('/', protect, createRecipe);
 
-router.post('/', protect, createRecipe); // protect makes req.user available
-
-// ⬇️ Add this new route
-router.get('/:id', getRecipeById);
+// Get single recipe by ID (public or protected depending on your logic)
+router.get('/:id', protect, getRecipeById);
 
 export default router;
