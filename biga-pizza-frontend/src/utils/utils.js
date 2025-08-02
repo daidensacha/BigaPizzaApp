@@ -141,3 +141,7 @@ export function getLocalDateTimePlus24h() {
 
   return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
 }
+
+export function cn(...classes) {
+  return classes.filter(Boolean).join(' ');
+}

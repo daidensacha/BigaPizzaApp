@@ -10,7 +10,7 @@ export default function StepWrapper({
   isLastStep = false,
 }) {
   return (
-    <div className="rounded-2xl shadow-md bg-white text-gray-900 p-6 border dark:shadow dark:bg-stone-600 dark:text-gray-100 dark:border-stone-800">
+    <div className="rounded-2xl shadow-md bg-white text-gray-900 p-6 bg-opacity-40 dark:bg-opacity-40 border dark:shadow dark:bg-stone-600 dark:text-gray-100 dark:border-stone-800">
       <div className="text-sm text-gray-800 dark:text-stone-100 text-center">
         Step{' '}
         <span className="font-medium text-gray-800 dark:text-stone-100">

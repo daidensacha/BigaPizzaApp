@@ -13,8 +13,9 @@ import AdminDashboard from '@pages/Accounts/AdminDashboard';
 // import NavbarAccountLinks from '@components/NavbarAccountLinks';
 import UserDashboard from '@pages/Accounts/UserDashboard';
 import ProtectedRoute from '@components/routes/ProtectedRoute';
-import AccountPage from '@pages/Accounts/AccountPage';
-import RecipeDetailPage from '@pages/Recipes/UserRecipeDetails';
+import AccountPage from '@accounts/AccountPage';
+import UserRecipeDetails from '@recipes/UserRecipeDetails'; // ??? UserRecipeDetails
+import UserRecipeList from '@recipes/UserRecipeList';
 
 function App() {
   const { isModalOpen, closeAuthModal } = useAuthModal();
@@ -49,11 +50,13 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/create-recipe" element={<CreateRecipe />} />
               <Route path="/menu" element={<PizzaMenu />} />
+              <Route path="/my-recipes" element={<UserRecipeList />} />
+              <Route path="/recipes/:id" element={<UserRecipeDetails />} />
               <Route
                 path="/account/recipes/:id"
                 element={
                   <ProtectedRoute>
-                    <RecipeDetailPage />
+                    <UserRecipeDetails />
                   </ProtectedRoute>
                 }
               />

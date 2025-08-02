@@ -44,7 +44,7 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-yellow-400">
+      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-amber-600">
         {formData.bigaPercent}% Biga Pizza Recipe
       </h2>
 
@@ -56,8 +56,8 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
       {/* Ingredient Columns */}
       <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
         {/* Biga Column */}
-        <div className="bg-white dark:bg-stone-800 p-4 rounded shadow border border-gray-200 dark:border-stone-700">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-yellow-400 mb-2">
+        <div className="bg-white dark:bg-stone-900 bg-opacity-40 dark:bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
             Biga Ingredients
           </h3>
           <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
@@ -76,8 +76,8 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
         </div>
 
         {/* Refresh Column */}
-        <div className="bg-white dark:bg-stone-800 p-4 rounded shadow border border-gray-200 dark:border-stone-700">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-yellow-400 mb-2">
+        <div className="bg-white dark:bg-stone-900  bg-opacity-40 dark:bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
             Refresh Ingredients
           </h3>
           <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
@@ -106,11 +106,11 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
 
       {/* Step-by-Step Instructions */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold text-center text-gray-800 dark:text-yellow-400 mb-4">
+        <h3 className="text-lg font-semibold text-center text-gray-800 dark:text-amber-600 mb-4">
           Step-by-Step Instructions
         </h3>
-        <ol className="space-y-6 text-sm text-gray-800 dark:text-stone-300">
-          <li>
+        <ol className="space-y-6 text-sm text-gray-800 dark:text-stone-300 text-left text-justify">
+          <li className="">
             <strong>1. Prepare Biga</strong>
             <p className="text-sm text-gray-600 dark:text-stone-400 italic">
               {isTimelineConfirmed && schedule.prepBigaTime
@@ -208,12 +208,12 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
         {user ? (
           <button
             onClick={handleSaveRecipe}
-            className="mt-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
           >
             Save Recipe
           </button>
         ) : (
-          <p className="mt-6 text-sm text-gray-500 italic">
+          <p className="text-sm text-gray-500 italic">
             Log in to save your recipe
           </p>
         )}

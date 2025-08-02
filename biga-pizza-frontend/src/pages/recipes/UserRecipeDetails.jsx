@@ -1,65 +1,60 @@
+import { API_BASE } from '@/config/apiConfig';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { getRecipeById } from '@services/recipeService';
+import { useAuth } from '@/context/AuthContext';
 
 export default function UserRecipeDetails() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/recipes/${id}`, {
-          credentials: 'include',
-        });
-        const data = await res.json();
+        const data = await getRecipeById(id, user?.token);
+        console.log(recipe);
         setRecipe(data);
       } catch (err) {
-        console.error('Error fetching recipe:', err);
+        console.error('Failed to load recipe', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecipe();
-  }, [id]);
+    if (user && id) fetchRecipe();
+  }, [id, user]);
 
-  if (loading)
-    return <p className="text-center text-yellow-500">Loading recipe...</p>;
-  if (!recipe)
-    return <p className="text-center text-gray-400">Recipe not found.</p>;
+  if (loading) return <div className="p-4">Loading recipe...</div>;
+  if (!recipe) return <div className="p-4">Recipe not found.</div>;
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-red-600 mb-4">{recipe.title}</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-2">
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">{recipe.title}</h1>
+      <p className="text-sm text-muted-foreground mb-2">
         Created: {new Date(recipe.createdAt).toLocaleString()}
       </p>
-
-      <div className="bg-white dark:bg-stone-800 rounded shadow p-4 space-y-2">
+      <div className="space-y-2">
         <p>
-          <strong>Biga %:</strong> {recipe.bigaPercent}%
+          <strong>Dough Balls:</strong> {recipe.formData.numPizzas}
         </p>
         <p>
-          <strong>Hydration:</strong> {recipe.hydration}%
+          <strong>Ball Weight (g):</strong> {recipe.formData.ballWeight}g
         </p>
         <p>
-          <strong>Salt %:</strong> {recipe.saltPercent}%
+          <strong>Hydration:</strong> {recipe.formData.doughHydration}%
         </p>
         <p>
-          <strong>Fermentation:</strong> {recipe.fermentationHours}h
+          <strong>Biga %:</strong> {recipe.formData.bigaPercent}%
         </p>
         <p>
-          <strong>Notes:</strong> {recipe.notes || '—'}
+          <strong>Salt %:</strong> {recipe.formData.saltPercent}%
         </p>
-      </div>
-
-      <div className="mt-6 flex gap-4">
-        <Link to="/account" className="text-blue-500 hover:underline">
-          ← Back to Recipes
-        </Link>
-        <button className="text-yellow-500 hover:underline">Edit</button>
-        <button className="text-red-500 hover:underline">Delete</button>
+        <p>
+          <strong>Malt %:</strong> {recipe.formData.maltPercent ?? '0'}%
+        </p>
+        {/* Add more fields as needed */}
       </div>
     </div>
   );

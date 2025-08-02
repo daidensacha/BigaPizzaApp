@@ -26,6 +26,7 @@ export default defineConfig({
       '@data': path.resolve(__dirname, './src/data'),
       '@services': path.resolve(__dirname, './src/services'),
       '@styles': path.resolve(__dirname, './src/styles'),
+      '@config': path.resolve(__dirname, './src/config'),
     },
   },
 });

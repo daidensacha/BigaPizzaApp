@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { ChevronUp } from 'lucide-react';
+import { ChevronUp, X } from 'lucide-react';
 import ScheduleInputGroup from '@components/ScheduleInputGroup';
 import { useRecipe } from '@context/RecipeContext';
 import YeastTypeToggleGroup from '@ui/YeastTypeToggleGroup';
@@ -116,9 +116,17 @@ export default function ScheduleSettingsDrawer({
               leaveTo="translate-x-full"
             >
               <Dialog.Panel className="relative w-full max-w-md bg-stone-700 shadow-xl p-6 overflow-y-auto">
-                <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
+                <Dialog.Title className="flex items-center text-xl font-semibold mb-4 text-neutral-400">
+                  <X
+                    onClick={onClose}
+                    className="text-stone-400 w-6 h-6  mr-2 border rounded-lg bg-stone-800 border-stone-600 hover:text-stone-500"
+                  />
                   Pizza Settings
                 </Dialog.Title>
+                {/* <X
+                  onClick={onClose}
+                  className="text-stone-400 w-10 h-10 border rounded-lg bg-stone-800 border-stone-600"
+                /> */}
 
                 <div className="space-y-2 mb-6">
                   {pizzaSettingsSections.map((section) =>

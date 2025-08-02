@@ -58,71 +58,71 @@ export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 dark:text-amber-500 text-center">
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-amber-600 text-center">
         Your Pizza Dough Recipe Preview
       </h2>
 
       {/* Recipe Summary */}
-      <div className="bg-white dark:bg-neutral-800 dark:bg-opacity-90 rounded-xl shadow p-6 space-y-4 border border-gray-200 dark:border-stone-600">
+      <div className="dark:bg-stone-700 bg-white bg-opacity-80 rounded-xl shadow p-6 space-y-4 border border-gray-200 dark:border-stone-700">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Pizzas:
             </span>{' '}
             {formData.numPizzas}
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Ball Weight:
             </span>{' '}
             {formData.ballWeight}g
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Biga:
             </span>{' '}
             {formData.bigaPercent}%
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Biga Hydration:
             </span>{' '}
             {formData.bigaHydration}%
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Total Dough:
             </span>{' '}
             {formData.numPizzas * formData.ballWeight}g
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Final Hydration:
             </span>{' '}
             {formData.finalHydration}%
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Salt:
             </span>{' '}
             {formData.saltPercent}%
           </div>
           {formData.maltPercent && (
             <div>
-              <span className="font-medium text-gray-700 dark:text-amber-400">
+              <span className="font-medium text-gray-700 dark:text-stone-300">
                 Malt:
               </span>{' '}
               {formData.maltPercent}%
             </div>
           )}
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Yeast Type:
             </span>{' '}
             {formData.yeastType}
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-amber-400">
+            <span className="font-medium text-gray-700 dark:text-stone-300">
               Baking Time:
             </span>{' '}
             {getBakingTime()}
@@ -132,12 +132,12 @@ export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
 
       {/* Ingredient Table */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-500 mb-2 flex items-center justify-center gap-2">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600  mb-2 flex items-center justify-center gap-2">
           Ingredient Breakdown
         </h3>
         <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-stone-900">
           <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100 dark:bg-stone-700 text-stone-200">
+            <thead className="bg-gray-600 dark:bg-stone-800 dark:text-stone-300 text-stone-200">
               <tr>
                 <th className="px-4 py-2 border-b">Ingredient</th>
                 <th className="px-4 py-2 border-b">Biga</th>
@@ -146,16 +146,21 @@ export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
                 <th className="px-4 py-2 border-b">Baker’s %</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="dark:bg-stone-700 bg-white bg-opacity-80 dark:text-stone-400 font-medium ">
               {previewRows.map((row) => (
-                <tr key={row.label} className="border-t">
-                  <td className="px-4 py-2 font-medium text-gray-700 dark:text-amber-400 dark:bg-stone-900">
+                <tr
+                  key={row.label}
+                  className="border-t text-gray-700 dark:text-amber-600"
+                >
+                  <td className="px-4 py-2 font-medium dark:text-stone-300">
                     {row.label}
                   </td>
-                  <td className="px-4 py-2 dark:bg-stone-900">{row.biga}</td>
-                  <td className="px-4 py-2 dark:bg-stone-900">{row.dough}</td>
-                  <td className="px-4 py-2 dark:bg-stone-900">{row.total}</td>
-                  <td className="px-4 py-2 dark:bg-stone-900">{row.percent}</td>
+                  <td className="px-4 py-2 dark:text-stone-400">{row.biga}</td>
+                  <td className="px-4 py-2 dark:text-stone-400">{row.dough}</td>
+                  <td className="px-4 py-2 dark:text-stone-400">{row.total}</td>
+                  <td className="px-4 py-2 dark:text-stone-400">
+                    {row.percent}
+                  </td>
                 </tr>
               ))}
             </tbody>

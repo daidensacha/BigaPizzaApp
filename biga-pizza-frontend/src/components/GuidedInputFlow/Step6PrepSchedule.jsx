@@ -35,13 +35,13 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
         Preparation Timeline
       </h2>
 
-      <div className="bg-white dark:bg-stone-900 dark:border-stone-800 rounded-xl shadow p-6 border border-gray-200 space-y-4">
+      <div className="bg-white dark:bg-stone-800 dark:border-stone-800 dark:bg-opacity-50 rounded-xl shadow p-6 border border-gray-200 space-y-4">
         {Object.entries(timelineEvents).map(([key, time]) => (
           <div key={key} className="grid grid-cols-2 gap-4 text-sm">
-            <div className="font-medium text-gray-700 dark:text-amber-400">
+            <div className="font-medium text-gray-700 dark:text-yellow-600">
               {labelMap[key] || key}:
             </div>
-            <div>
+            <div className="font-medium text-gray-700 dark:text-stone-300">
               {dayjs.isDayjs(time)
                 ? time.format('ddd, MMM D • h:mm a')
                 : 'Invalid time'}

@@ -19,7 +19,7 @@ export default function Step1BasicInfo() {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Step 1: Basic Info</h2>
       {/* Number of Pizzas */}
-      <div className="p-4 mt-5 rounded-lg bg-orange-50 dark:bg-gray-500 dark:bg-opacity-40 border border-orange-100 dark:border-stone-700">
+      <div className="p-4 mt-5 rounded-lg bg-orange-50 dark:bg-gray-500 bg-opacity-40 dark:bg-opacity-40 border border-orange-100 dark:border-stone-700">
         <GuidedInputField
           name="numPizzas"
           label={`Recipe for ${formData.numPizzas} ${
