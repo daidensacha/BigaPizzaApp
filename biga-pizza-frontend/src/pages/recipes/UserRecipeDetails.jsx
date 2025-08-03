@@ -1,60 +1,138 @@
-import { API_BASE } from '@/config/apiConfig';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getRecipeById } from '@services/recipeService';
-import { useAuth } from '@/context/AuthContext';
+import { getRecipeById } from '@/services/recipeService';
+import { formatGrams } from '@/utils/recipeFormatting';
+import { formatScheduleTime } from '@/utils/dateUtils';
+import { useAuth } from '@context/AuthContext';
+import dayjs from 'dayjs';
 
 export default function UserRecipeDetails() {
-  const { id } = useParams();
   const { user } = useAuth();
+  const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const data = await getRecipeById(id, user?.token);
-        console.log(recipe);
-        setRecipe(data);
-      } catch (err) {
-        console.error('Failed to load recipe', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user && id) fetchRecipe();
+    if (user?.token) {
+      getRecipeById(id, user.token)
+        .then(setRecipe)
+        .catch((err) => {
+          console.error('❌ Error fetching recipe:', err);
+          setError('Failed to load recipe');
+        })
+        .finally(() => setLoading(false)); // ✅ ensure this runs
+    }
   }, [id, user]);
 
-  if (loading) return <div className="p-4">Loading recipe...</div>;
-  if (!recipe) return <div className="p-4">Recipe not found.</div>;
+  console.log('👤 User in UserRecipeDetails:', user);
 
+  if (loading) return <p className="p-4">Loading...</p>;
+  if (error || !recipe)
+    return <p className="p-4 text-red-500">{error || 'Recipe not found.'}</p>;
+
+  const { formData, scheduleData, calculatedData, notes, rating } = recipe;
+  console.log(calculatedData);
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">{recipe.title}</h1>
-      <p className="text-sm text-muted-foreground mb-2">
-        Created: {new Date(recipe.createdAt).toLocaleString()}
+    <div className="space-y-6 p-6 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-amber-600">
+        {formData.bigaPercent}% Biga Pizza Recipe
+      </h2>
+
+      <p className="text-center text-gray-600 dark:text-stone-300">
+        {formData.numPizzas} Pizzas – {formData.ballWeight}g balls –{' '}
+        {formData.finalHydration}% Hydration
       </p>
-      <div className="space-y-2">
-        <p>
-          <strong>Dough Balls:</strong> {recipe.formData.numPizzas}
-        </p>
-        <p>
-          <strong>Ball Weight (g):</strong> {recipe.formData.ballWeight}g
-        </p>
-        <p>
-          <strong>Hydration:</strong> {recipe.formData.doughHydration}%
-        </p>
-        <p>
-          <strong>Biga %:</strong> {recipe.formData.bigaPercent}%
-        </p>
-        <p>
-          <strong>Salt %:</strong> {recipe.formData.saltPercent}%
-        </p>
-        <p>
-          <strong>Malt %:</strong> {recipe.formData.maltPercent ?? '0'}%
-        </p>
-        {/* Add more fields as needed */}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Biga */}
+        <div className="bg-white dark:bg-stone-900 bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
+            Biga Ingredients
+          </h3>
+          <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
+            <li>Flour: {formatGrams(calculatedData.ingredients.biga.flour)}</li>
+            <li>Water: {formatGrams(calculatedData.ingredients.biga.water)}</li>
+            <li>
+              Yeast ({formData.yeastType}):{' '}
+              {formatGrams(calculatedData.ingredients.biga.yeast, 'yeast')}
+            </li>
+            <li className="mt-2 font-medium">
+              Total: {formatGrams(calculatedData.ingredients.biga.total)}
+            </li>
+          </ul>
+        </div>
+
+        {/* Refresh */}
+        <div className="bg-white dark:bg-stone-900 bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
+            Refresh Ingredients
+          </h3>
+          <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
+            <li>
+              Flour: {formatGrams(calculatedData.ingredients.refresh.flour)}
+            </li>
+            <li>
+              Water: {formatGrams(calculatedData.ingredients.refresh.water)}
+            </li>
+            <li>
+              Yeast ({formData.yeastType}):{' '}
+              {formatGrams(calculatedData.ingredients.refresh.yeast, 'yeast')}
+            </li>
+            <li>
+              Salt: {formatGrams(calculatedData.ingredients.refresh.salt)}
+            </li>
+            {formData.maltPercent && (
+              <li>
+                Malt:{' '}
+                {formatGrams(calculatedData.ingredients.refresh.malt, 'malt')}
+              </li>
+            )}
+            <li className="mt-2 font-medium">
+              Total: {formatGrams(calculatedData.ingredients.refresh.total)}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Timeline Steps */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-center text-gray-800 dark:text-amber-600 mb-4">
+          Step-by-Step Instructions
+        </h3>
+        <ol className="space-y-6 text-sm text-gray-800 dark:text-stone-300 text-left text-justify">
+          {calculatedData.timelineSteps.map((step, index) => {
+            console.log(`Rendering step: ${step.label}, time: ${step.time}`);
+            return (
+              <li key={index}>
+                <strong>
+                  {index + 1}. {step.label}
+                </strong>
+                <p className="text-sm text-gray-600 dark:text-stone-400 italic">
+                  {step.time ? formatScheduleTime(dayjs(step.time)) : '• TBD'}
+                </p>
+                <p>{step.description}</p>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* Notes and Rating */}
+      {(notes || rating) && (
+        <div className="mt-6 text-sm text-gray-700 dark:text-stone-300">
+          {rating && <p>⭐ Rating: {rating} / 5</p>}
+          {notes && <p className="italic mt-1">Notes: {notes}</p>}
+        </div>
+      )}
+
+      <div className="mt-8 flex justify-center">
+        <Link
+          to="/dashboard"
+          className="bg-gray-200 dark:bg-stone-700 px-4 py-2 rounded hover:bg-gray-300 dark:hover:bg-stone-600"
+        >
+          ← Back to Dashboard
+        </Link>
       </div>
     </div>
   );

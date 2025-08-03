@@ -9,6 +9,7 @@ import { formatGrams } from '@/utils/recipeFormatting';
 import { useAuth } from '@context/AuthContext';
 import { saveRecipe } from '@services/recipeService';
 import { generateRecipeTitle } from '@/utils/recipeFormatting';
+import { round } from '@utils/utils';
 
 export default function Step7FinalRecipe({ setCurrentStep }) {
   const { user } = useAuth();
@@ -19,21 +20,93 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
     bakingDateTime: formData.bakingDateTime,
   });
 
+  const calculatedData = {
+    ingredients: {
+      biga: {
+        flour: Math.round(results.bigaFlour),
+        water: Math.round(results.bigaWater),
+        yeast: round(results.bigaYeast, 2), // 2 decimal places
+        total: Math.round(
+          results.bigaFlour + results.bigaWater + results.bigaYeast
+        ),
+      },
+      refresh: {
+        flour: Math.round(results.finalFlour),
+        water: Math.round(results.finalWater),
+        yeast: round(results.refreshYeast, 2), // 2 decimal places
+        salt: round(results.totalSalt, 1), // 1 decimal
+        malt: round(results.totalMalt, 2), // 2 decimal places
+        total: Math.round(
+          results.finalFlour +
+            results.finalWater +
+            results.refreshYeast +
+            results.totalSalt +
+            results.totalMalt
+        ),
+      },
+    },
+
+    timelineSteps: [
+      {
+        label: 'Prepare Biga',
+        time: isTimelineConfirmed ? schedule.prepBigaTime : null,
+        description:
+          'Mix biga ingredients and allow to ferment at cool room temperature. Keep it loosely covered.',
+      },
+      {
+        label: 'Autolyze',
+        time: isTimelineConfirmed ? schedule.autolyzeRefreshTime : null,
+        description:
+          'Mix flour and water from refresh phase and let rest. This helps gluten develop before kneading.',
+      },
+      {
+        label: 'Prepare Final Dough',
+        time: isTimelineConfirmed ? schedule.prepDoughTime : null,
+        description:
+          'Combine biga with the refresh dough, yeast, salt, and malt. Knead until smooth and elastic.',
+      },
+      {
+        label: 'Prepare Balls',
+        time: isTimelineConfirmed ? schedule.prepBallsTime : null,
+        description:
+          'Divide dough into balls, place into your lightly oiled proofing container. Proof until double in size or refrigerate.',
+      },
+      {
+        label: 'Preheat Oven',
+        time: isTimelineConfirmed ? schedule.preheatOvenTime : null,
+        description:
+          'Preheat your oven and pizza stone/steel to the maximum temperature available.',
+      },
+      {
+        label: 'Prepare Toppings',
+        time: isTimelineConfirmed ? schedule.prepToppingsTime : null,
+        description:
+          'Prepare and portion your toppings so they’re ready when the dough is.',
+      },
+      {
+        label: 'Bake Pizza',
+        time: formData.bakingDateTime ? schedule.bakePizza : null,
+        description:
+          'Stretch your dough, top your pizzas, and bake until golden and blistered. Enjoy!',
+      },
+    ],
+  };
+
   const handleSaveRecipe = async () => {
-    console.log('🧪 Save button clicked');
-    console.log('👤 User object:', user);
     if (!user?.token) {
       toast.error('You must be logged in to save your recipe.');
       return;
     }
 
     const recipePayload = {
-      title: generateRecipeTitle(formData), // ✅ auto title
+      title: generateRecipeTitle(formData),
       formData,
       scheduleData,
+      calculatedData,
     };
 
     try {
+      console.log('📦 Saving this payload:', recipePayload);
       await saveRecipe(recipePayload, user.token);
       toast.success('Recipe saved successfully!');
     } catch (err) {
@@ -53,151 +126,71 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
         {formData.finalHydration}% Hydration
       </p>
 
-      {/* Ingredient Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
-        {/* Biga Column */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-stone-900 bg-opacity-40 dark:bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
             Biga Ingredients
           </h3>
           <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
-            <li>Flour: {formatGrams(results.bigaFlour)}</li>
-            <li>Water: {formatGrams(results.bigaWater)}</li>
+            <li>Flour: {formatGrams(calculatedData.ingredients.biga.flour)}</li>
+            <li>Water: {formatGrams(calculatedData.ingredients.biga.water)}</li>
             <li>
-              Yeast ({formData.yeastType}): {formatGrams(results.bigaYeast)}
+              Yeast ({formData.yeastType}):{' '}
+              {formatGrams(calculatedData.ingredients.biga.yeast, 'yeast')}
             </li>
             <li className="mt-2 font-medium">
-              Total:{' '}
-              {formatGrams(
-                results.bigaFlour + results.bigaWater + results.bigaYeast
-              )}
+              Total: {formatGrams(calculatedData.ingredients.biga.total)}
             </li>
           </ul>
         </div>
 
-        {/* Refresh Column */}
-        <div className="bg-white dark:bg-stone-900  bg-opacity-40 dark:bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
+        <div className="bg-white dark:bg-stone-900 bg-opacity-40 dark:bg-opacity-40 p-4 rounded-lg shadow border border-gray-200 dark:border-stone-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-amber-600 mb-2">
             Refresh Ingredients
           </h3>
           <ul className="text-sm text-gray-700 dark:text-stone-300 space-y-1">
-            <li>Flour: {formatGrams(results.finalFlour)}</li>
-            <li>Water: {formatGrams(results.finalWater)}</li>
             <li>
-              Yeast ({formData.yeastType}): {formatGrams(results.refreshYeast)}
+              Flour: {formatGrams(calculatedData.ingredients.refresh.flour)}
             </li>
-            <li>Salt: {formatGrams(results.totalSalt)}</li>
+            <li>
+              Water: {formatGrams(calculatedData.ingredients.refresh.water)}
+            </li>
+            <li>
+              Yeast ({formData.yeastType}):{' '}
+              {formatGrams(calculatedData.ingredients.refresh.yeast, 'yeast')}
+            </li>
+            <li>
+              Salt: {formatGrams(calculatedData.ingredients.refresh.salt)}
+            </li>
             {formData.maltPercent && (
-              <li>Malt: {formatGrams(results.totalMalt)}</li>
+              <li>
+                Malt:{' '}
+                {formatGrams(calculatedData.ingredients.refresh.malt, 'malt')}
+              </li>
             )}
             <li className="mt-2 font-medium">
-              Total:{' '}
-              {formatGrams(
-                results.finalFlour +
-                  results.finalWater +
-                  results.refreshYeast +
-                  results.totalSalt +
-                  results.totalMalt
-              )}
+              Total: {formatGrams(calculatedData.ingredients.refresh.total)}
             </li>
           </ul>
         </div>
       </div>
 
-      {/* Step-by-Step Instructions */}
       <div className="mt-8">
         <h3 className="text-lg font-semibold text-center text-gray-800 dark:text-amber-600 mb-4">
           Step-by-Step Instructions
         </h3>
         <ol className="space-y-6 text-sm text-gray-800 dark:text-stone-300 text-left text-justify">
-          <li className="">
-            <strong>1. Prepare Biga</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.prepBigaTime
-                ? formatScheduleTime(schedule.prepBigaTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Mix biga ingredients and allow to ferment at cool room
-              temperature. Keep it loosely covered.
-            </p>
-          </li>
-          <li>
-            <strong>2. Autolyze</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.autolyzeRefreshTime
-                ? formatScheduleTime(schedule.autolyzeRefreshTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Mix flour and water from refresh phase and let rest. This helps
-              gluten develop before kneading.
-            </p>
-          </li>
-          <li>
-            <strong>3. Prepare Final Dough</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.prepDoughTime
-                ? formatScheduleTime(schedule.prepDoughTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Combine biga with the refresh dough, yeast, salt, and malt. Knead
-              until smooth and elastic.
-            </p>
-          </li>
-          <li>
-            <strong>4. Prepare Balls</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.prepBallsTime
-                ? formatScheduleTime(schedule.prepBallsTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Turn your dough out onto a clean surface. DIvide and weigh into
-              your preferred ball weight. Form into balls, place into your
-              lightly oiled proofing container/s. Cover and leave to proof,
-              until they are double in size. At this point you can bake, or
-              refrigerate. Remove from fridge at least an hour before baking so
-              they can coem to room temp.{' '}
-            </p>
-          </li>
-          <li>
-            <strong>5. Preheat Oven</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.preheatOvenTime
-                ? formatScheduleTime(schedule.preheatOvenTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Preheat your oven and pizza stone/steel to the maximum temperature
-              available.
-            </p>
-          </li>
-          <li>
-            <strong>6. Prepare Toppings</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {isTimelineConfirmed && schedule.prepToppingsTime
-                ? formatScheduleTime(schedule.prepToppingsTime)
-                : '• TBD'}
-            </p>
-            <p>
-              Prepare and portion your toppings so they’re ready when the dough
-              is.
-            </p>
-          </li>
-          <li>
-            <strong>7. Bake Pizza</strong>
-            <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-              {formData.bakingDateTime
-                ? formatScheduleTime(schedule.bakePizza)
-                : '• TBD'}
-            </p>
-            <p>
-              Stretch your dough, top your pizzas, and bake until golden and
-              blistered. Enjoy!
-            </p>
-          </li>
+          {calculatedData.timelineSteps.map((step, index) => (
+            <li key={index}>
+              <strong>
+                {index + 1}. {step.label}
+              </strong>
+              <p className="text-sm text-gray-600 dark:text-stone-400 italic">
+                {step.time ? formatScheduleTime(step.time) : '• TBD'}
+              </p>
+              <p>{step.description}</p>
+            </li>
+          ))}
         </ol>
       </div>
 
@@ -217,7 +210,6 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
             Log in to save your recipe
           </p>
         )}
-
         <button className="border border-gray-400 px-4 py-2 rounded-md hover:bg-gray-100 dark:border-stone-700 dark:text-yellow-500 dark:hover:bg-stone-700 transition">
           Edit / Back
         </button>

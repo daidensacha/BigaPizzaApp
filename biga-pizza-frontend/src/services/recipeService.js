@@ -31,3 +31,18 @@ export const getRecipeById = async (id, token) => {
   const res = await axios.get(`${API_BASE}/api/recipes/${id}`, config);
   return res.data;
 };
+
+// services/recipeService.js
+export const updateRecipeNotes = async (id, data, token) => {
+  const res = await axios.patch(`${API_BASE}/api/recipes/${id}/notes`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+export const deleteRecipe = async (id, token) => {
+  const res = await axios.delete(`${API_BASE}/api/recipes/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

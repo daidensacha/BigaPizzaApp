@@ -49,9 +49,20 @@ export function predictYeastPercent({
 }
 
 // ========================
+// Rounding Calculation
+//
+export function round(value, decimals = 2) {
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
+// ========================
 // Dough Calculation
 // ========================
 export function calculateDough(data) {
+  function round(value, decimals = 2) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+  }
+
   const {
     numPizzas,
     ballWeight,
@@ -59,7 +70,7 @@ export function calculateDough(data) {
     finalHydration,
     bigaHydration,
     saltPercent,
-    maltPercent,
+    maltPercent = 0, // default to 0 if undefined
     yeastType,
     bigaTime,
     bigaTemp,
@@ -70,9 +81,9 @@ export function calculateDough(data) {
   } = data;
 
   const totalDough = numPizzas * ballWeight;
+
   const totalFlour =
-    totalDough /
-    (1 + finalHydration / 100 + (saltPercent + (maltPercent || 0)) / 100);
+    totalDough / (1 + finalHydration / 100 + (saltPercent + maltPercent) / 100);
 
   const bigaFlour = totalFlour * (bigaPercent / 100);
   const finalFlour = totalFlour - bigaFlour;
@@ -82,14 +93,14 @@ export function calculateDough(data) {
   const totalWater = bigaWater + finalWater;
 
   const totalSalt = totalFlour * (saltPercent / 100);
-  const totalMalt = totalFlour * ((maltPercent || 0) / 100);
+  const totalMalt = totalFlour * (maltPercent / 100);
 
   const bigaYeastPercent = predictYeastPercent({
     stage: 'biga',
     temp: bigaTemp,
     time: bigaTime,
     yeastType,
-    correction: longCorrection, // use from slider
+    correction: longCorrection,
   });
 
   const refreshYeastPercent = predictYeastPercent({
@@ -98,30 +109,31 @@ export function calculateDough(data) {
     time: doughTime,
     yeastType,
     bigaPercent: bigaPercent / 100,
-    correction: shortCorrection, // use from slider
+    correction: shortCorrection,
   });
 
   const bigaYeast = bigaFlour * (bigaYeastPercent / 100);
   const refreshYeast = finalFlour * (refreshYeastPercent / 100);
-
   const totalYeast = bigaYeast + refreshYeast;
 
+  const totalYeastPercent = (totalYeast / totalFlour) * 100;
+
   return {
-    totalFlour,
-    bigaFlour,
-    finalFlour,
-    bigaWater,
-    finalWater,
-    totalWater,
-    totalSalt,
-    totalMalt,
-    bigaYeast,
-    refreshYeast,
-    bigaYeastPercent,
-    refreshYeastPercent,
-    totalYeast,
-    totalYeastPercent: (totalYeast / totalFlour) * 100,
-    bakersYeastPercent: (totalYeast / totalFlour) * 100,
+    totalFlour: round(totalFlour),
+    bigaFlour: round(bigaFlour),
+    finalFlour: round(finalFlour),
+    bigaWater: round(bigaWater),
+    finalWater: round(finalWater),
+    totalWater: round(totalWater),
+    totalSalt: round(totalSalt),
+    totalMalt: round(totalMalt),
+    bigaYeast: round(bigaYeast),
+    refreshYeast: round(refreshYeast),
+    bigaYeastPercent: round(bigaYeastPercent),
+    refreshYeastPercent: round(refreshYeastPercent),
+    totalYeast: round(totalYeast),
+    totalYeastPercent: round(totalYeastPercent),
+    bakersYeastPercent: round(totalYeastPercent), // same as above
   };
 }
 
