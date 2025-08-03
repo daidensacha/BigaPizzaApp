@@ -3,6 +3,8 @@ import {
   createRecipe,
   getRecipeById,
   getUserRecipes,
+  updateRecipeNotes,
+  deleteRecipe,
   // Add more routes like update/delete later
 } from '../controllers/recipeController.js';
 
@@ -18,5 +20,11 @@ router.get('/user', protect, getUserRecipes);
 
 // Get single recipe by ID (public or protected depending on your logic)
 router.get('/:id', protect, getRecipeById);
+
+// PATCH /api/recipes/:id/notes
+router.patch('/:id/notes', protect, updateRecipeNotes);
+
+// DELETE Recipe by id
+router.delete('/:id', protect, deleteRecipe);
 
 export default router;
