@@ -124,6 +124,41 @@ const updateRecipeNotes = asyncHandler(async (req, res) => {
   res.status(200).json(updatedRecipe);
 });
 
+const uploadRecipeImage = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+    recipe.image = `/uploads/${req.file.filename}`;
+    await recipe.save();
+
+    res.json({ message: 'Image uploaded', image: recipe.image });
+  } catch (err) {
+    console.error('Image upload error:', err);
+    res.status(500).json({ message: 'Failed to upload image' });
+  }
+};
+
+// In recipeController.js
+const updateRecipeImage = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+    const { image } = req.body;
+    if (!image)
+      return res.status(400).json({ message: 'Image URL is required' });
+
+    recipe.image = image;
+    await recipe.save();
+
+    res.json({ message: 'Image updated', image: recipe.image });
+  } catch (err) {
+    console.error('🔥 Failed to update recipe image:', err);
+    res.status(500).json({ message: 'Failed to update image' });
+  }
+};
+
 // Delete a recipe
 // DELETE /api/recipes/:id
 const deleteRecipe = asyncHandler(async (req, res) => {
@@ -149,5 +184,7 @@ export {
   getRecipeById,
   updateRecipe,
   updateRecipeNotes,
+  uploadRecipeImage,
+  updateRecipeImage,
   deleteRecipe,
 };

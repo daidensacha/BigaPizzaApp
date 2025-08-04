@@ -7,15 +7,79 @@ import { Star } from 'lucide-react';
 import ConfirmDeleteDialog from '@ui/ConfirmDeleteDialog';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import StarRatingInput from './StarRatingInput';
+import { updateRecipeImage } from '@/services/recipeService';
+
+const handleImageUpload = async (file) => {
+  if (!file) return;
+  try {
+    await uploadRecipeImage(recipe._id, file, user.token);
+    toast.success('Image uploaded!');
+    // Ideally: update image state or trigger a re-fetch
+  } catch (err) {
+    console.error(err);
+    toast.error('Failed to upload image.');
+  }
+};
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
   const [rating, setRating] = useState(recipe.rating || null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
+  const [localImage, setLocalImage] = useState(recipe.image);
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const cloudName = import.meta.env.VITE_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+
+  const handleUpload = () => {
+    if (!window.cloudinary) return;
+
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName,
+        uploadPreset,
+        folder: 'recipe/user_uploads',
+        sources: ['local', 'url', 'camera'],
+        cropping: false,
+        multiple: false,
+        maxFiles: 1,
+      },
+      async (error, result) => {
+        if (!error && result.event === 'success') {
+          const uploadedUrl = result.info.secure_url;
+          console.log('📸 Uploaded image URL:', uploadedUrl);
+
+          try {
+            // ✅ Save the image URL to the recipe
+            // await updateRecipeNotes(
+            //   recipe._id,
+            //   {
+            //     image: uploadedUrl,
+            //   },
+            //   user.token
+            // );
+            await updateRecipeImage(
+              recipe._id,
+              result.info.secure_url,
+              user.token
+            );
+            setLocalImage(result.info.secure_url);
+
+            toast.success('Image saved!');
+            // Optionally refresh the recipe or update local state
+          } catch (err) {
+            console.error('❌ Failed to save image to DB:', err);
+            toast.error('Failed to save image.');
+          }
+        }
+      }
+    );
+
+    widget.open();
+  };
 
   const handleConfirmDelete = async () => {
     await onDelete(recipe._id);
@@ -85,8 +149,9 @@ export default function RecipeCard({ recipe, onDelete }) {
         </p>
 
         {/* Star Rating */}
+        <StarRatingInput value={rating} onChange={handleStarClick} />
         <div className="flex items-center gap-1 mt-2">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {/* {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
               size={18}
@@ -99,7 +164,7 @@ export default function RecipeCard({ recipe, onDelete }) {
               `}
               onClick={() => handleStarClick(star)}
             />
-          ))}
+          ))} */}
         </div>
 
         {/* Notes */}
@@ -149,9 +214,28 @@ export default function RecipeCard({ recipe, onDelete }) {
         </Link>
       </div>
 
-      {/* Right Column: Image Placeholder */}
-      <div className="w-full md:w-32 h-24 bg-stone-200 dark:bg-stone-700 rounded-md flex items-center justify-center text-xs text-gray-500 dark:text-stone-400">
-        <span>Pizza Image</span>
+      {/* Right Column: Image Upload WIdget goes here  */}
+      <div className="w-full md:w-32 h-48 relative group rounded overflow-hidden bg-gray-900">
+        {/* Display Image or Placeholder */}
+        <img
+          src={localImage || '/images/placeholder.jpg'}
+          alt="Biga"
+          className="w-full h-full object-cover"
+        />
+
+        {/* Transparent Upload Button (covers entire image) */}
+        <button
+          type="button"
+          onClick={handleUpload}
+          className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+          title="Upload image"
+          aria-label="Upload image"
+        />
+
+        {/* Overlay Text on Hover */}
+        {/* <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs opacity-0 group-hover:opacity-100 transition z-20">
+          Change Image
+        </div> */}
       </div>
 
       {/* Headless UI Confirm Dialog */}

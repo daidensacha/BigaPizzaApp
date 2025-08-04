@@ -102,7 +102,9 @@ export default function EditRecipe() {
 
         {/* Toggle switch */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-stone-300">Include Prep Schedule</span>
+          <span className="text-sm text-stone-600 dark:text-stone-300">
+            Include Prep Schedule
+          </span>
           <button
             onClick={() => setIncludeTimeline(!includeTimeline)}
             className={`relative inline-flex items-center h-6 w-11 rounded-full transition-colors ${

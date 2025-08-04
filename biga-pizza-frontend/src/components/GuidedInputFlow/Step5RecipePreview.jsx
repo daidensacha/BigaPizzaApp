@@ -73,63 +73,83 @@ export default function Step5RecipePreview({
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Pizzas:
             </span>{' '}
-            {formData.numPizzas}
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.numPizzas}
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Ball Weight:
             </span>{' '}
-            {formData.ballWeight}g
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.ballWeight}g
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Biga:
             </span>{' '}
-            {formData.bigaPercent}%
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.bigaPercent}%
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Biga Hydration:
             </span>{' '}
-            {formData.bigaHydration}%
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.bigaHydration}%
+            </span>
           </div>
           <div>
-            <span className="font-medium text-gray-700 dark:text-stone-300">
+            <span className="font-medium text-stone-600 dark:text-stone-300">
               Total Dough:
             </span>{' '}
-            {formData.numPizzas * formData.ballWeight}g
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.numPizzas * formData.ballWeight}g
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Final Hydration:
             </span>{' '}
-            {formData.finalHydration}%
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.finalHydration}%
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Salt:
             </span>{' '}
-            {formData.saltPercent}%
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.saltPercent}%
+            </span>
           </div>
           {formData.maltPercent && (
             <div>
               <span className="font-medium text-gray-700 dark:text-stone-300">
                 Malt:
               </span>{' '}
-              {formData.maltPercent}%
+              <span className="font-medium text-gray-700 dark:text-stone-300">
+                {formData.maltPercent}%
+              </span>
             </div>
           )}
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Yeast Type:
             </span>{' '}
-            {formData.yeastType}
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {formData.yeastType}
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700 dark:text-stone-300">
               Baking Time:
             </span>{' '}
-            {getBakingTime()}
+            <span className="font-medium text-gray-700 dark:text-stone-300">
+              {getBakingTime()}
+            </span>
           </div>
         </div>
       </div>
@@ -174,7 +194,7 @@ export default function Step5RecipePreview({
         {/* Toggle Advanced Options */}
         <div className="text-right text-sm">
           <button
-            className="text-cyan-300 dark:text-cyan-500 underline hover:text-blue-800 dark:hover:text-cyan-600"
+            className="text-cyan-500 dark:text-cyan-500 underline hover:text-blue-800 dark:hover:text-cyan-600"
             onClick={() => setShowAdvanced(!showAdvanced)}
           >
             {showAdvanced ? 'Hide Advanced Options' : 'Show Advanced Options'}

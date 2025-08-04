@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserRecipes, deleteRecipe } from '@services/recipeService';
 import { useAuth } from '@context/AuthContext';
 import { toast } from 'react-hot-toast';
-import RecipeCard from '@recipes/RecipeCard';
+import RecipeCard from '@components/recipes/RecipeCard';
 
 export default function UserRecipeList() {
   const { user } = useAuth();

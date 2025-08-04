@@ -1,10 +1,15 @@
 import express from 'express';
+import multer from 'multer';
+const upload = multer({ dest: 'uploads/' }); // Temp local storage
+
 import {
   createRecipe,
   getRecipeById,
   getUserRecipes,
   updateRecipe,
   updateRecipeNotes,
+  uploadRecipeImage,
+  updateRecipeImage,
   deleteRecipe,
   // Add more routes like update/delete later
 } from '../controllers/recipeController.js';
@@ -27,6 +32,16 @@ router.patch('/:id/notes', protect, updateRecipeNotes);
 
 // PUT /api/recipes/:id (updates recipe)
 router.put('/:id', protect, updateRecipe);
+
+router.put('/:id/image', protect, updateRecipeImage);
+
+// Upload image to recipe list view
+router.post(
+  '/:id/upload-image',
+  protect,
+  upload.single('image'),
+  uploadRecipeImage
+);
 
 // DELETE Recipe by id
 router.delete('/:id', protect, deleteRecipe);

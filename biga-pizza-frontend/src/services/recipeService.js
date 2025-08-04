@@ -32,6 +32,7 @@ export const getRecipeById = async (id) => {
   return res.data;
 };
 
+// This update recipe worked
 export const updateRecipe = async (id, updatedData) => {
   const response = await axios.put(
     `${API_BASE}/api/recipes/${id}`,
@@ -41,6 +42,39 @@ export const updateRecipe = async (id, updatedData) => {
     }
   );
   return response.data;
+};
+
+// services/recipeService.js
+// export const updateRecipeImage = async (id, imageUrl, token) => {
+export const updateRecipeImage = async (id, imageUrl, token) => {
+  const response = await fetch(`${API_BASE}/api/recipes/${id}/image`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ image: imageUrl }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update image');
+  }
+
+  return response.json();
+};
+
+export const uploadRecipeImage = async (id, imageFile, token) => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  const res = await fetch(`${API_URL}/recipes/${id}/upload-image`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!res.ok) throw new Error('Image upload failed');
+  return res.json();
 };
 
 // services/recipeService.js
