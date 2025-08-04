@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { updateRecipeNotes } from '@/services/recipeService';
@@ -10,17 +10,18 @@ import { Fragment } from 'react';
 import StarRatingInput from './StarRatingInput';
 import { updateRecipeImage } from '@/services/recipeService';
 
-const handleImageUpload = async (file) => {
-  if (!file) return;
-  try {
-    await uploadRecipeImage(recipe._id, file, user.token);
-    toast.success('Image uploaded!');
-    // Ideally: update image state or trigger a re-fetch
-  } catch (err) {
-    console.error(err);
-    toast.error('Failed to upload image.');
-  }
-};
+// const handleImageUpload = async (url) => {
+//   if (fileInputRef.current) {
+//     fileInputRef.current.click();
+//   }
+//   try {
+//     await updateRecipeImage(recipe._id, url, user.token);
+//     toast.success('Image uploaded!');
+//   } catch (err) {
+//     console.error('❌ Failed to save image to DB:', err);
+//     toast.error('Failed to save image.');
+//   }
+// };
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
@@ -33,53 +34,114 @@ export default function RecipeCard({ recipe, onDelete }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const cloudName = import.meta.env.VITE_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+  const fileInputRef = useRef(null);
 
-  const handleUpload = () => {
-    if (!window.cloudinary) return;
-
-    const widget = window.cloudinary.createUploadWidget(
-      {
-        cloudName,
-        uploadPreset,
-        folder: 'recipe/user_uploads',
-        sources: ['local', 'url', 'camera'],
-        cropping: false,
-        multiple: false,
-        maxFiles: 1,
-      },
-      async (error, result) => {
-        if (!error && result.event === 'success') {
-          const uploadedUrl = result.info.secure_url;
-          console.log('📸 Uploaded image URL:', uploadedUrl);
-
-          try {
-            // ✅ Save the image URL to the recipe
-            // await updateRecipeNotes(
-            //   recipe._id,
-            //   {
-            //     image: uploadedUrl,
-            //   },
-            //   user.token
-            // );
-            await updateRecipeImage(
-              recipe._id,
-              result.info.secure_url,
-              user.token
-            );
-            setLocalImage(result.info.secure_url);
-
-            toast.success('Image saved!');
-            // Optionally refresh the recipe or update local state
-          } catch (err) {
-            console.error('❌ Failed to save image to DB:', err);
-            toast.error('Failed to save image.');
-          }
-        }
-      }
-    );
-
-    widget.open();
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    console.log('📂 File selected:', file);
+
+    try {
+      const imageUrl = await uploadToCloudinary(file);
+      await updateRecipeImage(recipe._id, imageUrl, user.token);
+      setLocalImage(imageUrl);
+      toast.success('Image uploaded!');
+    } catch (err) {
+      console.error('❌ Failed to handle upload:', err);
+      toast.error('Upload failed.');
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const { secure_url } = await uploadToCloudinary(formData); // If you use direct upload
+      await updateRecipeImage(recipe._id, secure_url, user.token);
+      toast.success('Image uploaded!');
+      // Optionally update recipe state to reflect new image
+    } catch (err) {
+      console.error('❌ Failed to upload image:', err);
+      toast.error('Failed to save image.');
+    }
+  };
+
+  const uploadToCloudinary = async (file) => {
+    const cloudName = import.meta.env.VITE_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+
+    console.log('🧪 Cloudinary config:', { cloudName, uploadPreset });
+    console.log('⬆️ Uploading to Cloudinary:', file);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      console.log('✅ Cloudinary response:', data);
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Upload failed');
+      }
+
+      return data.secure_url;
+    } catch (err) {
+      console.error('❌ Upload error:', err);
+      throw err;
+    }
+  };
+
+  // const handleUpload = () => {
+  //   if (!window.cloudinary) return;
+
+  //   const widget = window.cloudinary.createUploadWidget(
+  //     {
+  //       cloudName,
+  //       uploadPreset,
+  //       folder: 'recipe/user_uploads',
+  //       sources: ['local', 'url', 'camera'],
+  //       cropping: false,
+  //       multiple: false,
+  //       maxFiles: 1,
+  //     },
+  //     async (error, result) => {
+  //       if (!error && result.event === 'success') {
+  //         const uploadedUrl = result.info.secure_url;
+  //         console.log('📸 Uploaded image URL:', uploadedUrl);
+
+  //         try {
+  //           await handleImageUpload(result.info.secure_url);
+  //           setLocalImage(result.info.secure_url);
+
+  //           toast.success('Image saved!');
+  //           // Optionally refresh the recipe or update local state
+  //         } catch (err) {
+  //           console.error('❌ Failed to save image to DB:', err);
+  //           toast.error('Failed to save image.');
+  //         }
+  //       }
+  //     }
+  //   );
+
+  //   widget.open();
+  // };
 
   const handleConfirmDelete = async () => {
     await onDelete(recipe._id);
@@ -215,28 +277,43 @@ export default function RecipeCard({ recipe, onDelete }) {
       </div>
 
       {/* Right Column: Image Upload WIdget goes here  */}
-      <div className="w-full md:w-32 h-48 relative group rounded overflow-hidden bg-gray-900">
-        {/* Display Image or Placeholder */}
+      <div
+        onClick={handleImageClick}
+        className="w-full md:w-32 h-48 relative group bg-gray-900 overflow-hidden rounded-lg"
+      >
         <img
-          src={localImage || '/images/placeholder.jpg'}
-          alt="Biga"
           className="w-full h-full object-cover"
+          src={localImage || '/images/placeholder.jpg'}
         />
 
-        {/* Transparent Upload Button (covers entire image) */}
-        <button
-          type="button"
-          onClick={handleUpload}
-          className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
-          title="Upload image"
-          aria-label="Upload image"
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
         />
-
-        {/* Overlay Text on Hover */}
-        {/* <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs opacity-0 group-hover:opacity-100 transition z-20">
-          Change Image
-        </div> */}
       </div>
+      {/* <div className="w-full md:w-32 h-48 relative group bg-gray-900">
+        <img
+          src={recipe.image || '/images/placeholder.jpg'}
+          alt="Biga"
+          className="w-full h-full object-cover rounded"
+          onClick={handleImageUpload}
+        />
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          className="hidden"
+        />
+
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-xs opacity-0 group-hover:opacity-100 transition rounded-md cursor-pointer">
+          Change Image
+        </div>
+      </div> */}
 
       {/* Headless UI Confirm Dialog */}
       <ConfirmDeleteDialog
