@@ -1,147 +1,66 @@
-import { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { updateRecipeNotes } from '@/services/recipeService';
 import { toast } from 'react-hot-toast';
-import { Star } from 'lucide-react';
+// import { Star } from 'lucide-react';
 import ConfirmDeleteDialog from '@ui/ConfirmDeleteDialog';
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+// import { Dialog, Transition } from '@headlessui/react';
+// import { Fragment } from 'react';
 import StarRatingInput from './StarRatingInput';
 import { updateRecipeImage } from '@/services/recipeService';
-
-// const handleImageUpload = async (url) => {
-//   if (fileInputRef.current) {
-//     fileInputRef.current.click();
-//   }
-//   try {
-//     await updateRecipeImage(recipe._id, url, user.token);
-//     toast.success('Image uploaded!');
-//   } catch (err) {
-//     console.error('❌ Failed to save image to DB:', err);
-//     toast.error('Failed to save image.');
-//   }
-// };
+import { useDropzone } from 'react-dropzone';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
   const [rating, setRating] = useState(recipe.rating || null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
-  const [localImage, setLocalImage] = useState(recipe.image);
+  // const [localImage, setLocalImage] = useState(recipe.image);
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const cloudName = import.meta.env.VITE_CLOUD_NAME;
-  const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
-  const fileInputRef = useRef(null);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const cloudName = import.meta.env.VITE_CLOUD_NAME;
+  // const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+  // const fileInputRef = useRef(null);
 
-  const handleImageClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    console.log('📂 File selected:', file);
-
+  const handleImageUpload = async (url) => {
     try {
-      const imageUrl = await uploadToCloudinary(file);
-      await updateRecipeImage(recipe._id, imageUrl, user.token);
-      setLocalImage(imageUrl);
+      console.log('📤 Saving image to DB:', recipe._id, url);
+
+      await updateRecipeImage(recipe._id, url, user.token);
+
       toast.success('Image uploaded!');
     } catch (err) {
-      console.error('❌ Failed to handle upload:', err);
-      toast.error('Upload failed.');
-    }
-  };
-
-  const handleImageUpload = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const { secure_url } = await uploadToCloudinary(formData); // If you use direct upload
-      await updateRecipeImage(recipe._id, secure_url, user.token);
-      toast.success('Image uploaded!');
-      // Optionally update recipe state to reflect new image
-    } catch (err) {
-      console.error('❌ Failed to upload image:', err);
+      console.error('❌ Failed to save image to DB:', err);
       toast.error('Failed to save image.');
     }
   };
 
-  const uploadToCloudinary = async (file) => {
-    const cloudName = import.meta.env.VITE_CLOUD_NAME;
-    const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+  // Inside your component:
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
 
-    console.log('🧪 Cloudinary config:', { cloudName, uploadPreset });
-    console.log('⬆️ Uploading to Cloudinary:', file);
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', uploadPreset);
-
-    try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      console.log('✅ Cloudinary response:', data);
-
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'Upload failed');
+      try {
+        await handleImageUpload(file); // Use your existing Cloudinary + DB update logic
+        toast.success('Image uploaded!');
+      } catch (err) {
+        console.error('❌ Upload failed:', err);
+        toast.error('Upload failed.');
       }
+    },
+    [handleImageUpload]
+  );
 
-      return data.secure_url;
-    } catch (err) {
-      console.error('❌ Upload error:', err);
-      throw err;
-    }
-  };
-
-  // const handleUpload = () => {
-  //   if (!window.cloudinary) return;
-
-  //   const widget = window.cloudinary.createUploadWidget(
-  //     {
-  //       cloudName,
-  //       uploadPreset,
-  //       folder: 'recipe/user_uploads',
-  //       sources: ['local', 'url', 'camera'],
-  //       cropping: false,
-  //       multiple: false,
-  //       maxFiles: 1,
-  //     },
-  //     async (error, result) => {
-  //       if (!error && result.event === 'success') {
-  //         const uploadedUrl = result.info.secure_url;
-  //         console.log('📸 Uploaded image URL:', uploadedUrl);
-
-  //         try {
-  //           await handleImageUpload(result.info.secure_url);
-  //           setLocalImage(result.info.secure_url);
-
-  //           toast.success('Image saved!');
-  //           // Optionally refresh the recipe or update local state
-  //         } catch (err) {
-  //           console.error('❌ Failed to save image to DB:', err);
-  //           toast.error('Failed to save image.');
-  //         }
-  //       }
-  //     }
-  //   );
-
-  //   widget.open();
-  // };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: { 'image/*': [] },
+  });
 
   const handleConfirmDelete = async () => {
     await onDelete(recipe._id);
@@ -187,16 +106,6 @@ export default function RecipeCard({ recipe, onDelete }) {
     }
   };
 
-  const handleDelete = () => {
-    if (
-      confirm(
-        'Are you sure you want to delete this recipe? This cannot be undone.'
-      )
-    ) {
-      onDelete(recipe._id);
-    }
-  };
-
   const formattedDate = new Date(recipe.createdAt).toLocaleDateString();
 
   return (
@@ -212,22 +121,7 @@ export default function RecipeCard({ recipe, onDelete }) {
 
         {/* Star Rating */}
         <StarRatingInput value={rating} onChange={handleStarClick} />
-        <div className="flex items-center gap-1 mt-2">
-          {/* {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              size={18}
-              className={`cursor-pointer transition
-                ${
-                  star <= rating
-                    ? 'fill-yellow-400 stroke-yellow-500'
-                    : 'stroke-gray-400 dark:stroke-stone-500'
-                }
-              `}
-              onClick={() => handleStarClick(star)}
-            />
-          ))} */}
-        </div>
+        <div className="flex items-center gap-1 mt-2"></div>
 
         {/* Notes */}
         <textarea
@@ -277,43 +171,44 @@ export default function RecipeCard({ recipe, onDelete }) {
       </div>
 
       {/* Right Column: Image Upload WIdget goes here  */}
-      <div
-        onClick={handleImageClick}
-        className="w-full md:w-32 h-48 relative group bg-gray-900 overflow-hidden rounded-lg"
-      >
-        <img
-          className="w-full h-full object-cover"
-          src={localImage || '/images/placeholder.jpg'}
-        />
+      <div className="w-full md:w-32 h-48 relative group bg-gray-900 overflow-hidden rounded-lg">
+        <Tooltip.Provider delayDuration={300}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div
+                {...getRootProps()}
+                className="w-full md:w-32 h-48 relative group rounded overflow-hidden border border-gray-200 hover:shadow-lg transition"
+              >
+                <input {...getInputProps()} />
 
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
+                <img
+                  src={recipe.image || '/images/placeholder.jpg'}
+                  alt="Biga"
+                  className="w-full h-full object-cover transition duration-200 ease-in-out"
+                />
+
+                {/* Overlay text */}
+                <div className="absolute inset-0 flex items-center justify-center  text-center bg-black bg-opacity-40 text-white text-xs opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                  {isDragActive
+                    ? 'Drop to upload…'
+                    : 'Click, or drag image here to change image'}
+                </div>
+              </div>
+            </Tooltip.Trigger>
+
+            <Tooltip.Portal>
+              <Tooltip.Content
+                side="top"
+                align="center"
+                className="bg-black text-white px-2 py-1 text-xs rounded shadow-md z-50"
+              >
+                Upload a custom image for this recipe
+                <Tooltip.Arrow className="fill-black" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       </div>
-      {/* <div className="w-full md:w-32 h-48 relative group bg-gray-900">
-        <img
-          src={recipe.image || '/images/placeholder.jpg'}
-          alt="Biga"
-          className="w-full h-full object-cover rounded"
-          onClick={handleImageUpload}
-        />
-
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*"
-          className="hidden"
-        />
-
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-xs opacity-0 group-hover:opacity-100 transition rounded-md cursor-pointer">
-          Change Image
-        </div>
-      </div> */}
 
       {/* Headless UI Confirm Dialog */}
       <ConfirmDeleteDialog
