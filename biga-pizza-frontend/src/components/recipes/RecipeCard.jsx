@@ -12,13 +12,14 @@ import StarRatingInput from './StarRatingInput';
 import { updateRecipeImage } from '@/services/recipeService';
 import { useDropzone } from 'react-dropzone';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { uploadToCloudinary } from '@/utils/uploadToCloudinary';
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
   const [rating, setRating] = useState(recipe.rating || null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
-  // const [localImage, setLocalImage] = useState(recipe.image);
+  const [localImage, setLocalImage] = useState(recipe.image);
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
   // const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -31,7 +32,7 @@ export default function RecipeCard({ recipe, onDelete }) {
       console.log('📤 Saving image to DB:', recipe._id, url);
 
       await updateRecipeImage(recipe._id, url, user.token);
-
+      setLocalImage(url);
       toast.success('Image uploaded!');
     } catch (err) {
       console.error('❌ Failed to save image to DB:', err);
@@ -46,8 +47,8 @@ export default function RecipeCard({ recipe, onDelete }) {
       if (!file) return;
 
       try {
-        await handleImageUpload(file); // Use your existing Cloudinary + DB update logic
-        toast.success('Image uploaded!');
+        const imageUrl = await uploadToCloudinary(file); // ⬅️ Upload first
+        await handleImageUpload(imageUrl); // ⬅️ Then save URL to DB
       } catch (err) {
         console.error('❌ Upload failed:', err);
         toast.error('Upload failed.');
@@ -182,8 +183,8 @@ export default function RecipeCard({ recipe, onDelete }) {
                 <input {...getInputProps()} />
 
                 <img
-                  src={recipe.image || '/images/placeholder.jpg'}
-                  alt="Biga"
+                  src={localImage || recipe.image || '/images/placeholder.jpg'}
+                  alt="Recipe"
                   className="w-full h-full object-cover transition duration-200 ease-in-out"
                 />
 
