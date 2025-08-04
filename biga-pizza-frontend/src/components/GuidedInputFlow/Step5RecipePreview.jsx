@@ -8,7 +8,11 @@ import {
   generatePreviewRows,
 } from '@/utils/previewHelpers';
 
-export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
+export default function Step5RecipePreview({
+  onCreateSchedule,
+  onSkip,
+  isEditing = false,
+}) {
   const { formData, setFormData } = useRecipe();
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
@@ -245,29 +249,31 @@ export default function Step5RecipePreview({ onCreateSchedule, onSkip }) {
       </div>
 
       {/* Schedule Prompt */}
-      <div className="text-center mt-6">
-        <p className="text-gray-700 dark:text-amber-100">
-          Would you like to enter preparation steps and generate a full dough
-          timeline?
-        </p>
-        <div className="mt-4 flex justify-center gap-4">
-          <button
-            className="bg-green-600 dark:bg-green-900 text-green-200 dark:text-yellow-200 px-4 py-2 rounded-md shadow hover:bg-green-700 dark:hover:bg-green-800 transition"
-            onClick={onCreateSchedule}
-          >
-            Yes, add prep schedule
-          </button>
-          <button
-            className="border border-gray-300 px-4 py-2 rounded-md text-gray-700 dark:text-yellow-600 dark:bg-red-950 hover:bg-gray-100 dark:hover:bg-red-900 dark:border-none transition"
-            onClick={() => {
-              toast('Heres your recipe - timeline skipped.');
-              onSkip();
-            }}
-          >
-            No thanks
-          </button>
+      {!isEditing && (
+        <div className="text-center mt-6">
+          <p className="text-gray-700 dark:text-amber-100">
+            Would you like to enter preparation steps and generate a full dough
+            timeline?
+          </p>
+          <div className="mt-4 flex justify-center gap-4">
+            <button
+              className="bg-green-600 dark:bg-green-900 text-green-200 dark:text-yellow-200 px-4 py-2 rounded-md shadow hover:bg-green-700 dark:hover:bg-green-800 transition"
+              onClick={onCreateSchedule}
+            >
+              Yes, add prep schedule
+            </button>
+            <button
+              className="border border-gray-300 px-4 py-2 rounded-md text-gray-700 dark:text-yellow-600 dark:bg-red-950 hover:bg-gray-100 dark:hover:bg-red-900 dark:border-none transition"
+              onClick={() => {
+                toast('Heres your recipe - timeline skipped.');
+                onSkip();
+              }}
+            >
+              No thanks
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

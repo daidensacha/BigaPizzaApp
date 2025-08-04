@@ -6,11 +6,17 @@ import dayjs from '@/utils/dayjsConfig';
 import labelMap from '@/utils/scheduleLabels';
 import { useRecipe } from '@/context/RecipeContext';
 
-export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
+export default function Step6PrepSchedule({
+  onCreateSchedule,
+  onSkip,
+  isEditing = false,
+}) {
   const {
     scheduleData,
     setScheduleData,
     resetScheduleData,
+    onChange,
+    onOpenDrawer,
     formData,
     setTimelineConfirmed,
   } = useRecipe();
@@ -31,7 +37,7 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-center">
+      <h2 className="text-2xl font-semibold text-center text-stone-600 dark:text-amber-600">
         Preparation Timeline
       </h2>
 
@@ -55,42 +61,64 @@ export default function Step6PrepSchedule({ onCreateSchedule, onSkip }) {
         )}
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <p className="text-gray-700 dark:text-stone-300 mr-2">
-          Need to adjust prep durations?
-        </p>
+      {/* <div className="flex items-center justify-between border-t border-stone-600 pt-4 mt-6">
+        <span className="text-sm text-stone-300">Include Prep Schedule</span>
         <button
-          onClick={() => setDrawerOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
+          onClick={() => setIncludeTimeline(!includeTimeline)}
+          className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
+            includeTimeline ? 'bg-green-500' : 'bg-stone-600'
+          }`}
         >
-          Open Settings
+          <span
+            className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+              includeTimeline ? 'translate-x-6' : 'translate-x-1'
+            }`}
+          />
         </button>
-      </div>
+      </div> */}
 
-      <div className="mt-6 flex space-x-4 justify-center">
-        {/* Confirm Timeline button */}
-        <button
-          onClick={() => {
-            setTimelineConfirmed(true);
-            onCreateSchedule();
-          }}
-          className="bg-green-600 dark:bg-green-900 text-white dark:text-yellow-200 dark:hover:bg-green-800 px-4 py-2 rounded-md hover:bg-green-700"
-        >
-          Confirm Timeline
-        </button>
-        {/* Skip Schedule button */}
-        <button
-          onClick={() => {
-            setTimelineConfirmed(false);
-            toast('Heres your recipe - schedule skipped.');
-            onSkip();
-          }}
-          className="border border-gray-300 px-4 py-2 dark:text-yellow-600 dark:bg-red-950 dark:hover:bg-red-900 dark:border-none rounded-md hover:bg-gray-100"
-        >
-          Skip Schedule
-        </button>
-      </div>
+      {!isEditing && (
+        <div className="flex justify-between items-center mt-4">
+          <p className="text-gray-700 dark:text-stone-300 mr-2">
+            Need to adjust prep durations?
+          </p>
 
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={onOpenDrawer}
+              className="text-sm text-yellow-400 underline hover:text-yellow-200"
+            >
+              Open Schedule Settings
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!isEditing && (
+        <div className="mt-6 flex space-x-4 justify-center">
+          {/* Confirm Timeline button */}
+          <button
+            onClick={() => {
+              setTimelineConfirmed(true);
+              onCreateSchedule();
+            }}
+            className="bg-green-600 dark:bg-green-900 text-white dark:text-yellow-200 dark:hover:bg-green-800 px-4 py-2 rounded-md hover:bg-green-700"
+          >
+            Confirm Timeline
+          </button>
+          {/* Skip Schedule button */}
+          <button
+            onClick={() => {
+              setTimelineConfirmed(false);
+              toast('Heres your recipe - schedule skipped.');
+              onSkip();
+            }}
+            className="border border-gray-300 px-4 py-2 dark:text-yellow-600 dark:bg-red-950 dark:hover:bg-red-900 dark:border-none rounded-md hover:bg-gray-100"
+          >
+            Skip Schedule
+          </button>
+        </div>
+      )}
       <ScheduleSettingsDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}

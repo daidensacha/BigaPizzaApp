@@ -88,7 +88,9 @@ export default function CreateRecipe() {
           />
         );
       case 7:
-        return <Step7FinalRecipe setCurrentStep={setCurrentStep} />;
+        return (
+          <Step7FinalRecipe setCurrentStep={setCurrentStep} onBack={prevStep} />
+        );
       default:
         return null;
     }

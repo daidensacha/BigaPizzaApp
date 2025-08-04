@@ -16,6 +16,7 @@ import ProtectedRoute from '@components/routes/ProtectedRoute';
 import AccountPage from '@accounts/AccountPage';
 import UserRecipeDetails from '@recipes/UserRecipeDetails'; // ??? UserRecipeDetails
 import UserRecipeList from '@recipes/UserRecipeList';
+import EditRecipe from '@recipes/EditRecipe';
 
 function App() {
   const { isModalOpen, closeAuthModal } = useAuthModal();
@@ -26,6 +27,7 @@ function App() {
     scheduleData,
     setScheduleData,
     resetScheduleData,
+    resetFormData,
   } = useRecipe();
 
   const handleScheduleChange = (e) => {
@@ -52,6 +54,14 @@ function App() {
               <Route path="/menu" element={<PizzaMenu />} />
               <Route path="/my-recipes" element={<UserRecipeList />} />
               <Route path="/recipes/:id" element={<UserRecipeDetails />} />
+              <Route
+                path="/account/recipes/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <EditRecipe />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/account/recipes/:id"
                 element={
@@ -85,7 +95,10 @@ function App() {
           onClose={() => setSettingsDrawerOpen(false)}
           data={scheduleData}
           onChange={handleScheduleChange}
-          onReset={resetScheduleData}
+          onReset={() => {
+            resetScheduleData();
+            resetFormData();
+          }}
         />
         <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
       </div>

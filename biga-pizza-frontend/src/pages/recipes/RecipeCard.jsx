@@ -4,6 +4,9 @@ import { useAuth } from '@context/AuthContext';
 import { updateRecipeNotes } from '@/services/recipeService';
 import { toast } from 'react-hot-toast';
 import { Star } from 'lucide-react';
+import ConfirmDeleteDialog from '@ui/ConfirmDeleteDialog';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
@@ -11,6 +14,13 @@ export default function RecipeCard({ recipe, onDelete }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
   const { user } = useAuth();
+  const [showDialog, setShowDialog] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    await onDelete(recipe._id);
+    setShowDialog(false); // close dialog after deletion
+  };
 
   // Detect if notes changed
   const isDirty = note !== (recipe.notes || '');
@@ -120,12 +130,16 @@ export default function RecipeCard({ recipe, onDelete }) {
         >
           {isSaving ? 'Saving...' : isSaved ? '✓ Saved' : 'Save Notes'}
         </button>
-        <button
-          onClick={handleDelete}
-          className="mt-2 mx-2 text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-        >
-          Delete Recipe
-        </button>
+
+        <div className="t-3 mx-3 inline-block">
+          {/* Replace this with Headless UI dialog trigger */}
+          <button
+            onClick={() => setShowDialog(true)}
+            className="text-sm text-red-600 hover:underline"
+          >
+            Delete
+          </button>
+        </div>
 
         <Link
           to={`/account/recipes/${recipe._id}`}
@@ -139,6 +153,14 @@ export default function RecipeCard({ recipe, onDelete }) {
       <div className="w-full md:w-32 h-24 bg-stone-200 dark:bg-stone-700 rounded-md flex items-center justify-center text-xs text-gray-500 dark:text-stone-400">
         <span>Pizza Image</span>
       </div>
+
+      {/* Headless UI Confirm Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={showDialog}
+        onClose={() => setShowDialog(false)}
+        onConfirm={handleConfirmDelete}
+        recipeTitle={recipe.title}
+      />
     </div>
   );
 }

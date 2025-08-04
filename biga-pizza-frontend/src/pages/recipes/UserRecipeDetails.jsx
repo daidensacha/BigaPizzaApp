@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getRecipeById } from '@/services/recipeService';
 import { formatGrams } from '@/utils/recipeFormatting';
 import { formatScheduleTime } from '@/utils/dateUtils';
 import { useAuth } from '@context/AuthContext';
+import { ArrowLeft } from 'lucide-react';
 import dayjs from 'dayjs';
 
 export default function UserRecipeDetails() {
@@ -12,6 +13,8 @@ export default function UserRecipeDetails() {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.token) {
@@ -25,7 +28,8 @@ export default function UserRecipeDetails() {
     }
   }, [id, user]);
 
-  console.log('👤 User in UserRecipeDetails:', user);
+  const handleBack = () => navigate('/my-recipes');
+  // console.log('👤 User in UserRecipeDetails:', user);
 
   if (loading) return <p className="p-4">Loading...</p>;
   if (error || !recipe)
@@ -34,7 +38,17 @@ export default function UserRecipeDetails() {
   const { formData, scheduleData, calculatedData, notes, rating } = recipe;
   console.log(calculatedData);
   return (
-    <div className="space-y-6 p-6 max-w-4xl mx-auto">
+    <div className="print-wrapper space-y-6 p-6 max-w-4xl mx-auto">
+      <div className="no-print flex items-center mb-6">
+        <button
+          onClick={handleBack}
+          className="inline-flex items-center text-sm dark:text-yellow-400 dark:hover:text-yellow-300 text-yellow-600 hover:text-yellow-500 font-medium"
+        >
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back to Recipes
+        </button>
+      </div>
+
       <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-amber-600">
         {formData.bigaPercent}% Biga Pizza Recipe
       </h2>
@@ -102,7 +116,7 @@ export default function UserRecipeDetails() {
         </h3>
         <ol className="space-y-6 text-sm text-gray-800 dark:text-stone-300 text-left text-justify">
           {calculatedData.timelineSteps.map((step, index) => {
-            console.log(`Rendering step: ${step.label}, time: ${step.time}`);
+            // console.log(`Rendering step: ${step.label}, time: ${step.time}`);
             return (
               <li key={index}>
                 <strong>
@@ -126,10 +140,21 @@ export default function UserRecipeDetails() {
         </div>
       )}
 
-      <div className="mt-8 flex justify-center">
+      <div className="no-print mt-8 flex justify-center">
+        <button
+          onClick={() => window.print()}
+          className="no-print bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+        >
+          Print Recipe
+        </button>
+        <Link to={`/account/recipes/${recipe._id}/edit`}>
+          <button className="px-4 py-2 mx-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white">
+            Edit Recipe
+          </button>
+        </Link>
         <Link
-          to="/dashboard"
-          className="bg-gray-200 dark:bg-stone-700 px-4 py-2 rounded hover:bg-gray-300 dark:hover:bg-stone-600"
+          to="/account"
+          className="bg-gray-600 dark:bg-stone-700 px-4 py-2 rounded hover:bg-gray-500 dark:hover:bg-stone-600"
         >
           ← Back to Dashboard
         </Link>

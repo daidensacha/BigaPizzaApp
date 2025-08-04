@@ -1,5 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-
+// const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+import { API_BASE } from '@config';
 // DEFAULT OPTIONS
 const defaultOptions = {
   credentials: 'include', // ⬅️ include cookies
@@ -23,6 +23,7 @@ export const registerUser = async (userData) => {
 
 // LOGIN USER
 export const loginUser = async (userData) => {
+  // console.log('API_BASE:', API_BASE); // 🔍 check value
   const res = await fetch(`${API_BASE}/api/auth/login`, {
     ...defaultOptions,
     method: 'POST',

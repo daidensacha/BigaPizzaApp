@@ -28,7 +28,8 @@ const recipeSchema = new mongoose.Schema(
     },
     scheduleData: {
       type: Object,
-      required: true,
+      required: false, // allow null or undefined
+      default: null,
     },
     calculatedData: {
       ingredients: {

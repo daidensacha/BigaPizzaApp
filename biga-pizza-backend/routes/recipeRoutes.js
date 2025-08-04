@@ -3,6 +3,7 @@ import {
   createRecipe,
   getRecipeById,
   getUserRecipes,
+  updateRecipe,
   updateRecipeNotes,
   deleteRecipe,
   // Add more routes like update/delete later
@@ -23,6 +24,9 @@ router.get('/:id', protect, getRecipeById);
 
 // PATCH /api/recipes/:id/notes
 router.patch('/:id/notes', protect, updateRecipeNotes);
+
+// PUT /api/recipes/:id (updates recipe)
+router.put('/:id', protect, updateRecipe);
 
 // DELETE Recipe by id
 router.delete('/:id', protect, deleteRecipe);

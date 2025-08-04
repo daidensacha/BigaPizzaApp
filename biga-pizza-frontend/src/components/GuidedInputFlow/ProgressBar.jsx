@@ -5,7 +5,7 @@ export default function ProgressBar({ steps, currentStep }) {
     steps.length > 1 ? ((currentStep - 1) / (steps.length - 1)) * 100 : 0;
 
   return (
-    <div className="relative w-full mb-6">
+    <div className="no-print relative w-full mb-6">
       {/* Background line */}
       <div className="absolute top-4 left-0 w-full h-1 bg-gray-300 transform -translate-y-1/2 z-0" />
 

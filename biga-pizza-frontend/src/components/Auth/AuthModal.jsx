@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@context/AuthContext';
@@ -41,6 +41,14 @@ export default function AuthModal({ isOpen, onClose }) {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setLoginData({ email: '', password: '' });
+      setRegisterData({ name: '', email: '', password: '' });
+      setActiveDisclosure('login'); // Optional: default to login view
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">

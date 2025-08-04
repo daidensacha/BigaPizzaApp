@@ -16,6 +16,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await logout(); // this clears state + hits API
+      console.log('Navigating to home...');
       navigate('/');
     } catch (err) {
       console.error('Logout failed:', err);
@@ -53,7 +54,10 @@ export default function Navbar() {
             Login
           </button>
         ) : (
-          <NavbarUserMenu onOpenSettings={() => setSettingsDrawerOpen(true)} />
+          <NavbarUserMenu
+            onOpenSettings={() => setSettingsDrawerOpen(true)}
+            onLogout={handleLogout}
+          />
         )}
       </div>
     </nav>

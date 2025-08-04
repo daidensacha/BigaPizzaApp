@@ -11,7 +11,7 @@ import { saveRecipe } from '@services/recipeService';
 import { generateRecipeTitle } from '@/utils/recipeFormatting';
 import { round } from '@utils/utils';
 
-export default function Step7FinalRecipe({ setCurrentStep }) {
+export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
   const { user } = useAuth();
   const { formData, scheduleData, isTimelineConfirmed } = useRecipe();
   const results = calculateDough(formData);
@@ -116,7 +116,7 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="print-wrapper space-y-6">
       <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-amber-600">
         {formData.bigaPercent}% Biga Pizza Recipe
       </h2>
@@ -195,22 +195,28 @@ export default function Step7FinalRecipe({ setCurrentStep }) {
       </div>
 
       <div className="mt-8 flex justify-center gap-4">
-        <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+        <button
+          onClick={() => window.print()}
+          className="no-print bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+        >
           Print Recipe
         </button>
         {user ? (
           <button
             onClick={handleSaveRecipe}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
+            className="no-print bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
           >
             Save Recipe
           </button>
         ) : (
-          <p className="text-sm text-gray-500 italic">
+          <p className="no-print text-sm text-gray-500 italic">
             Log in to save your recipe
           </p>
         )}
-        <button className="border border-gray-400 px-4 py-2 rounded-md hover:bg-gray-100 dark:border-stone-700 dark:text-yellow-500 dark:hover:bg-stone-700 transition">
+        <button
+          onClick={onBack}
+          className="no-print border border-gray-400 px-4 py-2 rounded-md hover:bg-gray-100 dark:border-stone-700 dark:text-yellow-500 dark:hover:bg-stone-700 transition"
+        >
           Edit / Back
         </button>
       </div>

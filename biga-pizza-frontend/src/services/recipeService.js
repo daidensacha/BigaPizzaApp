@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_BASE } from '@config';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 export const saveRecipe = async (recipeData, token) => {
   const config = {
@@ -24,12 +25,22 @@ export const getUserRecipes = async (token) => {
   return res.data;
 };
 
-export const getRecipeById = async (id, token) => {
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  const res = await axios.get(`${API_BASE}/api/recipes/${id}`, config);
+export const getRecipeById = async (id) => {
+  const res = await axios.get(`${API_BASE}/api/recipes/${id}`, {
+    withCredentials: true,
+  });
   return res.data;
+};
+
+export const updateRecipe = async (id, updatedData) => {
+  const response = await axios.put(
+    `${API_BASE}/api/recipes/${id}`,
+    updatedData,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
 };
 
 // services/recipeService.js

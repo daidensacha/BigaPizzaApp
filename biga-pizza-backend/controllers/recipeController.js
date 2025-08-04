@@ -1,5 +1,8 @@
 import Recipe from '../models/Recipe.js';
 import asyncHandler from 'express-async-handler';
+import { calculatePrepSchedule } from '../utils/scheduleCalculator.js';
+import dayjs from 'dayjs';
+import camelCase from 'lodash.camelcase';
 
 const createRecipe = asyncHandler(async (req, res) => {
   const { title, formData, scheduleData, calculatedData } = req.body;
@@ -45,17 +48,55 @@ const getRecipeById = async (req, res) => {
 };
 
 // Update a recipe
+// controllers/recipeController.js
+
 const updateRecipe = async (req, res) => {
+  // console.log('req.body.scheduleData: ', req.body.scheduleData);
+  // console.log(
+  //   'req.body.formData.bakingDateTime: ',
+  //   req.body.formData.bakingDateTime
+  // );
   try {
-    const updated = await Recipe.findOneAndUpdate(
-      { _id: req.params.id, user: req.user._id },
-      req.body,
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ message: 'Recipe not found' });
-    res.status(200).json(updated);
+    const recipe = await Recipe.findById(req.params.id);
+
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    // Set basic data
+    recipe.formData = req.body.formData;
+    recipe.hasSchedule = req.body.hasSchedule;
+
+    if (req.body.hasSchedule === false) {
+      recipe.scheduleData = null;
+
+      // Strip time values from calculatedData.timelineSteps
+      if (recipe.calculatedData?.timelineSteps) {
+        recipe.calculatedData.timelineSteps =
+          recipe.calculatedData.timelineSteps.map(({ label, description }) => ({
+            label,
+            description,
+          }));
+      }
+    } else if (req.body.scheduleData) {
+      recipe.scheduleData = req.body.scheduleData;
+
+      // ✅ Recalculate timelineSteps with actual times
+      const schedule = calculatePrepSchedule({
+        ...req.body.scheduleData,
+        bakingDateTime: req.body.formData?.bakingDateTime,
+      });
+
+      // console.log('🧮 Calculated schedule:', schedule);
+
+      recipe.calculatedData.timelineSteps = schedule;
+    }
+
+    // console.log('💾 Saving recipe with ID:', req.params.id);
+    const updatedRecipe = await recipe.save();
+    res.json(updatedRecipe);
   } catch (err) {
-    console.error('Update Recipe Error:', err);
+    console.error('🔥 Update recipe error:', err);
     res.status(500).json({ message: 'Failed to update recipe' });
   }
 };
