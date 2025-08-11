@@ -7,7 +7,7 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 ## Product Decisions
 
 - **Two default buckets:**
-  - **Dough Defaults** (e.g., numberOfPizzas, ballWeight, finalDoughHydrationPercent, finalDoughBigaPercent, saltPercent, maltPercent, yeastType, fermentation temps/durations affecting yeast calc).
+  - **Dough Defaults** (e.g., numberOfPizzas, ballWeight, doughHydrationPercent, doughBigaPercent, saltPercent, maltPercent, yeastType, fermentation temps/durations affecting yeast calc).
   - **Schedule Defaults** (all fields from `defaultScheduleSettings`).
 - **Single defaults set per user** for v1. (Future: multiple named profiles like "Home Oven", "Ooni Koda").
 - **Precedence:** Recipe values > User defaults > App system defaults.
@@ -27,17 +27,18 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
   doughDefaults: {
     numberOfPizzas: 4,
     ballWeightGrams: 260,
-    finalDoughHydrationPercent: 64,
-    finalDoughBigaPercent: 45, // % of total flour in biga (min 40, max 100)
+    doughHydrationPercent: 64,
+    doughBigaPercent: 45, // % of total flour in biga (min 40, max 100)
     bigaHydrationPercent: 45,
     bigaYeastPercentOfBigaFlour: 0.2,
     refreshYeastPercentOfRefreshFlour: 0.02,
     saltPercentOfTotalFlour: 2.7,
     maltPercentOfTotalFlour: 0, // optional
     yeastType: 'IDY', // 'IDY' | 'ADY' | 'FRESH'
-    ambientTempC: 22, // optional
-    bigaFermentationHours: 18, // optional
-    doughFermentationHours: 24 // optional
+    bigaFermentationHours: 18,
+    bigaFermentationTempC: 18,
+    doughFermentationHours: 24,
+    doughFermentationTempC: 20
   },
   scheduleDefaults: {
     // mirror constants/defaultScheduleSettings.js
@@ -58,7 +59,10 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 }
 ```
 
-**Indexes** - `userId` unique. - `updatedAt` for housekeeping.
+**Indexes**
+
+- `userId` unique.
+- `updatedAt` for housekeeping.
 
 ## Frontend UX (Dashboard Settings Tab)
 
@@ -66,17 +70,22 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 
 ### Dough Defaults
 
-- UI mirrors Step 5 layout.
+- Form layout mirrors the display style used in `Step5RecipePreview.jsx` (GuidedInputFlow recipe preview).
 - Hover min/max hints; YeastTypeToggleGroup + popover descriptions.
-- Include `finalDoughBigaPercent` control (slider + numeric) with min 40, max 100.
+- Include `doughBigaPercent` control (slider + numeric) with min 40, max 100.
 - Buttons: _Reset to System_, _Save Defaults_. Dirty‑state guard.
 
 ### Schedule Defaults
 
-- UI mirrors Step 6 layout with grouped `ScheduleInputGroup` components.
+- Form layout mirrors the display style used in `Step6PrepSchedule.jsx` (GuidedInputFlow schedule preview).
 - Live timeline preview (non‑destructive) based on a sample baking time (e.g., tonight 19:00) to show effects.
 - Buttons: _Reset to System_, _Save Defaults_.
-  **Create Recipe Flow** - On `CreateRecipe.jsx` mount: fetch defaults → initialize `formData` + `scheduleData`. - Show a chip: "Loaded from My Defaults" with a tooltip “changing values here won’t change your defaults”. - Button in any recipe: _Apply My Defaults_ (writes values into current form) — optional for v1 if initial load covers most cases.
+
+**Create Recipe Flow**
+
+- On `CreateRecipe.jsx` mount: fetch defaults → initialize `formData` + `scheduleData`.
+- Show a chip: "Loaded from My Defaults" with a tooltip “changing values here won’t change your defaults”.
+- Button in any recipe: _Apply My Defaults_ (writes values into current form).
 
 ## State & Logic
 
@@ -90,19 +99,15 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 - Sanitize strings (notes not part of defaults).
 - Prevent `userId` spoofing (use session user only).
 - Large numbers or negative durations → 400 with clear messages.
-- Handle timezone (Europe/Berlin default) when showing sample timeline preview; allow manual TZ later per your enhancement plan.
+- Handle timezone (Europe/Berlin default) when showing sample timeline preview; allow manual TZ later.
 
 ## Migration Plan
 
-1.  Create `userDefaults` collection + index.
-
-2.  Seed new users with **system defaults** on first GET (lazy upsert) to keep UI simple.
-
-3.  Add Settings tab UI (two subtabs).
-
-4.  Wire Create Recipe to consume defaults for initial state.
-
-5.  QA and telemetry: Log % of new recipes started from defaults.
+1. Create `userDefaults` collection + index.
+2. Seed new users with **system defaults** on first GET (lazy upsert) to keep UI simple.
+3. Add Settings tab UI (two subtabs).
+4. Wire Create Recipe to consume defaults for initial state.
+5. QA and telemetry: Log % of new recipes started from defaults.
 
 ## Future (v1.2+)
 
@@ -115,14 +120,14 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 
 ### Naming rules
 
-- Use clear prefixes: `biga*`, `refresh*`, `finalDough*`, `totals*`.
+- Use clear prefixes: `biga*`, `refresh*`, `dough*`, `totals*`.
 - Suffix with units when stored values are not percents: `*Grams`, `*Hours`, `*C`.
 - Percent fields specify the reference base in the name: `*PercentOfTotalFlour`, `*PercentOfBigaFlour`, `*PercentOfRefreshFlour`.
 
 ### What belongs in user defaults vs per‑recipe
 
 - **User defaults (inputs only):** store user preferences that seed new recipes. **Do not** store grams here.
-- **Per‑recipe** `calculatedData`**:** store full grams breakdown for biga/refresh/final dough (used by Step 7). This preserves exact outputs when re‑opening a saved recipe.
+- **Per‑recipe** `calculatedData`: store full grams breakdown for biga/refresh/dough (used by Step 7).
 
 ### `doughDefaults` (v1 — inputs only)
 
@@ -130,17 +135,18 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 {
   numberOfPizzas: number,
   ballWeightGrams: number,
-  finalDoughHydrationPercent: number,
-  finalDoughBigaPercent: number,           // % of total flour in biga (40–100)
+  doughBigaPercent: number,
+  doughHydrationPercent: number,
   bigaHydrationPercent: number,
   yeastType: 'IDY' | 'ADY' | 'FRESH',
   bigaYeastPercentOfBigaFlour: number,
   refreshYeastPercentOfRefreshFlour: number,
   saltPercentOfTotalFlour: number,
   maltPercentOfTotalFlour: number,
-  ambientTempC?: number,
-  bigaFermentationHours?: number,
-  doughFermentationHours?: number
+  bigaFermentationHours: number,
+  bigaFermentationTempC: number,
+  doughFermentationHours: number,
+  doughFermentationTempC: number
 }
 ```
 
@@ -151,9 +157,11 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
   meta: {
     doughBallCount: number,
     doughBallWeightGrams: number,
-    totalDoughWeightGrams: number
+    totalDoughWeightGrams: number,
+    ambientTempC: number,
+    ambientTempSource: 'manual' | 'weather',
+    ambientTempRecordedAt: string
   },
-
   biga: {
     bigaFlourGrams: number,
     bigaWaterGrams: number,
@@ -161,7 +169,6 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
     bigaHydrationPercent: number,
     bigaYeastPercentOfBigaFlour: number
   },
-
   refresh: {
     refreshFlourGrams: number,
     refreshWaterGrams: number,
@@ -169,17 +176,16 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
     refreshMaltGrams: number,
     refreshYeastGrams: number,
     refreshYeastPercentOfRefreshFlour: number,
-    refreshHydrationPercent?: number
+    refreshHydrationPercent: number
   },
-
-  finalDough: {
-    finalDoughBigaPercent: number,
-    finalDoughFlourGrams: number,
-    finalDoughWaterGrams: number,
-    finalDoughSaltGrams: number,
-    finalDoughMaltGrams: number,
-    finalDoughYeastGrams: number,
-    finalDoughHydrationPercent: number
+  dough: {
+    doughBigaPercent: number,
+    doughFlourGrams: number,
+    doughWaterGrams: number,
+    doughSaltGrams: number,
+    doughMaltGrams: number,
+    doughYeastGrams: number,
+    doughHydrationPercent: number
   }
 }
 ```
@@ -189,7 +195,7 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 ## 🧩 Backend
 
 - [ ] `userDefaults` model & unique index on `userId`.
-- [ ] Validation schema reusing `inputConfig` + `defaultScheduleSettings` + new `finalDoughBigaPercent` rule.
+- [ ] Validation schema reusing `inputConfig` + `defaultScheduleSettings` + fermentation hours/temps + new `doughBigaPercent` rule.
 - [ ] `GET /api/user/defaults` (lazy create if not found with system defaults).
 - [ ] `PUT /api/user/defaults` (upsert, field‑level validation errors).
 - [ ] Auth middleware wired + tests.
@@ -197,14 +203,14 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 ## 🖥️ Frontend
 
 - [ ] Dashboard → **Settings** page shell with tabs: _Dough Defaults_ | _Schedule Defaults_.
-- [ ] Dough Defaults: add **finalDoughBigaPercent** control (slider + numeric) with min=40, max=100, step=1, tooltip help.
-- [ ] Wire `finalDoughBigaPercent` into calculateDough and preview.
+- [ ] Dough Defaults: add **doughBigaPercent** control (slider + numeric) with min=40, max=100, step=1, tooltip help.
+- [ ] Wire `doughBigaPercent` into calculateDough and preview.
 - [ ] Error states + inline validation for out‑of‑range values.
 - [ ] **Schedule Defaults** form (mirror Step6) using `ScheduleInputGroup`.
 - [ ] Live timeline preview (sample baking time) in Schedule tab.
 - [ ] `DefaultsContext` (load, cache, update; optimistic save + rollback on error).
 - [ ] CreateRecipe initializes from defaults; badge: "Loaded from My Defaults".
-- [ ] Optional: button "Apply My Defaults" inside Recipe editor.
+- [ ] Integration: Ensure Create/Edit Recipe modals can hydrate from user defaults or saved recipe.
 
 ## 🧪 QA
 
@@ -219,50 +225,3 @@ Enable each user to define **personal default settings** for (A) Pizza Dough and
 - [ ] Seed path for first‑time users (system defaults).
 - [ ] Print‑friendly Kanban view (A4 portrait) via simple CSS print styles.
 - [ ] README: note how to use Kanban (checklist in canvas + GitHub issues mapping).
-
-# Workflow & Branching Plan (Git)
-
-## Branching model
-
-- **main** — always deployable. Protected branch.
-- **develop** — integration branch for upcoming beta (optional; use if multiple streams overlap).
-- **feature/\*** — one branch per task or tightly‑coupled task group (e.g., `feature/user-defaults-api`, `feature/settings-tabs-ui`).
-- **fix/\*** — hotfixes off `main`.
-
-## Rules
-
-- Create issue → create matching branch (`feature/<issue-number>-slug`).
-- Small, focused PRs (≤ 300 lines diff when possible).
-- Require: lint passes, unit tests (if present), and manual QA checklist.
-- Squash merge to keep history clean. Delete branches after merge.
-
-## Suggested sequence (for this epic)
-
-1.  `feature/user-defaults-model-api` → model, routes, validation.
-
-2.  `feature/settings-tabs-ui` → settings shell with tabs.
-
-3.  `feature/dough-defaults-finalDoughBigaPercent` → UI control + wiring + preview.
-
-4.  `feature/schedule-defaults-ui` → schedule form + preview.
-
-5.  `feature/create-from-defaults` → hydrate CreateRecipe from defaults.
-
-6.  `feature/field-renames-migration` → refresh naming + migration script.
-
-7.  `feature/qa-polish` → error states, mobile, docs.
-
-## PR Template (checklist)
-
-- [ ] Linked issue
-- [ ] Screenshots / GIF (desktop + mobile)
-- [ ] Validation cases covered (min/max, empty)
-- [ ] i18n / labels reviewed
-- [ ] Accessibility quick pass (labels, focus, keyboard)
-- [ ] No console errors/warnings
-
-## Using the Kanban
-
-- Treat each **checkbox item** here as a corresponding **GitHub Issue**.
-- As we finish tasks, tick them here _and_ close the GitHub issue.
-- This doc is printable from any editor on iPad (Notes/Pages → Share → Print).
