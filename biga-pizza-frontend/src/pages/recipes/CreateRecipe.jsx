@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Info, Droplet, Timer, FlaskConical } from 'lucide-react';
 import {
   getLocalDateTimePlus24h,
@@ -14,6 +14,7 @@ import Step6PrepSchedule from '@guidedinputflow/Step6PrepSchedule';
 import Step7FinalRecipe from '@guidedinputflow/Step7FinalRecipe';
 import ProgressBar from '@guidedinputflow/ProgressBar';
 import { useRecipe } from '@/context/RecipeContext';
+import { useDefaults } from '@/context/DefaultsContext';
 
 const steps = [
   {
@@ -43,7 +44,33 @@ const steps = [
 
 export default function CreateRecipe() {
   const [currentStep, setCurrentStep] = useState(1);
-  const { formData, setFormData, isTimelineConfirmed } = useRecipe();
+  const { formData, setFormData, isTimelineConfirmed, initializeFromDefaults } =
+    useRecipe();
+
+  const {
+    defaults,
+    loading: defaultsLoading,
+    error: defaultsError,
+  } = useDefaults();
+  const seededRef = useRef(false);
+
+  useEffect(() => {
+    console.log(
+      '[CreateRecipe] loading:',
+      defaultsLoading,
+      'has defaults:',
+      !!defaults,
+      'error:',
+      !!defaultsError,
+      'seeded:',
+      seededRef.current
+    );
+    if (seededRef.current) return;
+    if (defaultsLoading || defaultsError || !defaults) return;
+    console.log('[CreateRecipe] calling initializeFromDefaults()');
+    initializeFromDefaults(defaults);
+    seededRef.current = true;
+  }, [defaultsLoading, defaultsError, defaults, initializeFromDefaults]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

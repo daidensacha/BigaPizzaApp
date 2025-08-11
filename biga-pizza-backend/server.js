@@ -6,17 +6,21 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
 import cookieParser from 'cookie-parser';
+import userDefaultsRoutes from './routes/userDefaults.routes.js';
+// after app + middleware setup
 
 dotenv.config();
 
 const app = express();
 app.use(
   cors({
-    origin: 'http://localhost:5173', // or your frontend URL
-    credentials: true, // ✅ allow cookies to be sent
-  }),
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
 );
-
+app.use(userDefaultsRoutes);
 app.use(express.json());
 app.use(cookieParser());
 

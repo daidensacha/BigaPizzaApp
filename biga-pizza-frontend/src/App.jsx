@@ -17,6 +17,7 @@ import AccountPage from '@accounts/AccountPage';
 import UserRecipeDetails from '@recipes/UserRecipeDetails'; // ??? UserRecipeDetails
 import UserRecipeList from '@recipes/UserRecipeList';
 import EditRecipe from '@recipes/EditRecipe';
+import NewRecipeEntry from '@recipes/NewRecipeEntry';
 
 function App() {
   const { isModalOpen, closeAuthModal } = useAuthModal();
@@ -54,6 +55,8 @@ function App() {
               <Route path="/menu" element={<PizzaMenu />} />
               <Route path="/my-recipes" element={<UserRecipeList />} />
               <Route path="/recipes/:id" element={<UserRecipeDetails />} />
+              <Route path="/recipes/new" element={<NewRecipeEntry />} />
+
               <Route
                 path="/account/recipes/:id/edit"
                 element={
