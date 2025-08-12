@@ -3,8 +3,21 @@ import asyncHandler from 'express-async-handler';
 import { calculatePrepSchedule } from '../utils/scheduleCalculator.js';
 import dayjs from 'dayjs';
 import camelCase from 'lodash.camelcase';
+import util from 'node:util';
+
+const logFull = (label, obj) => {
+  // if it’s a mongoose doc, get plain object to avoid getters/proxies
+  const plain = typeof obj?.toObject === 'function' ? obj.toObject() : obj;
+  console.log(
+    `\n${label}:\n`,
+    util.inspect(plain, { depth: null, colors: true })
+  );
+};
 
 const createRecipe = asyncHandler(async (req, res) => {
+  // Log the incoming request body fully expanded
+  logFull('📥 Incoming recipe payload', req.body);
+
   const { title, formData, scheduleData, calculatedData } = req.body;
   console.log('📥 Received new recipe:', req.body);
   const recipe = new Recipe({
@@ -16,6 +29,9 @@ const createRecipe = asyncHandler(async (req, res) => {
   });
   const savedRecipe = await recipe.save();
   console.log('✅ Recipe saved:', savedRecipe);
+
+  // Log the saved document fully expanded
+  logFull('✅ Saved recipe (expanded)', savedRecipe);
   res.status(201).json(savedRecipe);
 });
 
@@ -66,13 +82,13 @@ const updateRecipe = async (req, res) => {
       recipe.scheduleData = null;
 
       // Strip time values from calculatedData.timelineSteps
-      if (recipe.calculatedData?.timelineSteps) {
-        recipe.calculatedData.timelineSteps =
-          recipe.calculatedData.timelineSteps.map(({ label, description }) => ({
-            label,
-            description,
-          }));
-      }
+      // if (recipe.calculatedData?.timelineSteps) {
+      //   recipe.calculatedData.timelineSteps =
+      //     recipe.calculatedData.timelineSteps.map(({ label, description }) => ({
+      //       label,
+      //       description,
+      //     }));
+      // }
     } else if (req.body.scheduleData) {
       recipe.scheduleData = req.body.scheduleData;
 

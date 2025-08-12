@@ -24,6 +24,21 @@ dayjs.locale(userLocale);
 
 export default dayjs;
 
+// Helpers you can import
+export const toUtcIso = (localInput) =>
+  // localInput like "YYYY-MM-DDTHH:mm" from <input type="datetime-local">
+  dayjs(localInput).utc().toISOString();
+
+export const utcIsoToLocalInput = (utcIso) =>
+  // value for <input type="datetime-local"> (no seconds, no Z)
+  dayjs.utc(utcIso).local().format('YYYY-MM-DDTHH:mm');
+
+export const formatLocalLabel = (d) => {
+  // Accepts Dayjs | string(ISO) | Date; returns pretty local label
+  const dj = dayjs.isDayjs(d) ? d : dayjs.utc(d).local();
+  return dj.format('ddd, MMM D • h:mm A');
+};
+
 export function getLocalDateTimePlus24h() {
   return dayjs().add(24, 'hour').format('YYYY-MM-DDTHH:mm');
 }

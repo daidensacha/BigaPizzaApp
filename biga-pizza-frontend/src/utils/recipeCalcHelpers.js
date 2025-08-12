@@ -53,97 +53,89 @@ export function calcDoughAndSchedule(formData, scheduleData) {
 /**
  * Build calculatedData exactly like Step7
  */
+const toISO = (d) => {
+  if (!d) return null;
+  if (dayjs.isDayjs(d)) return d.toISOString();
+  const parsed = dayjs(d);
+  return parsed.isValid() ? parsed.toISOString() : null;
+};
+
 export function buildCalculatedData(results, sched, scheduleData) {
-  if (!results) return null;
+  if (!results || !sched) return null;
 
-  const bake =
-    sched?.bakingDateTimeObj ??
-    (scheduleData?.bakingDateTime ? dayjs(scheduleData.bakingDateTime) : null);
-
-  const calculatedData = {
-    ingredients: {
-      biga: {
-        flour: Math.round(results.bigaFlour),
-        water: Math.round(results.bigaWater),
-        yeast: round(results.bigaYeast, 2),
-        total: Math.round(
-          results.bigaFlour + results.bigaWater + results.bigaYeast
-        ),
-      },
-      refresh: {
-        flour: Math.round(results.finalFlour),
-        water: Math.round(results.finalWater),
-        yeast: round(results.refreshYeast, 2),
-        salt: round(results.totalSalt, 1),
-        malt: round(results.totalMalt, 2),
-        total: Math.round(
-          results.finalFlour +
-            results.finalWater +
-            results.refreshYeast +
-            results.totalSalt +
-            results.totalMalt
-        ),
-      },
+  const ingredients = {
+    biga: {
+      flour: Math.round(results.bigaFlour),
+      water: Math.round(results.bigaWater),
+      yeast: round(results.bigaYeast, 2),
+      total: Math.round(
+        results.bigaFlour + results.bigaWater + results.bigaYeast
+      ),
     },
+    refresh: {
+      flour: Math.round(results.finalFlour),
+      water: Math.round(results.finalWater),
+      yeast: round(results.refreshYeast, 2),
+      salt: round(results.totalSalt, 1),
+      malt: round(results.totalMalt, 2),
+      total: Math.round(
+        results.finalFlour +
+          results.finalWater +
+          results.refreshYeast +
+          results.totalSalt +
+          results.totalMalt
+      ),
+    },
+  };
+
+  return {
+    ingredients,
     timelineSteps: [
       {
         label: 'Prepare Biga',
-        time: sched?.prepBigaTime
-          ? formatScheduleTime(sched.prepBigaTime)
-          : null,
+        time: toISO(sched.prepBigaTime),
         description:
           'Mix biga ingredients and allow to ferment at cool room temperature. Keep it loosely covered.',
       },
       {
         label: 'Autolyze',
-        time: sched?.autolyzeRefreshTime
-          ? formatScheduleTime(sched.autolyzeRefreshTime)
-          : null,
+        time: toISO(sched.autolyzeRefreshTime),
         description:
           'Mix flour and water from refresh phase and let rest. This helps gluten develop before kneading.',
       },
       {
         label: 'Prepare Final Dough',
-        time: sched?.prepDoughTime
-          ? formatScheduleTime(sched.prepDoughTime)
-          : null,
+        time: toISO(sched.prepDoughTime),
         description:
           'Combine biga with the refresh dough, yeast, salt, and malt. Knead until smooth and elastic.',
       },
       {
         label: 'Prepare Balls',
-        time: sched?.prepBallsTime
-          ? formatScheduleTime(sched.prepBallsTime)
-          : null,
+        time: toISO(sched.prepBallsTime),
         description:
           'Divide dough into balls, place into your lightly oiled proofing container. Proof until double in size or refrigerate.',
       },
       {
         label: 'Preheat Oven',
-        time: sched?.preheatOvenTime
-          ? formatScheduleTime(sched.preheatOvenTime)
-          : null,
+        time: toISO(sched.preheatOvenTime),
         description:
           'Preheat your oven and pizza stone/steel to the maximum temperature available.',
       },
       {
         label: 'Prepare Toppings',
-        time: sched?.prepToppingsTime
-          ? formatScheduleTime(sched.prepToppingsTime)
-          : null,
+        time: toISO(sched.prepToppingsTime),
         description:
           'Prepare and portion your toppings so they’re ready when the dough is.',
       },
       {
         label: 'Bake Pizza',
-        time: bake ? formatScheduleTime(bake) : null,
+        // IMPORTANT: new name from scheduleCalculator
+        time: toISO(sched.bakingDateTime),
         description:
           'Stretch your dough, top your pizzas, and bake until golden and blistered. Enjoy!',
       },
     ],
   };
-
-  return calculatedData;
 }
 
 /**
