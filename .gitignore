@@ -63,9 +63,9 @@ storybook-static/
 .cache/
 
 # Root cleanup
-node_modules/
 backup_root_files/
 logs/
 temp/
-.DS_Store
+scripts/
+identifier-scan.csv
 

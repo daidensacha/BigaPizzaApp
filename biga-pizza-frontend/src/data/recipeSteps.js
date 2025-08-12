@@ -31,7 +31,7 @@ const recipeSteps = [
   },
   {
     title: 'Baking Time',
-    timeKey: 'bakePizza',
+    timeKey: 'bakingDateTime',
     instructions: `I turn my balls out into a large bowl of semolina, turning the balls. The top of your pizza balls will be the top of you pizza. At this point you will know if you have overfermented.Is  you have, it will be weak and will not hold together as the gluten will be broken down by the acids in the dough. It will also have a tendency to stick to you oven floor. Underfermented dough will be hard to stretch, as the gluten will be stong. Stretch each dough ball into a circle, leaving air in the sides of the pizza base. This will be your crust. Add toppings, and bake immediately. Bake each pizza until the crust is blistered and golden, about 2–4 minutes.`,
   },
 ];

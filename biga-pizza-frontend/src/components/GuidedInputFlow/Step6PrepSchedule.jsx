@@ -22,10 +22,7 @@ export default function Step6PrepSchedule({
   } = useRecipe();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const schedule = calculatePrepSchedule({
-    ...scheduleData,
-    bakingDateTime: formData.bakingDateTime,
-  });
+  const schedule = calculatePrepSchedule({ ...scheduleData });
 
   const { totalDuration, ...timelineEvents } = schedule;
 
@@ -60,22 +57,6 @@ export default function Step6PrepSchedule({
           </div>
         )}
       </div>
-
-      {/* <div className="flex items-center justify-between border-t border-stone-600 pt-4 mt-6">
-        <span className="text-sm text-stone-300">Include Prep Schedule</span>
-        <button
-          onClick={() => setIncludeTimeline(!includeTimeline)}
-          className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
-            includeTimeline ? 'bg-green-500' : 'bg-stone-600'
-          }`}
-        >
-          <span
-            className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-              includeTimeline ? 'translate-x-6' : 'translate-x-1'
-            }`}
-          />
-        </button>
-      </div> */}
 
       {!isEditing && (
         <div className="flex justify-between items-center mt-4">

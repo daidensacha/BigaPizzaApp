@@ -23,12 +23,12 @@ export function DefaultsProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      console.log('[DefaultsContext] GET /api/user/defaults… token?', !!token);
+      // console.log('[DefaultsContext] GET /api/user/defaults… token?', !!token);
       const res = await fetch('/api/user/defaults', {
         credentials: 'include', // send cookie if present
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('[DefaultsContext] status:', res.status);
+      // console.log('[DefaultsContext] status:', res.status);
 
       // Safely parse JSON (handles empty or non-JSON bodies)
       const text = await res.text();
@@ -48,10 +48,10 @@ export function DefaultsProvider({ children }) {
         throw new Error(msg);
       }
 
-      console.log(
-        '[DefaultsContext] received keys:',
-        data ? Object.keys(data) : []
-      );
+      // console.log(
+      //   '[DefaultsContext] received keys:',
+      //   data ? Object.keys(data) : []
+      // );
       setDefaults(data);
     } catch (e) {
       console.error('[DefaultsContext] load error:', e);

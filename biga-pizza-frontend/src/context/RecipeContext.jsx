@@ -23,12 +23,12 @@ const defaultFormData = {
   doughTime: 6,
   doughTemp: 22,
   yeastType: 'idy',
-  bakingDateTime: getLocalDateTimePlus24h(),
   shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
   longCorrection: YEAST_CORRECTION_DEFAULTS.long,
 };
 
 const defaultScheduleData = {
+  bakingDateTime: getLocalDateTimePlus24h(),
   bigaPrepTime: 15,
   bigaRisingTime: 24, // hours
   autolyzeRefreshPrep: 20,
@@ -78,7 +78,6 @@ export const RecipeProvider = ({ children }) => {
     doughTemp: d.doughFermentationTempC,
     yeastType: normalizeYeast(d.yeastType),
     // keep your existing fields
-    bakingDateTime: getLocalDateTimePlus24h(),
     shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
     longCorrection: YEAST_CORRECTION_DEFAULTS.long,
   });
@@ -95,6 +94,7 @@ export const RecipeProvider = ({ children }) => {
     ballsRisingTime: Math.round(s.ballsRisingTimeMin / 60), // -> hours
     preheatOvenDuration: s.preheatOvenDurationMin,
     toppingsPrepTime: s.toppingsPrepTimeMin,
+    bakingDateTime: getLocalDateTimePlus24h(),
   });
 
   // NEW: public initializer

@@ -5,7 +5,7 @@ const labelMap = {
   prepBallsTime: 'Ball Prep',
   preheatOvenTime: 'Preheat Oven',
   prepToppingsTime: 'Toppings Prep',
-  bakePizza: 'Bake Pizza',
+  bakingDateTime: 'Bake Pizza',
 };
 
 export default labelMap;

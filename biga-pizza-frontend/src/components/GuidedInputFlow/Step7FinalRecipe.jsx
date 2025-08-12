@@ -15,10 +15,7 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
   const { user } = useAuth();
   const { formData, scheduleData, isTimelineConfirmed } = useRecipe();
   const results = calculateDough(formData);
-  const schedule = calculatePrepSchedule({
-    ...scheduleData,
-    bakingDateTime: formData.bakingDateTime,
-  });
+  const schedule = calculatePrepSchedule(scheduleData);
 
   const calculatedData = {
     ingredients: {
@@ -85,7 +82,9 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
       },
       {
         label: 'Bake Pizza',
-        time: formData.bakingDateTime ? schedule.bakePizza : null,
+        time: scheduleData.bakingDateTime
+          ? formatScheduleTime(schedule.bakingDateTime) // now a dayjs object
+          : null,
         description:
           'Stretch your dough, top your pizzas, and bake until golden and blistered. Enjoy!',
       },
@@ -99,7 +98,7 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
     }
 
     const recipePayload = {
-      title: generateRecipeTitle(formData),
+      title: generateRecipeTitle(formData, scheduleData),
       formData,
       scheduleData,
       calculatedData,

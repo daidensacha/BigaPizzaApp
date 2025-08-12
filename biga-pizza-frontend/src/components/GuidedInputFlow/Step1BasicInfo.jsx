@@ -4,7 +4,7 @@ import inputConfig from '@constants/inputConfig';
 import GuidedInputField from '@ui/GuidedInputField';
 
 export default function Step1BasicInfo() {
-  const { formData, setFormData } = useRecipe();
+  const { formData, setFormData, scheduleData, setScheduleData } = useRecipe();
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -71,8 +71,13 @@ export default function Step1BasicInfo() {
         {/* Baking Date & Time */}
         <GuidedInputField
           name="bakingDateTime"
-          value={formData.bakingDateTime}
-          onChange={handleChange}
+          value={scheduleData.bakingDateTime}
+          onChange={(e) =>
+            setScheduleData((prev) => ({
+              ...prev,
+              bakingDateTime: e.target.value,
+            }))
+          }
           label="Baking Date and Time"
           type={inputConfig.bakingDateTime.type}
         />

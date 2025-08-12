@@ -51,11 +51,6 @@ const getRecipeById = async (req, res) => {
 // controllers/recipeController.js
 
 const updateRecipe = async (req, res) => {
-  // console.log('req.body.scheduleData: ', req.body.scheduleData);
-  // console.log(
-  //   'req.body.formData.bakingDateTime: ',
-  //   req.body.formData.bakingDateTime
-  // );
   try {
     const recipe = await Recipe.findById(req.params.id);
 

@@ -24,21 +24,21 @@ export function calculatePrepSchedule(data) {
     toppingsPrepTime,
   } = data;
 
-  const bakingTime = dayjs(bakingDateTime);
+  const bakingDateTimeObj = dayjs(bakingDateTime);
 
-  const prepToppingsTime = bakingTime.subtract(
+  const prepToppingsTime = bakingDateTimeObj.subtract(
     toMinutes(toppingsPrepTime) + 30,
     'minute'
   );
 
-  const preheatOvenTime = bakingTime.subtract(
+  const preheatOvenTime = bakingDateTimeObj.subtract(
     toMinutes(preheatOvenDuration),
     'minute'
   );
 
   const totalBallsTime =
     toMinutes(ballsPrepTime) + toMinutes(ballsRisingTime, 'h');
-  const prepBallsTime = bakingTime.subtract(totalBallsTime, 'minute');
+  const prepBallsTime = bakingDateTimeObj.subtract(totalBallsTime, 'minute');
 
   const totalDoughTime =
     toMinutes(doughPrepTime) + toMinutes(doughRisingTime, 'h');
@@ -56,8 +56,8 @@ export function calculatePrepSchedule(data) {
   const prepBigaTime = autolyzeRefreshTime.subtract(totalBigaTime, 'minute');
 
   const totalDuration =
-    dayjs.isDayjs(bakingTime) && dayjs.isDayjs(prepBigaTime)
-      ? bakingTime.diff(prepBigaTime, 'minute')
+    dayjs.isDayjs(bakingDateTimeObj) && dayjs.isDayjs(prepBigaTime)
+      ? bakingDateTimeObj.diff(prepBigaTime, 'minute')
       : null;
 
   return {
@@ -67,7 +67,9 @@ export function calculatePrepSchedule(data) {
     prepBallsTime,
     preheatOvenTime,
     prepToppingsTime,
-    bakePizza: bakingTime,
+    // This is a dayjs object, not the original string.
+    // Use formatScheduleTime() when displaying in UI.
+    bakingDateTime: bakingDateTimeObj,
     totalDuration,
   };
 }

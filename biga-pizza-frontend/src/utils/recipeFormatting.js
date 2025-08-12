@@ -64,8 +64,9 @@ export function generatePreviewRows(results) {
   ];
 }
 
-export const generateRecipeTitle = (formData) => {
-  const date = dayjs(formData.bakingDateTime).format('YYYY-MM-DD');
+export const generateRecipeTitle = (formData, scheduleData) => {
+  const bakingDate = scheduleData?.bakingDateTime || formData?.bakingDateTime;
+  const date = dayjs(bakingDate).format('YYYY-MM-DD');
   const biga = formData.bigaPercent;
   const hydration = formData.finalHydration;
   return `${date} - ${biga}% Biga Dough Hydration - ${hydration}%`;
