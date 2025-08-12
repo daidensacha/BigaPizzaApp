@@ -31,7 +31,7 @@ export default function Navbar() {
         </Link>
         <Link
           className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
-          to="/create-recipe"
+          to="/recipes/new"
         >
           Create Recipe
         </Link>
