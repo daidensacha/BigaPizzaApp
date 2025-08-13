@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* index.css or main.css */
 
 @layer utilities {
   @media print {
@@ -95,3 +96,12 @@ input[type='number'] {
   }
 }
 
+/* Only affect inputs inside the modal, not the drawer */
+.modal-recipe-editor input[type='number']::-webkit-outer-spin-button,
+.modal-recipe-editor input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.modal-recipe-editor input[type='number'] {
+  -moz-appearance: textfield;
+}

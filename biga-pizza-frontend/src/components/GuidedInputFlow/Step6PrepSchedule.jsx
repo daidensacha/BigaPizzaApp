@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
 import ScheduleSettingsDrawer from '@/components/ScheduleSettingsDrawer';
 import dayjs from '@/utils/dayjsConfig';
 import labelMap from '@/utils/scheduleLabels';
 import { useRecipe } from '@/context/RecipeContext';
+import {
+  calcDoughAndSchedule,
+  buildCalculatedData,
+} from '@/utils/recipeCalcHelpers';
 
 export default function Step6PrepSchedule({
   onCreateSchedule,
@@ -22,10 +26,7 @@ export default function Step6PrepSchedule({
   } = useRecipe();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const schedule = calculatePrepSchedule({
-    ...scheduleData,
-    bakingDateTime: formData.bakingDateTime,
-  });
+  const schedule = calculatePrepSchedule({ ...scheduleData });
 
   const { totalDuration, ...timelineEvents } = schedule;
 
@@ -34,6 +35,19 @@ export default function Step6PrepSchedule({
     const m = minutes % 60;
     return `${h}h ${m}m`;
   };
+
+  const { results, sched } = useMemo(() => {
+    try {
+      return calcDoughAndSchedule(formData, scheduleData);
+    } catch {
+      return { results: null, sched: null };
+    }
+  }, [formData, scheduleData]);
+
+  const previewCalculated = useMemo(() => {
+    if (!results || !sched) return null;
+    return buildCalculatedData(results, sched, scheduleData); // <- produces ISO strings
+  }, [results, sched, scheduleData]);
 
   return (
     <div className="space-y-6">
@@ -60,39 +74,6 @@ export default function Step6PrepSchedule({
           </div>
         )}
       </div>
-
-      {/* <div className="flex items-center justify-between border-t border-stone-600 pt-4 mt-6">
-        <span className="text-sm text-stone-300">Include Prep Schedule</span>
-        <button
-          onClick={() => setIncludeTimeline(!includeTimeline)}
-          className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
-            includeTimeline ? 'bg-green-500' : 'bg-stone-600'
-          }`}
-        >
-          <span
-            className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-              includeTimeline ? 'translate-x-6' : 'translate-x-1'
-            }`}
-          />
-        </button>
-      </div> */}
-
-      {!isEditing && (
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-gray-700 dark:text-stone-300 mr-2">
-            Need to adjust prep durations?
-          </p>
-
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={onOpenDrawer}
-              className="text-sm text-yellow-400 underline hover:text-yellow-200"
-            >
-              Open Schedule Settings
-            </button>
-          </div>
-        </div>
-      )}
 
       {!isEditing && (
         <div className="mt-6 flex space-x-4 justify-center">

@@ -3,8 +3,21 @@ import asyncHandler from 'express-async-handler';
 import { calculatePrepSchedule } from '../utils/scheduleCalculator.js';
 import dayjs from 'dayjs';
 import camelCase from 'lodash.camelcase';
+import util from 'node:util';
+
+const logFull = (label, obj) => {
+  // if it’s a mongoose doc, get plain object to avoid getters/proxies
+  const plain = typeof obj?.toObject === 'function' ? obj.toObject() : obj;
+  console.log(
+    `\n${label}:\n`,
+    util.inspect(plain, { depth: null, colors: true })
+  );
+};
 
 const createRecipe = asyncHandler(async (req, res) => {
+  // Log the incoming request body fully expanded
+  logFull('📥 Incoming recipe payload', req.body);
+
   const { title, formData, scheduleData, calculatedData } = req.body;
   console.log('📥 Received new recipe:', req.body);
   const recipe = new Recipe({
@@ -16,6 +29,9 @@ const createRecipe = asyncHandler(async (req, res) => {
   });
   const savedRecipe = await recipe.save();
   console.log('✅ Recipe saved:', savedRecipe);
+
+  // Log the saved document fully expanded
+  logFull('✅ Saved recipe (expanded)', savedRecipe);
   res.status(201).json(savedRecipe);
 });
 
@@ -51,48 +67,35 @@ const getRecipeById = async (req, res) => {
 // controllers/recipeController.js
 
 const updateRecipe = async (req, res) => {
-  // console.log('req.body.scheduleData: ', req.body.scheduleData);
-  // console.log(
-  //   'req.body.formData.bakingDateTime: ',
-  //   req.body.formData.bakingDateTime
-  // );
   try {
     const recipe = await Recipe.findById(req.params.id);
-
     if (!recipe) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
 
-    // Set basic data
-    recipe.formData = req.body.formData;
-    recipe.hasSchedule = req.body.hasSchedule;
-
-    if (req.body.hasSchedule === false) {
-      recipe.scheduleData = null;
-
-      // Strip time values from calculatedData.timelineSteps
-      if (recipe.calculatedData?.timelineSteps) {
-        recipe.calculatedData.timelineSteps =
-          recipe.calculatedData.timelineSteps.map(({ label, description }) => ({
-            label,
-            description,
-          }));
-      }
-    } else if (req.body.scheduleData) {
-      recipe.scheduleData = req.body.scheduleData;
-
-      // ✅ Recalculate timelineSteps with actual times
-      const schedule = calculatePrepSchedule({
-        ...req.body.scheduleData,
-        bakingDateTime: req.body.formData?.bakingDateTime,
-      });
-
-      // console.log('🧮 Calculated schedule:', schedule);
-
-      recipe.calculatedData.timelineSteps = schedule;
+    // Basic fields (keep previous if not provided)
+    if (req.body.formData) recipe.formData = req.body.formData;
+    if (typeof req.body.hasSchedule === 'boolean') {
+      recipe.hasSchedule = req.body.hasSchedule;
     }
 
-    // console.log('💾 Saving recipe with ID:', req.params.id);
+    if (req.body.hasSchedule === false) {
+      // Turn schedule off: drop schedule and clear timeline times
+      recipe.scheduleData = null;
+      if (recipe.calculatedData) {
+        recipe.calculatedData.timelineSteps = [];
+      }
+    } else {
+      // Schedule is on (or unchanged)
+      if (req.body.scheduleData) {
+        recipe.scheduleData = req.body.scheduleData;
+      }
+      // Trust frontend to send the already-built calculatedData
+      if (req.body.calculatedData) {
+        recipe.calculatedData = req.body.calculatedData;
+      }
+    }
+
     const updatedRecipe = await recipe.save();
     res.json(updatedRecipe);
   } catch (err) {

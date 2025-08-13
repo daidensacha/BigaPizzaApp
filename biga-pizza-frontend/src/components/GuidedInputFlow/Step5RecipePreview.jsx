@@ -2,18 +2,14 @@ import React from 'react';
 import { toast } from 'react-hot-toast';
 import { calculateDough, YEAST_CORRECTION_DEFAULTS } from '@/utils/utils';
 import { useRecipe } from '@/context/RecipeContext';
-import {
-  formatGrams,
-  formatBakersPercent,
-  generatePreviewRows,
-} from '@/utils/previewHelpers';
+import { generatePreviewRows } from '@/utils/previewHelpers';
 
 export default function Step5RecipePreview({
   onCreateSchedule,
   onSkip,
   isEditing = false,
 }) {
-  const { formData, setFormData } = useRecipe();
+  const { formData, setFormData, scheduleData, setScheduleData } = useRecipe();
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
   const handleChange = (e) => {
@@ -45,8 +41,8 @@ export default function Step5RecipePreview({
   const previewRows = generatePreviewRows(results);
 
   const getBakingTime = () => {
-    if (!formData.bakingDateTime) return 'Not set';
-    const date = new Date(formData.bakingDateTime);
+    if (!scheduleData.bakingDateTime) return 'Not set';
+    const date = new Date(scheduleData.bakingDateTime);
     const datePart = date.toLocaleDateString(undefined, {
       weekday: 'short',
       day: '2-digit',

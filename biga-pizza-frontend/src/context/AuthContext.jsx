@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-// AuthContext.jsx
 import { API_BASE } from '@config'; // or wherever it's defined
 
 const AuthContext = createContext();
@@ -19,14 +18,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(fullUser));
     toast.success(`Welcome back, ${userData.name}!`);
   };
-
-  // const logout = () => {
-  //   setUser(null);
-  //   localStorage.removeItem('user');
-  //   setUser(null);
-  //   Navigate('/');
-  //   toast.success('You have been logged out.');
-  // };
 
   const logout = async () => {
     try {

@@ -9,16 +9,6 @@ export function formatGrams(value, type = 'default') {
   return `${Math.round(num)}g`;
 }
 
-// export function formatGrams(value, label = '') {
-//   if (
-//     label.toLowerCase().includes('yeast') ||
-//     label.toLowerCase().includes('malt')
-//   ) {
-//     return `${value.toFixed(2)}g`;
-//   }
-//   return `${Math.round(value)}g`;
-// }
-
 export function formatBakersPercent(value) {
   const num = parseFloat(value);
   if (isNaN(num)) return '–';

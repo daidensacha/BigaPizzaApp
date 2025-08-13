@@ -10,30 +10,28 @@ const yeastOptions = [
 
 export default function YeastTypeToggleGroup({
   value,
-  onChange,
-  theme = 'light',
+  onChange, // expects event-like: { target: { name, value } }
   name = 'yeastType',
 }) {
   const [hovered, setHovered] = useState(null);
-  const isDark = theme === 'dark';
 
-  const base = isDark
-    ? 'bg-stone-800 text-yellow-200 border-yellow-700'
-    : 'bg-white text-gray-800 border-gray-300';
+  // Tailwind-only theme classes (no prop needed)
+  const base =
+    'bg-white text-gray-800 border-gray-300 ' +
+    'dark:bg-stone-800 dark:text-yellow-200 dark:border-yellow-700';
 
-  const selected = isDark
-    ? 'bg-yellow-600 text-white shadow-md border-yellow-600'
-    : 'bg-red-600 text-white shadow-md border-red-600';
+  const selected =
+    'bg-red-600 text-white shadow-md border-red-600 ' +
+    'dark:bg-yellow-600 dark:text-white dark:border-yellow-600';
 
-  const ring = isDark ? 'focus:ring-yellow-500' : 'focus:ring-red-500';
+  const ring = 'focus:ring-red-500 dark:focus:ring-yellow-500';
 
   return (
     <div className="flex space-x-2 relative">
       {yeastOptions.map((option, index) => {
         const isActive = value === option.value;
-
         const buttonClass = clsx(
-          'px-4 py-2 text-sm font-medium rounded-xl border focus:outline-none focus:ring-offset-0',
+          'px-4 py-2 text-sm font-medium rounded-xl border focus:outline-none focus:ring-2 focus:ring-offset-0',
           isActive ? selected : base,
           ring
         );
@@ -67,10 +65,9 @@ export default function YeastTypeToggleGroup({
                   exit={{ opacity: 0, y: 4 }}
                   transition={{ duration: 0.2 }}
                   className={clsx(
-                    'absolute z-10 mt-10 w-max max-w-[160px] px-3 py-1 text-xs rounded-lg shadow-lg pointer-events-none',
-                    isDark
-                      ? 'bg-stone-700 text-yellow-100'
-                      : 'bg-white text-gray-800 border border-gray-300'
+                    'absolute z-10 mt-10 w-max max-w-[160px] px-3 py-1 text-xs rounded-lg shadow-lg pointer-events-none border',
+                    'bg-white text-gray-800 border-gray-300',
+                    'dark:bg-stone-700 dark:text-yellow-100 dark:border-yellow-700'
                   )}
                 >
                   {option.description}

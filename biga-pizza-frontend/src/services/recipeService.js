@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { API_BASE } from '@config';
 
-// const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-
 export const saveRecipe = async (recipeData, token) => {
   const config = {
     headers: {
@@ -44,8 +42,6 @@ export const updateRecipe = async (id, updatedData) => {
   return response.data;
 };
 
-// services/recipeService.js
-// export const updateRecipeImage = async (id, imageUrl, token) => {
 export const updateRecipeImage = async (id, imageUrl, token) => {
   const response = await fetch(`${API_BASE}/api/recipes/${id}/image`, {
     method: 'PUT',
@@ -77,7 +73,6 @@ export const uploadRecipeImage = async (id, imageFile, token) => {
   return res.json();
 };
 
-// services/recipeService.js
 export const updateRecipeNotes = async (id, data, token) => {
   const res = await axios.patch(`${API_BASE}/api/recipes/${id}/notes`, data, {
     headers: { Authorization: `Bearer ${token}` },

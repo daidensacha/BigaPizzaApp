@@ -19,8 +19,14 @@ export default function ScheduleSettingsDrawer({
   onReset,
 }) {
   const [activeSectionKey, setActiveSectionKey] = useState('pizza:General');
-  const { formData, setFormData, resetFormData, resetScheduleData } =
-    useRecipe();
+  const {
+    formData,
+    setFormData,
+    resetFormData,
+    scheduleData,
+    setScheduleData,
+    resetScheduleData,
+  } = useRecipe();
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const closeButtonRef = useRef(null);
 
@@ -48,7 +54,17 @@ export default function ScheduleSettingsDrawer({
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    // safety: if someone mis-wires bakingDateTime into the form side, redirect it
+    if (name === 'bakingDateTime') {
+      handleScheduleChange(e);
+      return;
+    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleScheduleChange = (e) => {
+    const { name, value } = e.target;
+    setScheduleData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -59,13 +75,8 @@ export default function ScheduleSettingsDrawer({
     const isOpen = activeSectionKey === sectionKey;
 
     const isPizza = type === 'pizza';
-    const state = isPizza
-      ? formData
-      : {
-          ...defaultScheduleSettings,
-          ...(data ?? {}),
-        };
-    const handleChange = isPizza ? handleFormChange : onChange;
+    const state = isPizza ? formData : scheduleData ?? defaultScheduleSettings;
+    const handleChange = isPizza ? handleFormChange : handleScheduleChange;
 
     return (
       <div
@@ -162,6 +173,12 @@ export default function ScheduleSettingsDrawer({
                       <X className="w-5 h-5" />
                     </button>
                   </div>
+                  {/* Helper note (beginner-friendly) */}
+                  <p className="text-xs text-gray-500 mb-2">
+                    Changes here affect <strong>this recipe only</strong>.<br />{' '}
+                    To set your personal defaults, go to{' '}
+                    <em>Dashboard → Settings</em>.
+                  </p>
 
                   {/* Accordion Sections */}
                   <div className="space-y-2 mb-6">
@@ -204,84 +221,6 @@ export default function ScheduleSettingsDrawer({
           </div>
         </Dialog>
       </Transition.Root>
-      {/* <Transition.Root show={isOpen} as={Fragment}>
-        <Dialog className="relative z-50" onClose={onClose}>
-          <Transition.Child
-            as={Fragment}
-            enter="transition-opacity ease-in-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity ease-in-out duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-hidden">
-            <div className="absolute inset-0 flex justify-end">
-              <Transition.Child
-                as={Fragment}
-                enter="transform transition ease-in-out duration-300"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-200"
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
-                <Dialog.Panel className="relative w-full max-w-md bg-stone-700 shadow-xl p-6 overflow-y-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <Dialog.Title className="text-xl font-semibold text-neutral-400">
-                      Pizza Settings
-                    </Dialog.Title>
-                    <button
-                      onClick={handleClose}
-                      aria-label="Close settings"
-                      className="text-stone-400 hover:text-stone-500 border border-stone-600 bg-stone-800 rounded-lg p-1 transition"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-2 mb-6">
-                    {pizzaSettingsSections.map((section) =>
-                      renderAccordionSection(section, 'pizza')
-                    )}
-                  </div>
-
-                  <div className="border-t border-stone-500 my-6" />
-
-                  <Dialog.Title className="text-xl font-semibold mb-4 text-neutral-400">
-                    Schedule Settings
-                  </Dialog.Title>
-
-                  <div className="space-y-2">
-                    {scheduleSections.map((section) =>
-                      renderAccordionSection(section, 'schedule')
-                    )}
-                  </div>
-
-                  <div className="mt-6 flex justify-end">
-                    <button
-                      onClick={() => setIsResetDialogOpen(true)}
-                      className="text-red-700 border border-red-950 bg-stone-800 px-4 py-2 mr-1 rounded hover:text-stone-300 hover:bg-red-900 hover:border-stone-800"
-                    >
-                      Reset
-                    </button>
-                    <button
-                      ref={closeButtonRef}
-                      onClick={handleClose}
-                      className="text-gray-300 border border-stone-800 bg-stone-800 px-4 py-2 rounded hover:bg-stone-950"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition.Root> */}
 
       {/* Reset Confirmation Dialog OUTSIDE the drawer */}
       <Transition appear show={isResetDialogOpen} as={Fragment}>

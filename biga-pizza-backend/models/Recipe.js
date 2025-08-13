@@ -1,16 +1,5 @@
 import mongoose from 'mongoose';
 
-// const ingredientSchema = new mongoose.Schema({
-//   name: String,
-//   amount: Number,
-//   unit: String,
-// });
-
-// const stepSchema = new mongoose.Schema({
-//   time: Date,
-//   description: String,
-// });
-
 const recipeSchema = new mongoose.Schema(
   {
     user: {

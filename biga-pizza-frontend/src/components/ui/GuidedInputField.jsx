@@ -1,6 +1,4 @@
 import React from 'react';
-import InputTooltip from '@ui/InputTooltip';
-import inputConfig from '@constants/inputConfig';
 
 export default function GuidedInputField({
   name,
