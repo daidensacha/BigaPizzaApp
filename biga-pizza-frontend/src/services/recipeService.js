@@ -80,6 +80,18 @@ export const updateRecipeNotes = async (id, data, token) => {
   return res.data;
 };
 
+export async function updateRecipeTitle(id, payload, token) {
+  const res = await axios.patch(
+    `${API_BASE}/api/recipes/${id}/title`,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }
+  );
+  return res.data;
+}
+
 export const deleteRecipe = async (id, token) => {
   const res = await axios.delete(`${API_BASE}/api/recipes/${id}`, {
     headers: { Authorization: `Bearer ${token}` },

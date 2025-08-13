@@ -10,6 +10,7 @@ import {
   updateRecipeNotes,
   uploadRecipeImage,
   updateRecipeImage,
+  updateRecipeTitle,
   deleteRecipe,
   // Add more routes like update/delete later
 } from '../controllers/recipeController.js';
@@ -34,6 +35,9 @@ router.patch('/:id/notes', protect, updateRecipeNotes);
 router.put('/:id', protect, updateRecipe);
 
 router.put('/:id/image', protect, updateRecipeImage);
+
+// PATCH upate recipe title
+router.patch('/:id/title', protect, updateRecipeTitle);
 
 // Upload image to recipe list view
 router.post(
