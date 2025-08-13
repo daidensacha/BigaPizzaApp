@@ -103,7 +103,7 @@ export default function RecipeCard({ recipe, onDelete }) {
   const formattedDate = new Date(recipe.createdAt).toLocaleDateString();
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-white dark:bg-stone-800 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-stone-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+    <div className="w-full h-full flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-white dark:bg-stone-800 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-stone-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
       {/* Left Column */}
       <div className="flex-1">
         <h3 className="text-xl font-semibold text-stone-700 dark:text-yellow-400">

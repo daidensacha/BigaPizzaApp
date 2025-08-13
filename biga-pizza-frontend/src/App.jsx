@@ -1,26 +1,50 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet, useLocation } from 'react-router-dom';
+
 import Home from '@pages/Home';
 import CreateRecipe from '@pages/recipes/CreateRecipe';
 import PizzaMenu from '@pages/PizzaMenu';
 import Navbar from '@components/Navbar';
+
 import { useRecipe } from '@context/RecipeContext';
 import ScheduleSettingsDrawer from '@components/ScheduleSettingsDrawer';
+
 import AuthModal from '@components/auth/AuthModal';
 import { useAuthModal } from '@context/AuthModalContext';
-import UserAccount from '@pages/Accounts/UserAccount';
-import AdminDashboard from '@pages/Accounts/AdminDashboard';
-import UserDashboard from '@pages/Accounts/UserDashboard';
+
 import ProtectedRoute from '@components/routes/ProtectedRoute';
-import AccountPage from '@accounts/AccountPage';
-import UserRecipeDetails from '@recipes/UserRecipeDetails'; // ??? UserRecipeDetails
-import UserRecipeList from '@recipes/UserRecipeList';
-import EditRecipe from '@recipes/EditRecipe';
+
+// Public recipe pages (view & quick-create)
+import UserRecipeDetails from '@recipes/UserRecipeDetails';
 import NewRecipeEntry from '@recipes/NewRecipeEntry';
 
-function App() {
-  const { isModalOpen, closeAuthModal } = useAuthModal();
+// Account area pages
+import UserDashboard from '@/pages/account/UserDashboard';
+import UserDefaults from '@/pages/account/UserDefaults';
+import UserProfile from '@/pages/account/UserProfile';
+import UserAccount from '@/pages/account/UserAccount';
+import AdminDashboard from '@/pages/account/AdminDashboard';
+import UserRecipeList from '@recipes/UserRecipeList';
+import EditRecipe from '@recipes/EditRecipe';
 
+// Layout shell for all /account pages
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+
+function AccountShell() {
+  return (
+    <DashboardLayout>
+      <Outlet />
+    </DashboardLayout>
+  );
+}
+
+function AppInner() {
+  const location = useLocation();
+  const state = location.state || {};
+  const background = location.state && location.state.background;
+
+  const { isModalOpen, closeAuthModal } = useAuthModal();
   const {
     isSettingsDrawerOpen,
     setSettingsDrawerOpen,
@@ -32,80 +56,76 @@ function App() {
 
   const handleScheduleChange = (e) => {
     const { name, value } = e.target;
-    setScheduleData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setScheduleData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
-        {/* <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 transition-colors duration-500"> */}
-        <Navbar />
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
+      <Navbar />
+      <main className="px-6 lg:px-8 py-8">
+        <div className="transition-colors duration-500">
+          {/* Render the "page underneath" (or the modal route directly if no background) */}
+          <Routes location={background || location}>
+            {/* Public routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/create-recipe" element={<CreateRecipe />} />
+            <Route path="/menu" element={<PizzaMenu />} />
+            {/* Include /recipes/new here so a direct visit works as a full page */}
+            <Route path="/recipes/new" element={<NewRecipeEntry />} />
+            <Route path="/recipes/:id" element={<UserRecipeDetails />} />
 
-        <main className="max-w-4xl mx-auto px-4 py-8">
-          {/* Remove dark theme - dark back ground */}
-          {/* <div className="dark:bg-stone-900 text-yellow-100 rounded-xl transition-colors duration-500"> */}
-          <div className="text-yellow-100 rounded-xl transition-colors duration-500">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/create-recipe" element={<CreateRecipe />} />
-              <Route path="/menu" element={<PizzaMenu />} />
-              <Route path="/my-recipes" element={<UserRecipeList />} />
-              <Route path="/recipes/:id" element={<UserRecipeDetails />} />
-              <Route path="/recipes/new" element={<NewRecipeEntry />} />
-
+            {/* Account area (nested & protected) */}
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <AccountShell />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<UserDashboard />} />
+              <Route path="recipes" element={<UserRecipeList />} />
+              <Route path="recipes/:id" element={<UserRecipeDetails />} />
+              <Route path="recipes/:id/edit" element={<EditRecipe />} />
+              <Route path="defaults" element={<UserDefaults />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="settings" element={<UserAccount />} />
               <Route
-                path="/account/recipes/:id/edit"
-                element={
-                  <ProtectedRoute>
-                    <EditRecipe />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/account/recipes/:id"
-                element={
-                  <ProtectedRoute>
-                    <UserRecipeDetails />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/account"
-                element={
-                  <ProtectedRoute>
-                    <AccountPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
+                path="admin"
                 element={
                   <ProtectedRoute adminOnly>
                     <AdminDashboard />
                   </ProtectedRoute>
                 }
               />
-            </Routes>
-          </div>
-        </main>
+            </Route>
+          </Routes>
 
-        <ScheduleSettingsDrawer
-          isOpen={isSettingsDrawerOpen}
-          onClose={() => setSettingsDrawerOpen(false)}
-          data={scheduleData}
-          onChange={handleScheduleChange}
-          onReset={() => {
-            resetScheduleData();
-            resetFormData();
-          }}
-        />
-        <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
-      </div>
-    </Router>
+          {/* Render the modal ONLY if we have a background page */}
+          {background && (
+            <Routes>
+              <Route path="/recipes/new" element={<NewRecipeEntry />} />
+            </Routes>
+          )}
+        </div>
+      </main>
+
+      {/* Global drawers/modals */}
+      <ScheduleSettingsDrawer
+        isOpen={isSettingsDrawerOpen}
+        onClose={() => setSettingsDrawerOpen(false)}
+        data={scheduleData}
+        onChange={handleScheduleChange}
+        onReset={() => {
+          resetScheduleData();
+          resetFormData();
+        }}
+      />
+      <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return <AppInner />;
+}

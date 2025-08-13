@@ -1,6 +1,6 @@
 // src/components/recipes/ModalRecipeEditor.jsx
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import { formatLocalLabel } from '@/utils/dayjsConfig';
@@ -11,6 +11,8 @@ import { useDefaults } from '@/context/DefaultsContext';
 
 import NumberInputGroup from '@/components/ui/NumberInputGroup';
 import YeastTypeToggleGroup from '@/components/ui/YeastTypeToggleGroup';
+import YeastCorrectionSliders from '@/components/ui/YeastCorrectionSliders';
+import { YEAST_CORRECTION_DEFAULTS } from '@/utils/utils';
 import inputConfig from '@/constants/inputConfig';
 
 import { saveRecipe } from '@/services/recipeService';
@@ -34,6 +36,8 @@ import {
 export default function ModalRecipeEditor({ mode = 'create', onClose }) {
   const { user } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
+  const background = location.state?.backgroundLocation || null;
   const dialogRef = useRef(null);
 
   const { formData, setFormData, scheduleData, setScheduleData } = useRecipe();
@@ -45,10 +49,16 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   // a11y + close handlers
-  const close = useCallback(
-    () => (onClose ? onClose() : nav(-1)),
-    [nav, onClose]
-  );
+  // const close = useCallback(
+  //   () => (onClose ? onClose() : nav(-1)),
+  //   [nav, onClose]
+  // );
+  const close = useCallback(() => {
+    if (onClose) return onClose(); // caller-provided close (if any)
+    if (background) return nav(-1); // routed modal → go back to the background page
+    return nav('/'); // direct visit → send somewhere sensible
+  }, [nav, onClose, background]);
+
   useEffect(() => {
     dialogRef.current?.focus();
   }, []);
@@ -151,6 +161,23 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
     } finally {
       setSavingRecipe(false);
     }
+  };
+
+  const handleCorrectionChange = (name, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...(name === 'short'
+        ? { shortCorrection: value }
+        : { longCorrection: value }),
+    }));
+  };
+
+  const handleResetCorrections = () => {
+    setFormData((prev) => ({
+      ...prev,
+      shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
+      longCorrection: YEAST_CORRECTION_DEFAULTS.long,
+    }));
   };
 
   // UI helpers
@@ -346,7 +373,7 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
                       bakingDateTime: e.target.value,
                     }))
                   }
-                  className="h-9 w-full leading-none text-sm px-3 border border-zinc-300 rounded-md bg-white dark:bg-zinc-900 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 dark:[color-scheme:dark]"
+                  className="h-9 w-full dark leading-none text-sm px-3 border border-zinc-300 rounded-md bg-white dark:bg-zinc-900 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 dark:[color-scheme:dark]"
                 />
               </div>
 
@@ -387,36 +414,59 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
               {/* Ingredient table */}
               <div className="border rounded-lg p-4 border-zinc-200 dark:border-zinc-800 overflow-x-auto">
                 <h3 className="font-semibold mb-3">Ingredient Breakdown</h3>
+
                 {!previewCalculated ? (
                   <p className="text-sm text-zinc-500">
                     Adjust inputs to see the breakdown.
                   </p>
                 ) : (
-                  <table className="min-w-full text-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-zinc-300 dark:border-zinc-700">
-                        <th className="text-left py-1 pr-4">Ingredient</th>
-                        <th className="text-right px-2">Biga</th>
-                        <th className="text-right px-2">Refresh</th>
-                        <th className="text-right px-2">Total</th>
-                        <th className="text-right px-2">Baker%</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ingredientRows.map((row) => (
-                        <tr
-                          key={row.label}
-                          className="border-b last:border-0 border-zinc-200 dark:border-zinc-800"
-                        >
-                          <td className="py-1 pr-4">{row.label}</td>
-                          <td className="text-right px-2">{row.biga}</td>
-                          <td className="text-right px-2">{row.refresh}</td>
-                          <td className="text-right px-2">{row.total}</td>
-                          <td className="text-right px-2">{row.bakers}</td>
+                  <>
+                    <table className="min-w-full text-sm border-collapse">
+                      <thead>
+                        <tr className="border-b border-zinc-300 dark:border-zinc-700">
+                          <th className="text-left py-1 pr-4">Ingredient</th>
+                          <th className="text-right px-2">Biga</th>
+                          <th className="text-right px-2">Refresh</th>
+                          <th className="text-right px-2">Total</th>
+                          <th className="text-right px-2">Baker%</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {ingredientRows.map((row) => (
+                          <tr
+                            key={row.label}
+                            className="border-b last:border-0 border-zinc-200 dark:border-zinc-800"
+                          >
+                            <td className="py-1 pr-4">{row.label}</td>
+                            <td className="text-right px-2">{row.biga}</td>
+                            <td className="text-right px-2">{row.refresh}</td>
+                            <td className="text-right px-2">{row.total}</td>
+                            <td className="text-right px-2">{row.bakers}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    {/* Advanced toggle + compact sliders */}
+                    <div className="mt-3">
+                      <button
+                        type="button"
+                        className="text-xs underline text-zinc-800 dark:text-zinc-200"
+                        onClick={() => setShowAdvanced((v) => !v)}
+                      >
+                        {showAdvanced ? 'Hide Advanced' : 'Advanced ▸'}
+                      </button>
+
+                      {showAdvanced && (
+                        <YeastCorrectionSliders
+                          shortValue={formData.shortCorrection}
+                          longValue={formData.longCorrection}
+                          onChange={handleCorrectionChange}
+                          onReset={handleResetCorrections}
+                        />
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
 
@@ -447,32 +497,23 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
           )}
 
           {/* Advanced actions */}
-          <div className="mt-2">
-            <button
-              className="text-sm underline text-zinc-800 dark:text-zinc-200"
-              onClick={() => setShowAdvanced((v) => !v)}
-            >
-              {showAdvanced ? 'Hide Advanced' : 'Advanced ▸'}
-            </button>
-            {showAdvanced && (
-              <div className="mt-2 flex flex-wrap gap-2">
-                <button
-                  className="px-3 py-1 rounded bg-zinc-100 dark:bg-zinc-800"
-                  onClick={applyMyDefaults}
-                >
-                  Apply My Defaults
-                </button>
-                <button
-                  className="px-3 py-1 rounded bg-zinc-100 dark:bg-zinc-800"
-                  disabled={saving}
-                  onClick={saveTheseAsMyDefaults}
-                >
-                  {saving ? 'Saving…' : 'Save These as My Defaults…'}
-                </button>
-              </div>
-            )}
-          </div>
-
+          {tab === 'preview' && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                className="px-3 py-1 rounded bg-zinc-100 dark:bg-zinc-800"
+                onClick={applyMyDefaults}
+              >
+                Apply My Defaults
+              </button>
+              <button
+                className="px-3 py-1 rounded bg-zinc-100 dark:bg-zinc-800"
+                disabled={saving}
+                onClick={saveTheseAsMyDefaults}
+              >
+                {saving ? 'Saving…' : 'Save These as My Defaults…'}
+              </button>
+            </div>
+          )}
           <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
             Changes here affect <strong>this recipe only</strong>. Manage your
             saved defaults in <em>Dashboard → Settings</em>.

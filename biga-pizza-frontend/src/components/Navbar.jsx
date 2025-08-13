@@ -1,16 +1,16 @@
 import { useAuth } from '@/context/AuthContext';
 import NavbarUserMenu from '@/components/NavbarUserMenu';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from '@ui/ThemeToggle';
 import { useAuthModal } from '@context/AuthModalContext';
 import { useRecipe } from '@context/RecipeContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
   const { openAuthModal } = useAuthModal();
   const { user, logout } = useAuth();
   const { setSettingsDrawerOpen } = useRecipe();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -31,6 +31,7 @@ export default function Navbar() {
         <Link
           className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
           to="/recipes/new"
+          state={{ background: location }}
         >
           Create Recipe
         </Link>

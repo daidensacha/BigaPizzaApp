@@ -27,7 +27,7 @@ export default function UserRecipeDetails() {
     }
   }, [id, user]);
 
-  const handleBack = () => navigate('/my-recipes');
+  const handleBack = () => navigate('/account/recipes');
   // console.log('👤 User in UserRecipeDetails:', user);
 
   if (loading) return <p className="p-4">Loading...</p>;
@@ -38,7 +38,7 @@ export default function UserRecipeDetails() {
   console.log('GET recipeById calculatiedData', calculatedData);
   console.log('GET recipeById scheduleData:', scheduleData);
   return (
-    <div className="print-wrapper space-y-6 p-6 max-w-4xl mx-auto">
+    <div className="print-wrapper space-y-6 px-2 lg:px-4 w-full">
       <div className="no-print flex items-center mb-6">
         <button
           onClick={handleBack}
