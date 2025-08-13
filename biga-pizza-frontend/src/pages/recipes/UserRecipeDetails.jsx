@@ -5,7 +5,6 @@ import { formatGrams } from '@/utils/recipeFormatting';
 import { formatLocalLabel } from '@/utils/dayjsConfig';
 import { useAuth } from '@context/AuthContext';
 import { ArrowLeft } from 'lucide-react';
-import dayjs from 'dayjs';
 
 export default function UserRecipeDetails() {
   const { user } = useAuth();

@@ -1,4 +1,3 @@
-// src/pages/recipes/NewRecipeEntry.jsx
 import { useAuth } from '@/context/AuthContext';
 import ModalRecipeEditor from '@/components/recipes/ModalRecipeEditor';
 import CreateRecipe from '@/pages/recipes/CreateRecipe';

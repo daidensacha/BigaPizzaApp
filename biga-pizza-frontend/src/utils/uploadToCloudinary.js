@@ -1,4 +1,3 @@
-// src/utils/uploadToCloudinary.js
 export const uploadToCloudinary = async (file) => {
   const cloudName = import.meta.env.VITE_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;

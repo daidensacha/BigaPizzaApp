@@ -1,4 +1,3 @@
-// src/components/ui/ConfirmDeleteDialog.jsx
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 

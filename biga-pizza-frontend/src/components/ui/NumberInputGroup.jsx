@@ -1,4 +1,3 @@
-// src/components/ui/NumberInputGroup.jsx
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
 
 function NumberInputGroup({

@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { updateRecipeNotes } from '@/services/recipeService';
 import { toast } from 'react-hot-toast';
-// import { Star } from 'lucide-react';
 import ConfirmDeleteDialog from '@ui/ConfirmDeleteDialog';
-// import { Dialog, Transition } from '@headlessui/react';
-// import { Fragment } from 'react';
 import StarRatingInput from './StarRatingInput';
 import { updateRecipeImage } from '@/services/recipeService';
 import { useDropzone } from 'react-dropzone';
@@ -22,10 +19,6 @@ export default function RecipeCard({ recipe, onDelete }) {
   const [localImage, setLocalImage] = useState(recipe.image);
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
-  // const [isDialogOpen, setIsDialogOpen] = useState(false);
-  // const cloudName = import.meta.env.VITE_CLOUD_NAME;
-  // const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
-  // const fileInputRef = useRef(null);
 
   const handleImageUpload = async (url) => {
     try {

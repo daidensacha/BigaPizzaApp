@@ -156,20 +156,6 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
   // UI helpers
   const nowPlus1Hour = dayjs().add(1, 'hour').format('YYYY-MM-DDTHH:mm');
 
-  // console.log(
-  //   '[Preview] scheduleData.bakingDateTime =',
-  //   scheduleData?.bakingDateTime
-  // );
-  // console.log('[Preview] sched from helpers =', sched);
-  // console.log('[Preview] previewCalculated =', previewCalculated);
-  // console.log(
-  //   '[Preview] timelineSteps =',
-  //   previewCalculated?.timelineSteps?.map((s) => ({
-  //     label: s.label,
-  //     time: s.time,
-  //   }))
-  // );
-
   return (
     <div
       className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-[1px] flex items-end sm:items-center justify-center p-0 sm:p-4"
@@ -362,9 +348,6 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
                   }
                   className="h-9 w-full leading-none text-sm px-3 border border-zinc-300 rounded-md bg-white dark:bg-zinc-900 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 dark:[color-scheme:dark]"
                 />
-                {/* FLATPICKR START*/}
-
-                {/* FLATPICKR END */}
               </div>
 
               <legend className="px-2 text-sm font-semibold">Schedule</legend>

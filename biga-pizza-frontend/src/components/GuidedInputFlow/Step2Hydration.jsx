@@ -59,8 +59,6 @@ export default function Step2Hydration() {
           step={inputConfig.saltPercent.step}
           unit={inputConfig.saltPercent.unit}
         />
-        {/* </div>
-      <div className="p-4 rounded-lg bg-green-50 dark:bg-purple-700 dark:bg-opacity-40 border border-purple-200 dark:border-green-700"> */}
         {/* Malt Percentage (Optional) */}
         <GuidedInputField
           name="maltPercent"

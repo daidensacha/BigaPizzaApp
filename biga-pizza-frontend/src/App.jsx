@@ -10,7 +10,6 @@ import AuthModal from '@components/auth/AuthModal';
 import { useAuthModal } from '@context/AuthModalContext';
 import UserAccount from '@pages/Accounts/UserAccount';
 import AdminDashboard from '@pages/Accounts/AdminDashboard';
-// import NavbarAccountLinks from '@components/NavbarAccountLinks';
 import UserDashboard from '@pages/Accounts/UserDashboard';
 import ProtectedRoute from '@components/routes/ProtectedRoute';
 import AccountPage from '@accounts/AccountPage';

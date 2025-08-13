@@ -4,7 +4,6 @@ import { ChevronUp, X } from 'lucide-react';
 import ScheduleInputGroup from '@components/ScheduleInputGroup';
 import { useRecipe } from '@context/RecipeContext';
 import YeastTypeToggleGroup from '@ui/YeastTypeToggleGroup';
-// import BakingDateTimePicker from '@/components/inputs/BakingDateTimePicker';
 import toast from 'react-hot-toast';
 import {
   pizzaSettingsSections,
@@ -52,14 +51,6 @@ export default function ScheduleSettingsDrawer({
     }
     onClose();
   };
-
-  // const handleFormChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

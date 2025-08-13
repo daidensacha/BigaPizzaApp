@@ -1,4 +1,3 @@
-// const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 import { API_BASE } from '@config';
 // DEFAULT OPTIONS
 const defaultOptions = {
@@ -23,7 +22,6 @@ export const registerUser = async (userData) => {
 
 // LOGIN USER
 export const loginUser = async (userData) => {
-  // console.log('API_BASE:', API_BASE); // 🔍 check value
   const res = await fetch(`${API_BASE}/api/auth/login`, {
     ...defaultOptions,
     method: 'POST',
@@ -35,10 +33,6 @@ export const loginUser = async (userData) => {
 
   // ✅ Merge token into the user object
   return data;
-  // return {
-  //   ...data.user,
-  //   token: data.token,
-  // };
 };
 
 // LOGOUT USER

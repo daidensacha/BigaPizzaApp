@@ -19,8 +19,6 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
   const results = calculateDough(formData);
   const schedule = calculatePrepSchedule(scheduleData);
 
-  // const nav = useNavigate();
-  // const location = useLocation();
   const { openAuthModal } = useAuthModal();
 
   const calculatedData = {
