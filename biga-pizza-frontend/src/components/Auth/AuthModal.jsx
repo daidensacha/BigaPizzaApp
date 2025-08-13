@@ -71,9 +71,23 @@ export default function AuthModal({ isOpen, onClose }) {
                     activeDisclosure === 'login' ? null : 'login'
                   )
                 }
-                className="w-full text-left font-medium px-4 py-2 rounded-lg bg-gray-100 dark:bg-stone-700 hover:bg-gray-200 dark:hover:bg-stone-600 transition"
+                className={`w-full text-left font-medium px-4 py-2 rounded-lg transition
+      ${
+        activeDisclosure === 'login'
+          ? 'bg-gray-400 dark:bg-orange-800 text-white dark:text-white shadow-sm'
+          : 'bg-gray-200 dark:bg-orange-900 hover:bg-gray-300 dark:hover:bg-orange-800 text-inherit'
+      }`}
               >
-                {activeDisclosure === 'login' ? '−' : '+'} Login
+                <span className="inline-flex items-center gap-2">
+                  <span
+                    className={`transition-transform ${
+                      activeDisclosure === 'login' ? 'rotate-0' : ''
+                    }`}
+                  >
+                    {activeDisclosure === 'login' ? '−' : '+'}
+                  </span>
+                  Login
+                </span>
               </button>
               {activeDisclosure === 'login' && (
                 <div className="p-4 pt-2 space-y-3">
@@ -115,9 +129,23 @@ export default function AuthModal({ isOpen, onClose }) {
                     activeDisclosure === 'register' ? null : 'register'
                   )
                 }
-                className="w-full text-left font-medium px-4 py-2 rounded-lg bg-gray-100 dark:bg-stone-700 hover:bg-gray-200 dark:hover:bg-stone-600 transition"
+                className={`w-full text-left font-medium px-4 py-2 rounded-lg transition
+      ${
+        activeDisclosure === 'register'
+          ? 'bg-gray-400 dark:bg-orange-800 text-white shadow-sm'
+          : 'bg-gray-200 dark:bg-orange-900 hover:bg-gray-300 dark:hover:bg-orange-800 text-inherit'
+      }`}
               >
-                {activeDisclosure === 'register' ? '−' : '+'} Register
+                <span className="inline-flex items-center gap-2">
+                  <span
+                    className={`transition-transform ${
+                      activeDisclosure === 'register' ? 'rotate-0' : ''
+                    }`}
+                  >
+                    {activeDisclosure === 'register' ? '−' : '+'}
+                  </span>
+                  Register
+                </span>
               </button>
               {activeDisclosure === 'register' && (
                 <div className="p-4 pt-2 space-y-3">

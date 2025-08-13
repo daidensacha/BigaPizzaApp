@@ -1,10 +1,12 @@
 import React from 'react';
+// import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthModal } from '@/context/AuthModalContext';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useRecipe } from '@/context/RecipeContext';
 import { calculateDough } from '@/utils/utils';
 import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
-import { formatScheduleTime } from '@/utils/dateUtils';
+import { formatLocalLabel } from '@/utils/dayjsConfig';
 import { formatGrams } from '@/utils/recipeFormatting';
 import { useAuth } from '@context/AuthContext';
 import { saveRecipe } from '@services/recipeService';
@@ -16,6 +18,10 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
   const { formData, scheduleData, isTimelineConfirmed } = useRecipe();
   const results = calculateDough(formData);
   const schedule = calculatePrepSchedule(scheduleData);
+
+  // const nav = useNavigate();
+  // const location = useLocation();
+  const { openAuthModal } = useAuthModal();
 
   const calculatedData = {
     ingredients: {
@@ -83,7 +89,7 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
       {
         label: 'Bake Pizza',
         time: scheduleData.bakingDateTime
-          ? formatScheduleTime(schedule.bakingDateTime) // now a dayjs object
+          ? formatLocalLabel(schedule.bakingDateTime) // now a dayjs object
           : null,
         description:
           'Stretch your dough, top your pizzas, and bake until golden and blistered. Enjoy!',
@@ -185,7 +191,7 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
                 {index + 1}. {step.label}
               </strong>
               <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-                {step.time ? formatScheduleTime(step.time) : '• TBD'}
+                {step.time ? formatLocalLabel(step.time) : '• TBD'}
               </p>
               <p>{step.description}</p>
             </li>
@@ -208,9 +214,12 @@ export default function Step7FinalRecipe({ setCurrentStep, onBack }) {
             Save Recipe
           </button>
         ) : (
-          <p className="no-print text-sm text-gray-500 italic">
-            Log in to save your recipe
-          </p>
+          <button
+            onClick={() => openAuthModal('login')} // or 'register', or no arg if your modal handles both
+            className="no-print border border-gray-400 px-4 py-2 rounded-md hover:bg-gray-100 dark:border-stone-700 dark:text-yellow-500 dark:hover:bg-stone-700 transition"
+          >
+            Log in / Register to save & edit
+          </button>
         )}
         <button
           onClick={onBack}

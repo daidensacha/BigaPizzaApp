@@ -68,7 +68,7 @@ export function calculatePrepSchedule(data) {
     preheatOvenTime,
     prepToppingsTime,
     // This is a dayjs object, not the original string.
-    // Use formatScheduleTime() when displaying in UI.
+    // Use formatLocalLabel() when displaying in UI.
     bakingDateTime: bakingDateTimeObj,
     totalDuration,
   };

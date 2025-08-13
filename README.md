@@ -111,15 +111,14 @@ biga-pizza-frontend            # React frontend with Vite + Tailwind CSS
 │   ├── authService.js     # API calls for auth
 │   └── recipeService.js   # API calls for recipes
 └── utils/
-├── dateUtils.js
-├── dayjsConfig.js     # Shared dayjs formatting
-├── previewHelpers.js
-├── recipeFormatting.js
-├── scheduleCalculator.js
-├── scheduleLabels.js
-├── theme.js
-├── toastUtils.js
-└── utils.js
+    ├── dayjsConfig.js     # Shared dayjs formatting
+    ├── previewHelpers.js
+    ├── recipeFormatting.js
+    ├── scheduleCalculator.js
+    ├── scheduleLabels.js
+    ├── theme.js
+    ├── toastUtils.js
+    └── utils.js
 ```
 
 ---

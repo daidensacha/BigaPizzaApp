@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
 import ScheduleSettingsDrawer from '@/components/ScheduleSettingsDrawer';
 import dayjs from '@/utils/dayjsConfig';
 import labelMap from '@/utils/scheduleLabels';
 import { useRecipe } from '@/context/RecipeContext';
+import {
+  calcDoughAndSchedule,
+  buildCalculatedData,
+} from '@/utils/recipeCalcHelpers';
 
 export default function Step6PrepSchedule({
   onCreateSchedule,
@@ -32,6 +36,19 @@ export default function Step6PrepSchedule({
     return `${h}h ${m}m`;
   };
 
+  const { results, sched } = useMemo(() => {
+    try {
+      return calcDoughAndSchedule(formData, scheduleData);
+    } catch {
+      return { results: null, sched: null };
+    }
+  }, [formData, scheduleData]);
+
+  const previewCalculated = useMemo(() => {
+    if (!results || !sched) return null;
+    return buildCalculatedData(results, sched, scheduleData); // <- produces ISO strings
+  }, [results, sched, scheduleData]);
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold text-center text-stone-600 dark:text-amber-600">
@@ -57,23 +74,6 @@ export default function Step6PrepSchedule({
           </div>
         )}
       </div>
-
-      {!isEditing && (
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-gray-700 dark:text-stone-300 mr-2">
-            Need to adjust prep durations?
-          </p>
-
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={onOpenDrawer}
-              className="text-sm text-yellow-400 underline hover:text-yellow-200"
-            >
-              Open Schedule Settings
-            </button>
-          </div>
-        </div>
-      )}
 
       {!isEditing && (
         <div className="mt-6 flex space-x-4 justify-center">

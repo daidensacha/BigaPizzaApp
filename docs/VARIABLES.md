@@ -70,7 +70,7 @@ type CalculatedData = {
   };
   timelineSteps: Array<{
     label: string;
-    time: string | null; // human-readable via formatScheduleTime
+    time: string | null; // human-readable via formatLocalLabel()
     description?: string;
   }>;
 };
@@ -112,7 +112,7 @@ type PrepSchedule = {
 ### `buildCalculatedData(results, sched, scheduleData)`
 
 - Builds `CalculatedData` for UI & persistence.
-- Uses `sched.*` for step times and **formats** with `formatScheduleTime`.
+- Uses `sched.*` for step times and **formats** with `formatLocalLabel()`.
 - For “Bake Pizza” it uses `sched.bakingDateTime` or (if missing) formats `scheduleData.bakingDateTime`.
 
 ### `makeIngredientRows(calculatedData)`
@@ -168,7 +168,7 @@ Backend model mirrors these three blobs: `formData`, `scheduleData`, `calculated
 - **Date/time (derived dayjs):** use the **same key** when returned from calculators; e.g. `schedule.bakingDateTime` is **dayjs**.
 - **Durations:** end with `Time` (minutes) or `RisingTime` (hours) to signal units.
 - **Booleans:** start with `is*` (e.g., `isTimelineConfirmed`).
-- **Helpers that format for UI:** `format*` (e.g., `formatScheduleTime`).
+- **Helpers that format for UI:** `format*` (e.g., `formatLocalLabel()`).
 - **Do not** introduce synonyms (`bakePizza`, `bakingDT`, etc.).
   If you must alias, add it here and deprecate the old one explicitly.
 
@@ -191,7 +191,7 @@ Backend model mirrors these three blobs: `formData`, `scheduleData`, `calculated
 ## 7) Common gotchas
 
 - Mixing units (minutes vs hours) in `scheduleData`—double-check when adding fields.
-- Using the dayjs object directly in JSX—always format via `formatScheduleTime`.
+- Using the dayjs object directly in JSX—always format via `formatLocalLabel()`.
 - Forgetting to seed `scheduleData.bakingDateTime` in “create” flows—ensure the default is set once (e.g., now + 1 day).
 - Ingredient Baker% must divide by **total flour** (biga + refresh), not total dough weight.
 
@@ -206,9 +206,9 @@ const calculatedData = buildCalculatedData(results, sched, scheduleData);
 
 // 2) Show bake time (preview):
 const bakeTime = sched?.bakingDateTime
-  ? formatScheduleTime(sched.bakingDateTime)
+  ? formatLocalLabel(sched.bakingDateTime)
   : scheduleData.bakingDateTime
-  ? formatScheduleTime(scheduleData.bakingDateTime)
+  ? formatLocalLabel(scheduleData.bakingDateTime)
   : null;
 
 // 3) Save:
@@ -222,3 +222,40 @@ const payload = {
   rating: null,
 };
 ```
+
+## 9) 📅 Date/Time Conventions — BigaPizzaApp
+
+**Goal**
+Always store and transmit times in **UTC**.
+Always display and edit times in the **user's local timezone**.
+
+---
+
+### Storage (backend, DB, API payloads)
+
+- All date/times are **ISO 8601 UTC strings** (e.g., `2025-08-14T18:30:00Z`).
+- No timezone offsets stored; the `Z` suffix means UTC.
+
+### Inputs (`<input type="datetime-local">`)
+
+- Controlled by strings in format `YYYY-MM-DDTHH:mm` (local time, no TZ).
+- When saving → convert to UTC ISO via `toUtcIso(localInput)`.
+- When loading → convert UTC ISO to local string via `utcIsoToLocalInput(utcIso)`.
+
+### Day.js Helpers
+
+- `toLocalDayjs(any)` → returns a Dayjs object in local TZ.
+- `formatLocalLabel(any, fmt?)` → pretty label in local TZ for UI.
+- `toUtcIso(localInput)` → local string → UTC ISO.
+- `utcIsoToLocalInput(utcIso)` → UTC ISO → local string.
+
+### Rendering
+
+- Any stored UTC time must be run through `formatLocalLabel()` before display.
+- Timelines, schedules, and previews should **never** display raw UTC.
+
+### Why
+
+- UTC storage avoids cross-timezone drift.
+- Local display makes times meaningful to the user.
+- This separation prevents “off-by-hours” bugs in scheduling.

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
+import { formatLocalLabel } from '@/utils/dayjsConfig';
 
 import { useAuth } from '@/context/AuthContext';
 import { useRecipe } from '@/context/RecipeContext';
@@ -451,7 +452,9 @@ export default function ModalRecipeEditor({ mode = 'create', onClose }) {
                         className="flex items-center justify-between gap-3"
                       >
                         <span>{s.label}</span>
-                        <span className="text-zinc-500">{s.time ?? '—'}</span>
+                        <span className="text-zinc-500">
+                          {s.time ? formatLocalLabel(s.time) : '—'}
+                        </span>
                       </li>
                     ))}
                   </ol>

@@ -1,9 +1,9 @@
-import { formatDateTime } from '@/utils/dateUtils';
+import { getLocalDateTimePlus24h } from '@/utils/dayjsConfig';
 
 const inputConfig = {
   // 🍕 Pizza Settings
   bakingDateTime: {
-    default: formatDateTime(new Date()),
+    default: getLocalDateTimePlus24h(),
     type: 'datetime-local',
   },
   numPizzas: {

@@ -14,11 +14,6 @@ const pizzaSettingsSections = [
   {
     title: 'General',
     inputs: [
-      withUnitAndMeta(
-        'bakingDateTime',
-        'Baking Date and Time',
-        'datetime-local'
-      ),
       withUnitAndMeta('numPizzas', 'Recipe for (pizzas)'),
       withUnitAndMeta('ballWeight', 'Ball weight (g)'),
       withUnitAndMeta('bigaPercent', 'Dough Biga %'),
@@ -52,6 +47,16 @@ const pizzaSettingsSections = [
 ];
 
 const scheduleSections = [
+  {
+    title: 'Baking Date-Time',
+    inputs: [
+      withUnitAndMeta(
+        'bakingDateTime',
+        'Baking Date and Time',
+        'datetime-local'
+      ),
+    ],
+  },
   {
     title: 'Biga',
     inputs: [

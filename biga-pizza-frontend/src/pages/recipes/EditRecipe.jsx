@@ -7,6 +7,12 @@ import Step5RecipePreview from '@components/guidedinputflow/Step5RecipePreview';
 import Step6PrepSchedule from '@components/guidedinputflow/Step6PrepSchedule';
 import ScheduleSettingsDrawer from '@components/ScheduleSettingsDrawer';
 import defaultScheduleSettings from '@constants/defaultScheduleSettings';
+import {
+  calcDoughAndSchedule,
+  buildCalculatedData,
+} from '@/utils/recipeCalcHelpers';
+import { calculateDough } from '@/utils/utils';
+import { calculatePrepSchedule } from '@/utils/scheduleCalculator';
 import toast from 'react-hot-toast';
 import { Settings } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
@@ -57,12 +63,23 @@ export default function EditRecipe() {
 
   const handleSave = async () => {
     try {
+      // 1) Recompute from current formData + scheduleData
+      const { results, sched } = calcDoughAndSchedule(formData, scheduleData);
+      const calculatedData = includeTimeline
+        ? buildCalculatedData(results, sched, scheduleData)
+        : {
+            ingredients: recipe?.calculatedData?.ingredients ?? null,
+            timelineSteps: [],
+          };
+
       const payload = {
         formData,
         hasSchedule: includeTimeline,
         scheduleData: includeTimeline
           ? scheduleData ?? defaultScheduleSettings
           : null,
+        // 2) Send calculatedData so the backend stores the fresh timeline
+        calculatedData,
       };
       console.log('📦 payload to update:', payload);
       console.log('🧾 Saving formData:', formData);

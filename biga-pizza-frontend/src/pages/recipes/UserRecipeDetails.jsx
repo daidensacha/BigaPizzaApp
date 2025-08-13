@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getRecipeById } from '@/services/recipeService';
 import { formatGrams } from '@/utils/recipeFormatting';
-import { formatScheduleTime } from '@/utils/dateUtils';
+import { formatLocalLabel } from '@/utils/dayjsConfig';
 import { useAuth } from '@context/AuthContext';
 import { ArrowLeft } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -36,7 +36,8 @@ export default function UserRecipeDetails() {
     return <p className="p-4 text-red-500">{error || 'Recipe not found.'}</p>;
 
   const { formData, scheduleData, calculatedData, notes, rating } = recipe;
-  console.log(calculatedData);
+  console.log('GET recipeById calculatiedData', calculatedData);
+  console.log('GET recipeById scheduleData:', scheduleData);
   return (
     <div className="print-wrapper space-y-6 p-6 max-w-4xl mx-auto">
       <div className="no-print flex items-center mb-6">
@@ -123,7 +124,7 @@ export default function UserRecipeDetails() {
                   {index + 1}. {step.label}
                 </strong>
                 <p className="text-sm text-gray-600 dark:text-stone-400 italic">
-                  {step.time ? formatScheduleTime(dayjs(step.time)) : '• TBD'}
+                  {step.time ? formatLocalLabel(step.time) : '• TBD'}
                 </p>
                 <p>{step.description}</p>
               </li>

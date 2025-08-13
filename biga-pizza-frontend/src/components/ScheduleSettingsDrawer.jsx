@@ -20,8 +20,14 @@ export default function ScheduleSettingsDrawer({
   onReset,
 }) {
   const [activeSectionKey, setActiveSectionKey] = useState('pizza:General');
-  const { formData, setFormData, resetFormData, resetScheduleData } =
-    useRecipe();
+  const {
+    formData,
+    setFormData,
+    resetFormData,
+    scheduleData,
+    setScheduleData,
+    resetScheduleData,
+  } = useRecipe();
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const closeButtonRef = useRef(null);
 
@@ -47,9 +53,27 @@ export default function ScheduleSettingsDrawer({
     onClose();
   };
 
+  // const handleFormChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    // safety: if someone mis-wires bakingDateTime into the form side, redirect it
+    if (name === 'bakingDateTime') {
+      handleScheduleChange(e);
+      return;
+    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleScheduleChange = (e) => {
+    const { name, value } = e.target;
+    setScheduleData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -60,13 +84,8 @@ export default function ScheduleSettingsDrawer({
     const isOpen = activeSectionKey === sectionKey;
 
     const isPizza = type === 'pizza';
-    const state = isPizza
-      ? formData
-      : {
-          ...defaultScheduleSettings,
-          ...(data ?? {}),
-        };
-    const handleChange = isPizza ? handleFormChange : onChange;
+    const state = isPizza ? formData : scheduleData ?? defaultScheduleSettings;
+    const handleChange = isPizza ? handleFormChange : handleScheduleChange;
 
     return (
       <div
