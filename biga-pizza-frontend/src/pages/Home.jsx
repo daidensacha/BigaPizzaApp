@@ -15,7 +15,7 @@ export default function Home() {
       });
     } else {
       // logged out → send to guided input flow
-      navigate('/guided-input-flow');
+      navigate('/create-recipe');
     }
   };
 
