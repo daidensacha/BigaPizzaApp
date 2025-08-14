@@ -2,8 +2,10 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
+  const navigate = useNavigate();
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="inline-flex items-center gap-2 text-sm font-medium focus:outline-none hover:text-red-600">
@@ -33,7 +35,7 @@ export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
             <Menu.Item>
               {({ active }) => (
                 <Link
-                  to="/my-recipes"
+                  to="/account/recipes"
                   className={`${
                     active ? 'bg-gray-100 dark:bg-stone-700' : ''
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -57,7 +59,7 @@ export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={onOpenSettings}
+                  onClick={() => navigate('/account/defaults')}
                   className={`${
                     active ? 'bg-gray-100 dark:bg-stone-700' : ''
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

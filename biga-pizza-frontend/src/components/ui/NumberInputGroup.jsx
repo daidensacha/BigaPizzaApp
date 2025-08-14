@@ -132,7 +132,7 @@ function NumberInputGroup({
       {label && (
         <label
           htmlFor={inputId}
-          className="text-xs font-medium text-zinc-600 dark:text-zinc-300 text-center"
+          className="text-xs font-medium text-zinc-600 dark:text-stone-400 text-center"
         >
           {label}
         </label>
@@ -168,11 +168,11 @@ function NumberInputGroup({
           style={{ MozAppearance: 'textfield' }}
         />
 
-        {unit && (
+        {/* {unit && (
           <span className="inline-flex h-8 items-center px-2 text-xs rounded-md border border-zinc-300 bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700">
             {unit}
           </span>
-        )}
+        )} */}
 
         <button
           type="button"

@@ -7,39 +7,12 @@ import React, {
 } from 'react';
 import { getLocalDateTimePlus24h } from '@utils/dayjsConfig';
 import { YEAST_CORRECTION_DEFAULTS } from '@utils/utils';
+import {
+  defaultFormData,
+  defaultScheduleData,
+} from '@/constants/defaultInputSettings';
 
 const RecipeContext = createContext();
-
-const defaultFormData = {
-  numPizzas: 3,
-  ballWeight: 280,
-  bigaHydration: 50,
-  finalHydration: 68,
-  bigaPercent: 50,
-  saltPercent: 3.4, // only in dough refresh
-  maltPercent: 0.5, // only in dough refresh
-  bigaTime: 24,
-  bigaTemp: 6,
-  doughTime: 6,
-  doughTemp: 22,
-  yeastType: 'idy',
-  shortCorrection: YEAST_CORRECTION_DEFAULTS.short,
-  longCorrection: YEAST_CORRECTION_DEFAULTS.long,
-};
-
-const defaultScheduleData = {
-  bakingDateTime: getLocalDateTimePlus24h(),
-  bigaPrepTime: 15,
-  bigaRisingTime: 24, // hours
-  autolyzeRefreshPrep: 20,
-  autolyzeRefreshRest: 30,
-  doughPrepTime: 30,
-  doughRisingTime: 6, // hours
-  ballsPrepTime: 20,
-  ballsRisingTime: 6, // hours
-  preheatOvenDuration: 60,
-  toppingsPrepTime: 30,
-};
 
 export const RecipeProvider = ({ children }) => {
   const [formData, setFormData] = useState(defaultFormData);

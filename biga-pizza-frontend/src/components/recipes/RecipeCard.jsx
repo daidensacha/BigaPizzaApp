@@ -13,6 +13,7 @@ import StarRatingInput from './StarRatingInput';
 import { useDropzone } from 'react-dropzone';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { uploadToCloudinary } from '@/utils/uploadToCloudinary';
+import { Pencil, Check, XCircle } from 'lucide-react';
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
@@ -28,14 +29,39 @@ export default function RecipeCard({ recipe, onDelete }) {
   const [savingTitle, setSavingTitle] = useState(false);
   const titleInputRef = useRef(null);
 
+  const emptyTitleMessages = [
+    'Your dough needs a name before it can rise to fame 🍕',
+    'Nameless pizza? Sounds mysterious… but no. Give it a title!',
+    'Oops, no title! Even biga needs an identity.',
+  ];
+
+  const [titleError, setTitleError] = useState('');
+
+  const isTitleDirty =
+    (localTitle || '').trim() !== (recipe.title || '').trim();
+
   const commitTitle = async () => {
     const next = (localTitle || '').trim();
-    if (!next || next === recipe.title) {
-      // nothing to do; just close editor
-      setLocalTitle(recipe.title || '');
-      setEditingTitle(false);
+
+    // Funny validation if empty
+    if (!next) {
+      const msg =
+        emptyTitleMessages[
+          Math.floor(Math.random() * emptyTitleMessages.length)
+        ];
+      setTitleError(msg);
+      // refocus input so user can try again
+      requestAnimationFrame(() => titleInputRef.current?.focus());
       return;
     }
+
+    // Nothing changed? just close editor
+    if (next === (recipe.title || '')) {
+      setEditingTitle(false);
+      setTitleError('');
+      return;
+    }
+
     try {
       setSavingTitle(true);
       const updated = await updateRecipeTitle(
@@ -45,6 +71,7 @@ export default function RecipeCard({ recipe, onDelete }) {
       );
       setLocalTitle(updated.title);
       setEditingTitle(false);
+      setTitleError('');
       toast.success('Title saved!');
     } catch (err) {
       console.error(err);
@@ -65,6 +92,9 @@ export default function RecipeCard({ recipe, onDelete }) {
       e.preventDefault();
       setLocalTitle(recipe.title || '');
       setEditingTitle(false);
+      setTitleError('');
+    } else if (titleError) {
+      setTitleError('');
     }
   };
 
@@ -168,12 +198,15 @@ export default function RecipeCard({ recipe, onDelete }) {
             >
               {localTitle || 'Untitled Recipe'}
             </h3>
+
+            {/* Edit (Pencil) */}
             <button
               type="button"
-              className="text-xs px-2 py-1 rounded border border-stone-300 dark:border-stone-600 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700"
+              aria-label="Edit title"
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700"
               onClick={() => setEditingTitle(true)}
             >
-              Edit
+              <Pencil className="w-4 h-4 text-stone-500 hover:text-stone-700 dark:text-stone-300 dark:hover:text-yellow-300" />
             </button>
           </div>
         ) : (
@@ -187,30 +220,50 @@ export default function RecipeCard({ recipe, onDelete }) {
               onKeyDown={onTitleKeyDown}
               onBlur={commitTitle}
               maxLength={120}
-              className="w-full max-w-[36rem] px-2 py-1 rounded border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
+              aria-invalid={!!titleError}
+              className={`w-full max-w-[36rem] px-2 py-1 rounded border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white ${
+                titleError ? 'ring-1 ring-red-500' : ''
+              }`}
               placeholder="Recipe title…"
             />
+
+            {/* Save (Check) */}
             <button
               type="button"
-              onMouseDown={(e) => e.preventDefault()} // keep focus for blur->commit order
+              onMouseDown={(e) => e.preventDefault()} // keep focus so blur->commit order is stable
               onClick={commitTitle}
               disabled={savingTitle}
-              className="text-sm px-2 py-1 rounded bg-green-600 text-white disabled:opacity-60"
+              aria-label="Save title"
+              title={savingTitle ? 'Saving…' : 'Save'}
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700 disabled:opacity-60"
             >
-              {savingTitle ? 'Saving…' : 'Save'}
+              <Check
+                className={`w-5 h-5 ${
+                  isTitleDirty ? 'text-green-600' : 'text-stone-400'
+                }`}
+              />
             </button>
+
+            {/* Cancel (XCircle) */}
             <button
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 setLocalTitle(recipe.title || '');
                 setEditingTitle(false);
+                setTitleError('');
               }}
-              className="text-sm px-2 py-1 rounded border border-stone-300 dark:border-stone-600"
+              aria-label="Cancel editing"
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700"
             >
-              Cancel
+              <XCircle className="w-5 h-5 text-stone-400 hover:text-stone-600 dark:hover:text-yellow-300" />
             </button>
           </div>
+        )}
+
+        {/* Inline playful message (optional) */}
+        {editingTitle && titleError && (
+          <p className="text-red-500 text-sm mt-1">{titleError}</p>
         )}
 
         <p className="text-sm text-gray-500 dark:text-stone-400">

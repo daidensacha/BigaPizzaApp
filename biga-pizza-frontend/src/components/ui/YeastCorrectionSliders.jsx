@@ -57,7 +57,7 @@ export default function YeastCorrectionSliders({
             className="w-full"
           />
           <p className="text-[11px] text-gray-500 dark:text-yellow-500">
-            Affects refresh ≤ 12h
+            Affects dough ≤ 12h
           </p>
         </div>
         {/* end long */}
@@ -66,7 +66,7 @@ export default function YeastCorrectionSliders({
       <button
         type="button"
         onClick={onReset}
-        className="mt-3 text-xs text-blue-600 underline hover:text-blue-700"
+        className="mt-3 text-xs text-blue-600 underline hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500"
       >
         Reset to defaults
       </button>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { getRecipeById } from '@/services/recipeService';
 import { formatGrams } from '@/utils/recipeFormatting';
 import { formatLocalLabel } from '@/utils/dayjsConfig';
@@ -14,6 +14,8 @@ export default function UserRecipeDetails() {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id: recipeId } = useParams();
 
   useEffect(() => {
     if (user?.token) {
@@ -26,6 +28,25 @@ export default function UserRecipeDetails() {
         .finally(() => setLoading(false)); // ✅ ensure this runs
     }
   }, [id, user]);
+
+  const openEditor = () => {
+    navigate(`/editor/${id}`, {
+      state: { backgroundLocation: location }, // <-- this is the “background” layer
+    });
+  };
+
+  useEffect(() => {
+    const handleRecipeUpdated = (e) => {
+      if (e.detail.id === recipeId) {
+        setRecipe(e.detail.recipe); // instantly replace old recipe data
+      }
+    };
+
+    window.addEventListener('recipe:updated', handleRecipeUpdated);
+    return () => {
+      window.removeEventListener('recipe:updated', handleRecipeUpdated);
+    };
+  }, [recipeId]);
 
   const handleBack = () => navigate('/account/recipes');
   // console.log('👤 User in UserRecipeDetails:', user);
@@ -147,11 +168,12 @@ export default function UserRecipeDetails() {
         >
           Print Recipe
         </button>
-        <Link to={`/account/recipes/${recipe._id}/edit`}>
-          <button className="px-4 py-2 mx-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white">
-            Edit Recipe
-          </button>
-        </Link>
+        <button
+          onClick={openEditor}
+          className="px-4 py-2 mx-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white"
+        >
+          Edit Recipe
+        </button>
         <Link
           to="/account"
           className="bg-gray-600 dark:bg-stone-700 px-4 py-2 rounded hover:bg-gray-500 dark:hover:bg-stone-600"

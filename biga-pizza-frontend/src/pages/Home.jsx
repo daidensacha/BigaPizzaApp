@@ -1,8 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Home() {
+  const { user } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const handleCreateClick = () => {
+    if (user) {
+      // logged in → open modal editor for create
+      navigate('/editor/create', {
+        state: { backgroundLocation: location },
+      });
+    } else {
+      // logged out → send to guided input flow
+      navigate('/guided-input-flow');
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-8 text-center">
@@ -15,7 +30,7 @@ export default function Home() {
         ingredients, and master fermentation.
       </p>
       <button
-        onClick={() => navigate('/create-recipe')}
+        onClick={handleCreateClick}
         className="px-6 py-3 bg-red-500 dark:bg-red-800 hover:bg-red-600 text-white text-lg font-medium rounded-lg shadow transition"
       >
         Create Your Recipe
