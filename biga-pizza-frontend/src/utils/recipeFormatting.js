@@ -69,5 +69,5 @@ export const generateRecipeTitle = (formData, scheduleData) => {
   const date = dayjs(bakingDate).format('YYYY-MM-DD');
   const biga = formData.bigaPercent;
   const hydration = formData.finalHydration;
-  return `${biga}% Biga Dough Hydration - ${hydration}%`;
+  return `${biga}% Biga - Dough Hydration ${hydration}%`;
 };

@@ -57,12 +57,16 @@ export default function Navbar() {
         {!user ? (
           <button
             className="text-yellow-700 hover:text-red-600 dark:text-yellow-500 dark:hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-800 rounded-md transition-colors duration-200"
-            onClick={openAuthModal}
+            onClick={() => {
+              console.log('[Navbar] Login clicked'); // 👈 should appear
+              openAuthModal(); // 👈 must exist
+            }}
           >
             Login
           </button>
         ) : (
           <NavbarUserMenu
+            user={user} // pass user to NavbarUserMenu dropdown
             onOpenSettings={() => setSettingsDrawerOpen(true)}
             onLogout={handleLogout}
           />

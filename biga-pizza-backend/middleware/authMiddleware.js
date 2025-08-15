@@ -1,12 +1,14 @@
+// middleware/protect.js
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-const protect = (req, res, next) => {
-  // 1. Try to get token from cookie
+const protect = async (req, res, next) => {
   let token = req.cookies?.token;
 
-  // 2. If not in cookie, try Authorization header
-  if (!token && req.headers.authorization?.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
+  // Accept case-insensitive Bearer
+  const auth = req.headers.authorization || '';
+  if (!token && auth.toLowerCase().startsWith('bearer ')) {
+    token = auth.slice(7).trim();
   }
 
   if (!token) {
@@ -15,11 +17,30 @@ const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, name }
+    // decoded: { id, name?, tokenVersion? }
+
+    // Load fresh tokenVersion from DB
+    const user = await User.findById(decoded.id).select('_id tokenVersion');
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    if ((user.tokenVersion || 0) !== (decoded.tokenVersion || 0)) {
+      return res
+        .status(401)
+        .json({ message: 'Token expired, please log in again' });
+    }
+
+    // Keep req.user minimal and normalized
+    req.user = {
+      id: user._id.toString(),
+      tokenVersion: user.tokenVersion || 0,
+    };
+
     next();
   } catch (err) {
     console.error('JWT Verify Error:', err);
-    res.status(401).json({ message: 'Not authorized, token failed' });
+    return res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 

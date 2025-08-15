@@ -3,23 +3,39 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '@/context/AuthContext';
+import AvatarBadge from '@/components/profile/AvatarBadge';
 
 export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
+  // const { user } = useAuth();
   const navigate = useNavigate();
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="inline-flex items-center gap-2 text-sm font-medium focus:outline-none hover:text-red-600">
-        {user?.avatar ? (
-          <img
-            src={user.avatar}
-            alt="Avatar"
-            className="w-6 h-6 rounded-full"
+        {user?.avatarStyle && user?.avatarSeed ? (
+          <AvatarBadge
+            type={user.avatarStyle}
+            seed={user.avatarSeed}
+            size={24} //or 28/32 depending on your spacing
           />
         ) : (
           <span>Account</span>
         )}
         <ChevronDown className="w-4 h-4" />
       </Menu.Button>
+
+      {/* <Menu.Button className="inline-flex items-center gap-2 text-sm font-medium focus:outline-none hover:text-red-600">
+        {user?.avatarStyle && user?.avatarSeed ? (
+          <AvatarBadge
+            style={user.avatarStyle}
+            seed={user.avatarSeed}
+            size={24} //or 28/32 depending on your spacing
+          />
+        ) : (
+          <span>Account</span>
+        )}
+        <ChevronDown className="w-4 h-4" />
+      </Menu.Button> */}
 
       <Transition
         as={Fragment}

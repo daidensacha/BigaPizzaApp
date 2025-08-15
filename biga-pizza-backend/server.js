@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import cookieParser from 'cookie-parser';
 import userDefaultsRoutes from './routes/userDefaults.routes.js';
 
@@ -33,6 +34,7 @@ connectDB();
 // ✅ API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/user', userRoutes);
 app.use(userDefaultsRoutes); // <-- if these are API routes, consider prefixing with /api
 
 const PORT = process.env.PORT || 5000;

@@ -6,6 +6,8 @@ import Navbar from '@components/Navbar';
 import ProtectedRoute from '@components/routes/ProtectedRoute';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import ModalRecipeEditor from '@/components/recipes/ModalRecipeEditor';
+import { useAuthModal } from '@/context/AuthModalContext';
+import AuthModal from '@/components/auth/AuthModal';
 
 // Public pages
 import Home from '@pages/Home';
@@ -31,17 +33,22 @@ function AccountShell() {
 
 export default function AppInner() {
   const location = useLocation();
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
 
   // background overlay support
   const background = location.state?.backgroundLocation;
   const isEditor = location.pathname.startsWith('/editor/');
   const baseLocation = isEditor && background ? background : location;
 
+  // AuthModal
+  const { isModalOpen, closeAuthModal } = useAuthModal();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
       <Navbar />
 
-      <main className="px-6 lg:px-8 py-8">
+      <main className={isHome ? '' : 'px-6 lg:px-8 py-8'}>
         {/* BASE LAYER — always rendered (keeps navbar/layout visible) */}
         <Routes location={baseLocation}>
           {/* Public */}
@@ -107,6 +114,7 @@ export default function AppInner() {
           </Routes>
         )}
       </main>
+      <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
     </div>
   );
 }
