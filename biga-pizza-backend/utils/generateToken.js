@@ -1,17 +1,13 @@
-// utils/generateToken.js
+// utils/generateToken.js (you already have)
 import jwt from 'jsonwebtoken';
-
-export const generateToken = (user) => {
-  const id = user._id?.toString?.() || user.id?.toString?.(); // normalize to string
-
-  return jwt.sign(
+export const generateToken = (user) =>
+  jwt.sign(
     {
-      id, // always 'id' (string)
+      id: user._id,
       name: user.name,
+      email: user.email,
       tokenVersion: user.tokenVersion || 0,
-      // omit email for smaller/safer token unless you really need it
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
-};

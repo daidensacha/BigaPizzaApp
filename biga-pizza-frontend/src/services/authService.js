@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { API_BASE } from '@config';
 // DEFAULT OPTIONS
 const defaultOptions = {
@@ -59,3 +60,20 @@ export const checkSession = async () => {
   if (!res.ok) throw new Error(data.message || 'Session check failed.');
   return data;
 };
+
+// FORGOT / RESET PASSWORD
+export async function requestPasswordReset(email) {
+  const { data } = await axios.post(`${API_BASE}/api/auth/forgot-password`, {
+    email,
+  });
+  return data; // { message: 'If that account exists, an email has been sent.' }
+}
+
+export async function resetPassword({ email, token, newPassword }) {
+  const { data } = await axios.post(`${API_BASE}/api/auth/reset-password`, {
+    email,
+    token,
+    newPassword,
+  });
+  return data; // { message: 'Password reset successful. Please log in.' }
+}

@@ -1,7 +1,16 @@
 // src/components/dashboard/DashboardLayout.jsx
 import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import PageTransition from '@/components/motion/PageTransition';
+// import PageFade from '@/components/motion/PageFade';
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  BookOpen,
+  UserCircle2,
+  Settings,
+} from 'lucide-react';
 
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
@@ -37,10 +46,15 @@ export default function DashboardLayout() {
             </div>
 
             <nav className="p-3 space-y-1">
-              <Item to="/account" label="Overview" exact />
-              <Item to="/account/recipes" label="My Recipes" />
-              <Item to="/account/defaults" label="My Defaults" />
-              <Item to="/account/profile" label="Profile" />
+              <Item
+                to="/account"
+                label="Overview"
+                icon={LayoutDashboard}
+                exact
+              />
+              <Item to="/account/recipes" label="My Recipes" icon={BookOpen} />
+              <Item to="/account/profile" label="Profile" icon={UserCircle2} />
+              <Item to="/account/settings" label="Settings" icon={Settings} />
             </nav>
           </aside>
 
@@ -54,7 +68,9 @@ export default function DashboardLayout() {
 
           {/* Main content */}
           <main className="min-w-0 flex-1 p-4">
-            <Outlet />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </div>
       </div>
@@ -62,21 +78,22 @@ export default function DashboardLayout() {
   );
 }
 
-function Item({ to, label, exact = false }) {
+function Item({ to, label, icon: Icon, exact = false }) {
   return (
     <NavLink
       to={to}
       end={exact}
       className={({ isActive }) =>
         [
-          'block px-3 py-2 rounded-md transition',
+          'flex items-center gap-2 px-3 py-2 rounded-md transition',
           isActive
             ? 'bg-yellow-600/20 text-yellow-900 dark:text-yellow-200'
             : 'hover:bg-zinc-100 dark:hover:bg-zinc-800',
         ].join(' ')
       }
     >
-      {label}
+      {Icon && <Icon className="w-4 h-4 shrink-0" />}
+      <span>{label}</span>
     </NavLink>
   );
 }

@@ -1,6 +1,13 @@
 // src/App.jsx
-import React from 'react';
-import { Routes, Route, Outlet, useLocation, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  Navigate,
+  useSearchParams,
+} from 'react-router-dom';
 
 import Navbar from '@components/Navbar';
 import ProtectedRoute from '@components/routes/ProtectedRoute';
@@ -8,6 +15,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import ModalRecipeEditor from '@/components/recipes/ModalRecipeEditor';
 import { useAuthModal } from '@/context/AuthModalContext';
 import AuthModal from '@/components/auth/AuthModal';
+import PageTransition from '@/components/motion/PageTransition';
 
 // Public pages
 import Home from '@pages/Home';
@@ -18,10 +26,10 @@ import PizzaMenu from '@pages/PizzaMenu';
 import UserDashboard from '@/pages/account/UserDashboard';
 import UserDefaults from '@/pages/account/UserDefaults';
 import UserProfile from '@/pages/account/UserProfile';
-import UserAccount from '@/pages/account/UserAccount';
 import AdminDashboard from '@/pages/account/AdminDashboard';
 import UserRecipeList from '@/pages/account/recipes/UserRecipeList';
 import UserRecipeDetails from '@/pages/account/recipes/UserRecipeDetails';
+import ResetPassword from '@/pages/auth/ResetPassword';
 
 function AccountShell() {
   return (
@@ -34,6 +42,8 @@ function AccountShell() {
 export default function AppInner() {
   const location = useLocation();
   const { pathname } = useLocation();
+  const [params, setParams] = useSearchParams();
+
   const isHome = pathname === '/';
 
   // background overlay support
@@ -42,7 +52,16 @@ export default function AppInner() {
   const baseLocation = isEditor && background ? background : location;
 
   // AuthModal
-  const { isModalOpen, closeAuthModal } = useAuthModal();
+  const { isModalOpen, openAuthModal, closeAuthModal } = useAuthModal();
+
+  // 👇 Auto-open modal when `?auth=login` is present, then clean the URL
+  useEffect(() => {
+    if (params.get('auth') === 'login') {
+      openAuthModal?.();
+      params.delete('auth');
+      setParams(params, { replace: true });
+    }
+  }, [params, setParams, openAuthModal]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
@@ -50,47 +69,49 @@ export default function AppInner() {
 
       <main className={isHome ? '' : 'px-6 lg:px-8 py-8'}>
         {/* BASE LAYER — always rendered (keeps navbar/layout visible) */}
-        <Routes location={baseLocation}>
-          {/* Public */}
-          <Route path="/" element={<Home />} />
-          <Route path="/create-recipe" element={<CreateRecipe />} />
-          <Route path="/menu" element={<PizzaMenu />} />
+        <PageTransition>
+          <Routes location={baseLocation}>
+            {/* Public */}
+            <Route path="/" element={<Home />} />
+            <Route path="/create-recipe" element={<CreateRecipe />} />
+            <Route path="/menu" element={<PizzaMenu />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Legacy redirects (optional) */}
-          <Route
-            path="/recipes"
-            element={<Navigate to="/account/recipes" replace />}
-          />
-          <Route
-            path="/recipes/new"
-            element={<Navigate to="/editor/create" replace />}
-          />
-
-          {/* Account (protected + nested) */}
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <AccountShell />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<UserDashboard />} />
-            <Route path="recipes" element={<UserRecipeList />} />
-            <Route path="recipes/:id" element={<UserRecipeDetails />} />
-            <Route path="defaults" element={<UserDefaults />} />
-            <Route path="profile" element={<UserProfile />} />
-            <Route path="settings" element={<UserAccount />} />
+            {/* Legacy redirects (optional) */}
             <Route
-              path="admin"
+              path="/recipes"
+              element={<Navigate to="/account/recipes" replace />}
+            />
+            <Route
+              path="/recipes/new"
+              element={<Navigate to="/editor/create" replace />}
+            />
+
+            {/* Account (protected + nested) */}
+            <Route
+              path="/account"
               element={
-                <ProtectedRoute adminOnly>
-                  <AdminDashboard />
+                <ProtectedRoute>
+                  <AccountShell />
                 </ProtectedRoute>
               }
-            />
-          </Route>
-        </Routes>
+            >
+              <Route index element={<UserDashboard />} />
+              <Route path="recipes" element={<UserRecipeList />} />
+              <Route path="recipes/:id" element={<UserRecipeDetails />} />
+              <Route path="settings" element={<UserDefaults />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route
+                path="admin"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+          </Routes>
+        </PageTransition>
 
         {/* OVERLAY LAYER — only render on /editor/* */}
         {isEditor && (

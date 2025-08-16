@@ -1,9 +1,10 @@
 // src/components/profile/AvatarGenerator.jsx
 import { useRef, useEffect, useState } from 'react';
-import KaleidoAvatar from './KaleidoAvatar'; // your exact zen implementation
 import { Dice6 } from 'lucide-react';
+// import KaleidoAvatar from './KaleidoAvatar'; // ← your zen component
+import KaleidoSticksAvatar from './KaleidoSticksAvatar';
 
-/* ---- tiny PRNG helpers (same family as KaleidoAvatar) ---- */
+/* ---------- tiny PRNG helpers shared with Mandala ---------- */
 function hashSeed(str) {
   let h = 2166136261 >>> 0;
   for (let i = 0; i < str.length; i++) {
@@ -22,13 +23,14 @@ function mulberry32(a) {
 }
 const hsl = (h, s, l) => `hsl(${h}, ${s}%, ${l}%)`;
 
-/* ---- Mandala (geometric) canvas renderer ---- */
-function MandalaCanvas({ seed, size, className }) {
+/* ---------- Mandala canvas (unchanged look) ---------- */
+export function MandalaCanvas({ seed, size, className = '' }) {
   const ref = useRef(null);
 
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
+
     const dpr = window.devicePixelRatio || 1;
     canvas.width = size * dpr;
     canvas.height = size * dpr;
@@ -48,12 +50,13 @@ function MandalaCanvas({ seed, size, className }) {
       hsl((baseHue + 320) % 360, 65, 45),
     ];
 
-    ctx.clearRect(0, 0, size, size);
+    const S = size;
+    ctx.clearRect(0, 0, S, S);
 
-    // subtle soft bloom inside circle footprint
+    // subtle soft bloom inside circle
     ctx.save();
-    ctx.translate(size / 2, size / 2);
-    const r = size * 0.48;
+    ctx.translate(S / 2, S / 2);
+    const r = S * 0.48;
     const bg = ctx.createRadialGradient(0, 0, r * 0.1, 0, 0, r);
     bg.addColorStop(0, 'rgba(255,255,255,0.35)');
     bg.addColorStop(1, 'rgba(255,255,255,0.0)');
@@ -68,14 +71,14 @@ function MandalaCanvas({ seed, size, className }) {
     const wedges = 8;
 
     ctx.save();
-    ctx.translate(size / 2, size / 2);
+    ctx.translate(S / 2, S / 2);
     for (let w = 0; w < wedges; w++) {
       const color = palette[Math.floor(rnd() * palette.length)];
       ctx.fillStyle = color;
       ctx.strokeStyle = color;
 
-      const inner = size * (0.12 + rnd() * 0.18);
-      const outer = size * (0.28 + rnd() * 0.2);
+      const inner = S * (0.12 + rnd() * 0.18);
+      const outer = S * (0.28 + rnd() * 0.2);
       const thickness = 0.6 + rnd() * 0.7;
 
       for (let s = 0; s < segments; s++) {
@@ -105,7 +108,7 @@ function MandalaCanvas({ seed, size, className }) {
 
     // center dot
     ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size * 0.06, 0, Math.PI * 2);
+    ctx.arc(S / 2, S / 2, S * 0.06, 0, Math.PI * 2);
     ctx.fillStyle = palette[0];
     ctx.fill();
 
@@ -126,29 +129,27 @@ function MandalaCanvas({ seed, size, className }) {
   );
 }
 
-/* ---- AvatarGenerator wrapper ---- */
+/* ---------- AvatarGenerator wrapper ---------- */
 export default function AvatarGenerator({
   type = 'kaleido', // 'kaleido' | 'mandala'
   seed = 'BigaPizza',
-  size = 96, // keep modest (64–96 ideal in Profile)
+  size = 96,
   className = '',
-  onChange, // optional: ({ type, seed }) => void
-  onTypeChange, // optional: (type) => void
-  onSeedChange, // optional: (seed) => void
+  onChange,
+  onTypeChange,
+  onSeedChange,
+  showControls = true, // 👈 NEW: default true (profile pages)
 }) {
   const [isRolling, setIsRolling] = useState(false);
 
   const emitType = (nextType) => {
     onChange ? onChange({ type: nextType, seed }) : onTypeChange?.(nextType);
   };
-
   const emitSeed = (nextSeed) => {
     if (onChange) onChange({ type, seed: nextSeed });
     else onSeedChange?.(nextSeed);
   };
-
   const switchTo = (nextType) => emitType(nextType);
-
   const roll = () => {
     const nextSeed = `${Date.now().toString(36)}-${Math.floor(
       Math.random() * 1e6
@@ -163,50 +164,52 @@ export default function AvatarGenerator({
       {/* preview */}
       <div className="shrink-0">
         {type === 'kaleido' ? (
-          <KaleidoAvatar seed={seed} size={size} rounded />
+          <KaleidoSticksAvatar seed={seed} size={size} rounded />
         ) : (
           <MandalaCanvas seed={seed} size={size} />
         )}
       </div>
 
-      {/* controls */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex rounded-lg border border-stone-300 dark:border-stone-700 overflow-hidden">
+      {/* controls — hidden when showControls is false */}
+      {showControls && (
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex rounded-lg border border-stone-300 dark:border-stone-700 overflow-hidden">
+            <button
+              className={`px-3 py-1 text-sm ${
+                type === 'kaleido'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-white dark:bg-stone-800'
+              }`}
+              onClick={() => switchTo('kaleido')}
+            >
+              Zen
+            </button>
+            <button
+              className={`px-3 py-1 text-sm ${
+                type === 'mandala'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-white dark:bg-stone-800'
+              }`}
+              onClick={() => switchTo('mandala')}
+            >
+              Mandala
+            </button>
+          </div>
+
           <button
-            className={`px-3 py-1 text-sm ${
-              type === 'kaleido'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-white dark:bg-stone-800'
-            }`}
-            onClick={() => switchTo('kaleido')}
+            onClick={roll}
+            className="p-2 rounded hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+            aria-label="Roll new avatar"
+            title="Roll new avatar"
           >
-            Zen
-          </button>
-          <button
-            className={`px-3 py-1 text-sm ${
-              type === 'mandala'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-white dark:bg-stone-800'
-            }`}
-            onClick={() => switchTo('mandala')}
-          >
-            Mandala
+            <Dice6
+              className={`w-5 h-5 text-stone-700 dark:text-stone-300 ${
+                isRolling ? 'animate-spin' : ''
+              }`}
+            />
           </button>
         </div>
-
-        <button
-          onClick={roll}
-          className="p-2 rounded hover:bg-stone-100 dark:hover:bg-stone-800 transition"
-          aria-label="Roll new avatar"
-          title="Roll new avatar"
-        >
-          <Dice6
-            className={`w-5 h-5 text-stone-700 dark:text-stone-300 ${
-              isRolling ? 'animate-spin' : ''
-            }`}
-          />
-        </button>
-      </div>
+      )}
     </div>
   );
 }

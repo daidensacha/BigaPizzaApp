@@ -7,6 +7,7 @@ import { Dice6, RotateCcw, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { API_BASE } from '@/config';
 import AvatarGenerator from '@/components/profile/AvatarGenerator';
+// import KaleidoAvatar from '@/components/profile/KaleidoAvatar';
 
 export default function UserProfile() {
   const { user, token, logout, updateUser } = useAuth();
@@ -114,7 +115,7 @@ export default function UserProfile() {
                 <AvatarGenerator
                   type={style}
                   seed={seed}
-                  size={64}
+                  size={28}
                   onChange={({ type, seed }) => {
                     setStyle(type);
                     setSeed(seed);

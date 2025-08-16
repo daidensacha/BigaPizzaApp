@@ -19,7 +19,23 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <AuthModalProvider>
               <App />
             </AuthModalProvider>
-            <Toaster position="top-right" /> {/* ✅ Toast container */}
+            <Toaster
+              position="top-right"
+              containerStyle={{ top: 80 }} // push below navbar {/* ✅ Toast container */}
+              toastOptions={{
+                duration: 2000,
+                style: {
+                  background: '#1f2937',
+                  color: '#fff',
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                },
+                success: {
+                  iconTheme: { primary: '#10b981', secondary: '#fff' },
+                },
+                error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
+              }}
+            />
           </RecipeProvider>
         </DefaultsProvider>
       </AuthProvider>

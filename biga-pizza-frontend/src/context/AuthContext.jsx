@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
       setToken(null);
       localStorage.removeItem('user');
       delete axios.defaults.headers.common.Authorization;
-      toast('Logged out');
+      toast.success('Logged out', { id: 'logout', duration: 1500 });
     }
   };
 

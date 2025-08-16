@@ -23,7 +23,6 @@ export default function Home() {
     <section
       className="
         relative isolate
-        -mx-6 lg:-mx-8 -mt-8 -mb-8
         min-h-[calc(100vh-3.5rem)]   /* 100vh minus navbar height */
         flex items-center
       "
@@ -43,15 +42,37 @@ export default function Home() {
 
         {/* 2) Oven outline image — ABOVE gradient */}
         <div
-          className="
-      absolute inset-0 bg-center bg-cover bg-no-repeat
-      opacity-95 dark:opacity-70
-      mix-blend-multiply dark:mix-blend-soft-light
-      [filter:contrast(1.22)_brightness(0.88)]
-      dark:[filter:contrast(1.10)_brightness(0.95)]
-    "
-          style={{ backgroundImage: "url('/images/oven-outline-strong.png')" }}
-        />
+          className="absolute inset-0
+             opacity-95 dark:opacity-70
+             mix-blend-multiply dark:mix-blend-soft-light
+             [filter:contrast(1.22)_brightness(0.88)]
+             dark:[filter:contrast(1.10)_brightness(0.95)]"
+        >
+          <picture>
+            <source
+              srcSet="
+        /images/oven-outline-768-stone300.png 768w,
+        /images/oven-outline-1920-stone400.png 1920w,
+        /images/oven-outline-2560-stone300-quant.png 2560w
+      "
+              media="(prefers-color-scheme: dark)"
+            />
+            <source
+              srcSet="
+        /images/oven-outline-768-stone300.png 768w,
+        /images/oven-outline-1920-stone400.png 1920w,
+        /images/oven-outline-2560-stone300-quant.png 2560w
+      "
+              media="(prefers-color-scheme: light)"
+            />
+            <img
+              src="/images/oven-outline-1920-stone400.png"
+              alt=""
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </picture>
+        </div>
 
         {/* 3) Veil — top (only this fades) */}
         <div

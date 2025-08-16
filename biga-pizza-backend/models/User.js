@@ -20,7 +20,12 @@ const userSchema = new mongoose.Schema(
     avatarStyle: { type: String, default: 'kaleido' },
     avatarSeed: { type: String, default: 'BigaPizza' },
 
-    // reset
+    // RESET PASSWORD
+    // If you don’t want the reset fields to come back in queries by default,
+    // add select: false to them in the schema:
+    // resetPasswordTokenHash: { type: String, select: false },
+    // resetPasswordExpiresAt: { type: Date, select: false },
+
     resetPasswordTokenHash: String,
     resetPasswordExpiresAt: Date,
   },
