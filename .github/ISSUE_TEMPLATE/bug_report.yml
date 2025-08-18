@@ -1,0 +1,30 @@
+name: "🐞 Bug report"
+description: Report something that isn’t working
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Tell us what you expected vs. what happened.
+      placeholder: Clear steps help us reproduce and fix it.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1) Go to…\n2) Click…\n3) See error…"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "OS / Browser / Version"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      render: bash
