@@ -18,12 +18,14 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.1",
+    "dotenv-flow": "^4.1.0",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "lodash.camelcase": "^4.3.0",
     "mongoose": "^8.16.5",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

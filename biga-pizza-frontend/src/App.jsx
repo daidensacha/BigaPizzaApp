@@ -1,111 +1,175 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from '@pages/Home';
-import CreateRecipe from '@pages/recipes/CreateRecipe';
-import PizzaMenu from '@pages/PizzaMenu';
+// src/App.jsx
+import React, { useEffect } from 'react';
+import {
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  Navigate,
+  useSearchParams,
+} from 'react-router-dom';
+
 import Navbar from '@components/Navbar';
-import { useRecipe } from '@context/RecipeContext';
-import ScheduleSettingsDrawer from '@components/ScheduleSettingsDrawer';
-import AuthModal from '@components/auth/AuthModal';
-import { useAuthModal } from '@context/AuthModalContext';
-import UserAccount from '@pages/Accounts/UserAccount';
-import AdminDashboard from '@pages/Accounts/AdminDashboard';
-import UserDashboard from '@pages/Accounts/UserDashboard';
 import ProtectedRoute from '@components/routes/ProtectedRoute';
-import AccountPage from '@accounts/AccountPage';
-import UserRecipeDetails from '@recipes/UserRecipeDetails'; // ??? UserRecipeDetails
-import UserRecipeList from '@recipes/UserRecipeList';
-import EditRecipe from '@recipes/EditRecipe';
-import NewRecipeEntry from '@recipes/NewRecipeEntry';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import ModalRecipeEditor from '@/components/recipes/ModalRecipeEditor';
+import { useAuthModal } from '@/context/AuthModalContext';
+import AuthModal from '@/components/auth/AuthModal';
+import PageTransition from '@/components/motion/PageTransition';
 
-function App() {
-  const { isModalOpen, closeAuthModal } = useAuthModal();
+// Public pages
+import Home from '@pages/Home';
+import CreateRecipe from '@pages/guided/CreateRecipe';
+import PizzaMenu from '@pages/PizzaMenu';
 
-  const {
-    isSettingsDrawerOpen,
-    setSettingsDrawerOpen,
-    scheduleData,
-    setScheduleData,
-    resetScheduleData,
-    resetFormData,
-  } = useRecipe();
+// Account pages
+import UserDashboard from '@/pages/account/UserDashboard';
+import UserDefaults from '@/pages/account/UserDefaults';
+import UserProfile from '@/pages/account/UserProfile';
+import AdminDashboard from '@/pages/account/AdminDashboard';
+import UserRecipeList from '@/pages/account/recipes/UserRecipeList';
+import UserRecipeDetails from '@/pages/account/recipes/UserRecipeDetails';
+import ResetPassword from '@/pages/auth/ResetPassword';
 
-  const handleScheduleChange = (e) => {
-    const { name, value } = e.target;
-    setScheduleData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+function AccountShell() {
+  return (
+    <DashboardLayout>
+      <Outlet />
+    </DashboardLayout>
+  );
+}
+
+export default function AppInner() {
+  const location = useLocation();
+  const { pathname } = useLocation();
+  const [params, setParams] = useSearchParams();
+
+  const isHome = pathname === '/';
+
+  // background overlay support
+  const background = location.state?.backgroundLocation;
+  const isEditor = location.pathname.startsWith('/editor/');
+  const baseLocation = isEditor && background ? background : location;
+
+  // AuthModal
+  const { isModalOpen, openAuthModal, closeAuthModal } = useAuthModal();
+
+  // 👇 Auto-open modal when `?auth=login` is present, then clean the URL
+  useEffect(() => {
+    if (params.get('auth') === 'login') {
+      openAuthModal?.();
+      params.delete('auth');
+      setParams(params, { replace: true });
+    }
+  }, [params, setParams, openAuthModal]);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
-        {/* <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 transition-colors duration-500"> */}
-        <Navbar />
+    <div className="min-h-screen relative">
+      {' '}
+      {/*
+        Background layering:
+        - Gradient is always present.
+        - Oven art is shown everywhere.
+        - On the Home page ONLY, we boost filters & fade-in
+          for extra warmth and vividness (special intro feel).
+        - Other pages keep the oven art calm & neutral.
+      */}
+      {/* Fixed background behind the whole app */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* Gradient */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br
+                from-red-100 to-yellow-100
+                dark:from-orange-950 dark:to-slate-950"
+        />
 
-        <main className="max-w-4xl mx-auto px-4 py-8">
-          {/* Remove dark theme - dark back ground */}
-          {/* <div className="dark:bg-stone-900 text-yellow-100 rounded-xl transition-colors duration-500"> */}
-          <div className="text-yellow-100 rounded-xl transition-colors duration-500">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/create-recipe" element={<CreateRecipe />} />
-              <Route path="/menu" element={<PizzaMenu />} />
-              <Route path="/my-recipes" element={<UserRecipeList />} />
-              <Route path="/recipes/:id" element={<UserRecipeDetails />} />
-              <Route path="/recipes/new" element={<NewRecipeEntry />} />
+        {/* Oven art (single image, styled per theme) */}
+        <div
+          className="absolute inset-0 bg-center bg-cover bg-no-repeat
+               opacity-95 mix-blend-multiply
+               [filter:contrast(1.22)_brightness(0.88)]
+               dark:opacity-70 dark:mix-blend-soft-light
+               dark:[filter:contrast(1.20)_brightness(1.25)]
+               transition-opacity"
+          style={{
+            backgroundImage:
+              "url('/images/oven-outline-2560-stone300-quant.png')",
+          }}
+        />
 
+        {/* Optional veil for subtle depth */}
+        <div className="absolute inset-0 bg-white/5 dark:bg-black/25" />
+      </div>
+      <Navbar />
+      <main className={isHome ? '' : 'px-6 lg:px-8 py-8'}>
+        {/* BASE LAYER — always rendered (keeps navbar/layout visible) */}
+        <PageTransition>
+          <Routes location={baseLocation}>
+            {/* Public */}
+            <Route path="/" element={<Home />} />
+            <Route path="/create-recipe" element={<CreateRecipe />} />
+            <Route path="/menu" element={<PizzaMenu />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
+            {/* Legacy redirects (optional) */}
+            <Route
+              path="/recipes"
+              element={<Navigate to="/account/recipes" replace />}
+            />
+            <Route
+              path="/recipes/new"
+              element={<Navigate to="/editor/create" replace />}
+            />
+
+            {/* Account (protected + nested) */}
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <AccountShell />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<UserDashboard />} />
+              <Route path="recipes" element={<UserRecipeList />} />
+              <Route path="recipes/:id" element={<UserRecipeDetails />} />
+              <Route path="settings" element={<UserDefaults />} />
+              <Route path="profile" element={<UserProfile />} />
               <Route
-                path="/account/recipes/:id/edit"
-                element={
-                  <ProtectedRoute>
-                    <EditRecipe />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/account/recipes/:id"
-                element={
-                  <ProtectedRoute>
-                    <UserRecipeDetails />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/account"
-                element={
-                  <ProtectedRoute>
-                    <AccountPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
+                path="admin"
                 element={
                   <ProtectedRoute adminOnly>
                     <AdminDashboard />
                   </ProtectedRoute>
                 }
               />
-            </Routes>
-          </div>
-        </main>
+            </Route>
+          </Routes>
+        </PageTransition>
 
-        <ScheduleSettingsDrawer
-          isOpen={isSettingsDrawerOpen}
-          onClose={() => setSettingsDrawerOpen(false)}
-          data={scheduleData}
-          onChange={handleScheduleChange}
-          onReset={() => {
-            resetScheduleData();
-            resetFormData();
-          }}
-        />
-        <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
-      </div>
-    </Router>
+        {/* OVERLAY LAYER — only render on /editor/* */}
+        {isEditor && (
+          <Routes>
+            <Route
+              path="/editor/create"
+              element={
+                <ProtectedRoute>
+                  <ModalRecipeEditor mode="create" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/editor/:id"
+              element={
+                <ProtectedRoute>
+                  <ModalRecipeEditor mode="edit" />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        )}
+      </main>
+      <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} />
+    </div>
   );
 }
-
-export default App;

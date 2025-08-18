@@ -26,7 +26,7 @@ export default defineConfig({
       '@ui': path.resolve(__dirname, './src/components/ui'),
       '@constants': path.resolve(__dirname, './src/constants'),
       '@pages': path.resolve(__dirname, './src/pages'),
-      '@accounts': path.resolve(__dirname, './src/pages/accounts'),
+      '@accounts': path.resolve(__dirname, './src/pages/account'),
       '@recipes': path.resolve(__dirname, './src/pages/recipes'),
       '@pizzamenu': path.resolve(__dirname, './src/pages/pizzamenu'),
       '@utils': path.resolve(__dirname, './src/utils'),

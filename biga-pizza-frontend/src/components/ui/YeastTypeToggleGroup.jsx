@@ -22,7 +22,7 @@ export default function YeastTypeToggleGroup({
 
   const selected =
     'bg-red-600 text-white shadow-md border-red-600 ' +
-    'dark:bg-yellow-600 dark:text-white dark:border-yellow-600';
+    'dark:bg-yellow-800 dark:text-white dark:border-yellow-600';
 
   const ring = 'focus:ring-red-500 dark:focus:ring-yellow-500';
 

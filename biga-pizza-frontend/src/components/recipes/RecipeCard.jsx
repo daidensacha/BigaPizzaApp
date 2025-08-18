@@ -1,15 +1,19 @@
 import React from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
-import { updateRecipeNotes } from '@/services/recipeService';
+import {
+  updateRecipeNotes,
+  updateRecipeImage,
+  updateRecipeTitle,
+} from '@/services/recipeService';
 import { toast } from 'react-hot-toast';
 import ConfirmDeleteDialog from '@ui/ConfirmDeleteDialog';
 import StarRatingInput from './StarRatingInput';
-import { updateRecipeImage } from '@/services/recipeService';
 import { useDropzone } from 'react-dropzone';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { uploadToCloudinary } from '@/utils/uploadToCloudinary';
+import { Pencil, Check, XCircle } from 'lucide-react';
 
 export default function RecipeCard({ recipe, onDelete }) {
   const [note, setNote] = useState(recipe.notes || '');
@@ -19,6 +23,80 @@ export default function RecipeCard({ recipe, onDelete }) {
   const [localImage, setLocalImage] = useState(recipe.image);
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [localTitle, setLocalTitle] = useState(recipe.title || '');
+  const [savingTitle, setSavingTitle] = useState(false);
+  const titleInputRef = useRef(null);
+
+  const emptyTitleMessages = [
+    'Your dough needs a name before it can rise to fame 🍕',
+    'Nameless pizza? Sounds mysterious… but no. Give it a title!',
+    'Oops, no title! Even biga needs an identity.',
+  ];
+
+  const [titleError, setTitleError] = useState('');
+
+  const isTitleDirty =
+    (localTitle || '').trim() !== (recipe.title || '').trim();
+
+  const commitTitle = async () => {
+    const next = (localTitle || '').trim();
+
+    // Funny validation if empty
+    if (!next) {
+      const msg =
+        emptyTitleMessages[
+          Math.floor(Math.random() * emptyTitleMessages.length)
+        ];
+      setTitleError(msg);
+      // refocus input so user can try again
+      requestAnimationFrame(() => titleInputRef.current?.focus());
+      return;
+    }
+
+    // Nothing changed? just close editor
+    if (next === (recipe.title || '')) {
+      setEditingTitle(false);
+      setTitleError('');
+      return;
+    }
+
+    try {
+      setSavingTitle(true);
+      const updated = await updateRecipeTitle(
+        recipe._id,
+        { title: next },
+        user.token
+      );
+      setLocalTitle(updated.title);
+      setEditingTitle(false);
+      setTitleError('');
+      toast.success('Title saved!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to save title');
+      setLocalTitle(recipe.title || '');
+      setEditingTitle(false);
+    } finally {
+      setSavingTitle(false);
+    }
+  };
+
+  // keyboard handling for the title input
+  const onTitleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      commitTitle();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setLocalTitle(recipe.title || '');
+      setEditingTitle(false);
+      setTitleError('');
+    } else if (titleError) {
+      setTitleError('');
+    }
+  };
 
   const handleImageUpload = async (url) => {
     try {
@@ -103,12 +181,91 @@ export default function RecipeCard({ recipe, onDelete }) {
   const formattedDate = new Date(recipe.createdAt).toLocaleDateString();
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-white dark:bg-stone-800 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-stone-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+    <div className="w-full h-full flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-white dark:bg-stone-800 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-stone-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
       {/* Left Column */}
       <div className="flex-1">
-        <h3 className="text-xl font-semibold text-stone-700 dark:text-yellow-400">
+        {/* <h3 className="text-xl font-semibold text-stone-700 dark:text-yellow-400">
           {recipe.title}
-        </h3>
+        </h3> */}
+
+        {/* TITLE AREA (inline editable) */}
+        {!editingTitle ? (
+          <div className="flex items-start gap-2">
+            <h3
+              className="text-xl font-semibold text-stone-700 dark:text-yellow-400 cursor-text"
+              title="Click to edit title"
+              onClick={() => setEditingTitle(true)}
+            >
+              {localTitle || 'Untitled Recipe'}
+            </h3>
+
+            {/* Edit (Pencil) */}
+            <button
+              type="button"
+              aria-label="Edit title"
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700"
+              onClick={() => setEditingTitle(true)}
+            >
+              <Pencil className="w-4 h-4 text-stone-500 hover:text-stone-700 dark:text-stone-300 dark:hover:text-yellow-300" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <input
+              ref={titleInputRef}
+              autoFocus
+              type="text"
+              value={localTitle}
+              onChange={(e) => setLocalTitle(e.target.value)}
+              onKeyDown={onTitleKeyDown}
+              onBlur={commitTitle}
+              maxLength={120}
+              aria-invalid={!!titleError}
+              className={`w-full max-w-[36rem] px-2 py-1 rounded border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white ${
+                titleError ? 'ring-1 ring-red-500' : ''
+              }`}
+              placeholder="Recipe title…"
+            />
+
+            {/* Save (Check) */}
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()} // keep focus so blur->commit order is stable
+              onClick={commitTitle}
+              disabled={savingTitle}
+              aria-label="Save title"
+              title={savingTitle ? 'Saving…' : 'Save'}
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700 disabled:opacity-60"
+            >
+              <Check
+                className={`w-5 h-5 ${
+                  isTitleDirty ? 'text-green-600' : 'text-stone-400'
+                }`}
+              />
+            </button>
+
+            {/* Cancel (XCircle) */}
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                setLocalTitle(recipe.title || '');
+                setEditingTitle(false);
+                setTitleError('');
+              }}
+              aria-label="Cancel editing"
+              className="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700"
+            >
+              <XCircle className="w-5 h-5 text-stone-400 hover:text-stone-600 dark:hover:text-yellow-300" />
+            </button>
+          </div>
+        )}
+
+        {/* Inline playful message (optional) */}
+        {editingTitle && titleError && (
+          <p className="text-red-500 text-sm mt-1">{titleError}</p>
+        )}
+
         <p className="text-sm text-gray-500 dark:text-stone-400">
           Created on: {formattedDate}
         </p>

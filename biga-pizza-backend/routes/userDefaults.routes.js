@@ -3,17 +3,15 @@ import protect from '../middleware/authMiddleware.js';
 import {
   getMyDefaults,
   updateMyDefaults,
+  resetMyDefaults, // ← add this
 } from '../controllers/userDefaults.controller.js';
-
-// Ensure your auth middleware sets req.user
-const requireAuth = (req, res, next) => {
-  if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-  next();
-};
 
 const router = express.Router();
 
 router.get('/api/user/defaults', protect, getMyDefaults);
 router.put('/api/user/defaults', protect, updateMyDefaults);
+
+// NEW: reset to system defaults (recompute yeast)
+router.post('/api/user/defaults/reset', protect, resetMyDefaults);
 
 export default router;

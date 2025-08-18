@@ -147,7 +147,7 @@ export function makeIngredientRows(calculatedData) {
 
   const flourTotal = b.flour + rf.flour;
   const totalWater = b.water + rf.water;
-  const totalYeast = b.yeast + rf.yeast;
+  const totalYeast = round(b.yeast + rf.yeast, 2);
   const totalSalt = rf.salt; // salt only in refresh
   const totalMalt = rf.malt; // malt only in refresh
 
@@ -174,7 +174,7 @@ export function makeIngredientRows(calculatedData) {
       biga: b.yeast,
       refresh: rf.yeast,
       total: totalYeast,
-      bakers: pct(totalYeast, 3),
+      bakers: pct(totalYeast, 2),
     },
     {
       label: 'Salt',

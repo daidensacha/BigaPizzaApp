@@ -1,17 +1,40 @@
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  BookOpen,
+  UserRound,
+  Settings as SettingsIcon,
+  LogOut,
+  ChevronDown,
+} from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import AvatarBadge from '@/components/profile/AvatarBadge';
 
-export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
+function itemClasses(active, danger = false) {
+  return [
+    'group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm',
+    active
+      ? danger
+        ? 'bg-red-100 text-red-700 dark:bg-red-800/40 dark:text-red-300'
+        : 'bg-gray-100 dark:bg-stone-700'
+      : danger
+      ? 'text-red-600 hover:bg-red-50 dark:hover:bg-stone-700'
+      : 'hover:bg-gray-100 dark:hover:bg-stone-700',
+  ].join(' ');
+}
+
+export default function NavbarUserMenu({ onLogout, user }) {
+  const navigate = useNavigate();
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="inline-flex items-center gap-2 text-sm font-medium focus:outline-none hover:text-red-600">
-        {user?.avatar ? (
-          <img
-            src={user.avatar}
-            alt="Avatar"
-            className="w-6 h-6 rounded-full"
+        {user?.avatarStyle && user?.avatarSeed ? (
+          <AvatarBadge
+            type={user.avatarStyle}
+            seed={user.avatarSeed}
+            size={24} // navbar size
           />
         ) : (
           <span>Account</span>
@@ -28,59 +51,62 @@ export default function NavbarUserMenu({ onOpenSettings, onLogout, user }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white dark:bg-stone-800 shadow-lg ring-1 ring-black/5 focus:outline-none z-50">
-          <div className="px-1 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/my-recipes"
-                  className={`${
-                    active ? 'bg-gray-100 dark:bg-stone-700' : ''
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  📖 My Recipes
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/account"
-                  className={`${
-                    active ? 'bg-gray-100 dark:bg-stone-700' : ''
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  👤 Account Overview
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={onOpenSettings}
-                  className={`${
-                    active ? 'bg-gray-100 dark:bg-stone-700' : ''
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  ⚙️ Settings
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="px-1 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => onLogout?.()}
-                  className={`${
-                    active ? 'bg-red-100 dark:bg-stone-700' : ''
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm text-red-600`}
-                >
-                  🔓 Logout
-                </button>
-              )}
-            </Menu.Item>
-          </div>
+        <Menu.Items className="absolute right-0 mt-2 w-52 origin-top-right rounded-md bg-white dark:bg-stone-800 shadow-lg ring-1 ring-black/5 focus:outline-none z-50 p-1">
+          {/* Overview */}
+          <Menu.Item>
+            {({ active }) => (
+              <Link to="/account" className={itemClasses(active)}>
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Overview</span>
+              </Link>
+            )}
+          </Menu.Item>
+
+          {/* My Recipes */}
+          <Menu.Item>
+            {({ active }) => (
+              <Link to="/account/recipes" className={itemClasses(active)}>
+                <BookOpen className="w-4 h-4" />
+                <span>My Recipes</span>
+              </Link>
+            )}
+          </Menu.Item>
+
+          {/* Profile */}
+          <Menu.Item>
+            {({ active }) => (
+              <Link to="/account/profile" className={itemClasses(active)}>
+                <UserRound className="w-4 h-4" />
+                <span>Profile</span>
+              </Link>
+            )}
+          </Menu.Item>
+
+          {/* Settings */}
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                onClick={() => navigate('/account/settings')}
+                className={itemClasses(active)}
+              >
+                <SettingsIcon className="w-4 h-4" />
+                <span>Settings</span>
+              </button>
+            )}
+          </Menu.Item>
+
+          {/* Divider */}
+          <div className="my-1 border-t border-stone-200 dark:border-stone-700" />
+
+          {/* Logout */}
+          <Menu.Item>
+            {({ active }) => (
+              <button onClick={onLogout} className={itemClasses(active, true)}>
+                <LogOut className="w-4 h-4" />
+                <span>Log out</span>
+              </button>
+            )}
+          </Menu.Item>
         </Menu.Items>
       </Transition>
     </Menu>

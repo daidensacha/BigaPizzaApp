@@ -1,4 +1,29 @@
+// NumberInputGroup.jsx
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
+
+const SIZE_STYLES = {
+  xs: {
+    wrapMin: 'min-w-[9.5rem]',
+    label: 'text-[10px]',
+    btn: 'h-6 px-2 text-[11px] rounded',
+    input: 'h-6 w-16 text-[11px] rounded',
+    hint: 'text-[9px]',
+  },
+  sm: {
+    btn: 'h-7 px-2.5 text-xs rounded',
+    input: 'h-7 w-16 text-xs rounded',
+    hint: 'text-[10px]',
+    label: 'text-[11px]',
+    wrapMin: 'min-w-[9.5rem]',
+  },
+  md: {
+    btn: 'h-8 px-3 text-sm rounded-md',
+    input: 'h-8 w-20 text-sm rounded-md',
+    hint: 'text-[10px]',
+    label: 'text-xs',
+    wrapMin: 'min-w-[11rem]',
+  },
+};
 
 function NumberInputGroup({
   label,
@@ -9,19 +34,23 @@ function NumberInputGroup({
   step = 1,
   unit,
   className = '',
-  firstDelay = 350, // ms before repeating starts
-  repeatDelay = 85, // ms between repeats
+  firstDelay = 350,
+  repeatDelay = 85,
+  size = 'sm', // ⬅️ NEW: 'sm' | 'md'
+  align = 'center', // new prop
 }) {
-  // ---- basic helpers ----
+  const S = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
+
+  const alignClass = align === 'start' ? 'items-start' : 'items-center';
+  const labelAlign = align === 'start' ? 'text-left' : 'text-center';
+
   const clamp = useCallback((n) => Math.min(max, Math.max(min, n)), [min, max]);
 
-  // Latest committed value for repeat loop
   const valueRef = useRef(typeof value === 'number' ? value : 0);
   useEffect(() => {
     valueRef.current = typeof value === 'number' ? value : 0;
   }, [value]);
 
-  // Draft for natural typing
   const [draft, setDraft] = useState(value ?? '');
   useEffect(() => setDraft(value ?? ''), [value]);
 
@@ -54,8 +83,7 @@ function NumberInputGroup({
     [step, setValueClamped]
   );
 
-  // ---- hold-to-repeat (minimal globals; added on start, removed on stop) ----
-  // --- Hold-to-repeat (per-button, minimal globals) ---
+  // hold-to-repeat
   const holdingRef = useRef(false);
   const startTimerRef = useRef(null);
   const repeatTimerRef = useRef(null);
@@ -76,12 +104,7 @@ function NumberInputGroup({
 
   const stopHold = useCallback(() => {
     if (!holdingRef.current) return;
-
-    // If released before repeat began, treat as a single click
-    if (!repeatStartedRef.current) {
-      stepOnce(dirRef.current);
-    }
-
+    if (!repeatStartedRef.current) stepOnce(dirRef.current);
     holdingRef.current = false;
     clearTimers();
   }, [clearTimers, stepOnce]);
@@ -89,13 +112,9 @@ function NumberInputGroup({
   const startHold = useCallback(
     (dir, e) => {
       e?.preventDefault?.();
-
-      // start from what’s visible
       commitDraft();
-
       holdingRef.current = true;
       dirRef.current = dir;
-
       clearTimers();
       startTimerRef.current = setTimeout(() => {
         if (!holdingRef.current) return;
@@ -109,15 +128,14 @@ function NumberInputGroup({
     [commitDraft, stepOnce, clearTimers, firstDelay, repeatDelay]
   );
 
-  // 1) cleanup on unmount
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       holdingRef.current = false;
       clearTimers();
-    };
-  }, [clearTimers]);
+    },
+    [clearTimers]
+  );
 
-  // 2) keep draft in sync when not holding
   useEffect(() => {
     if (holdingRef.current) return;
     setDraft(value ?? '');
@@ -127,21 +145,21 @@ function NumberInputGroup({
 
   return (
     <div
-      className={`flex flex-col gap-1 items-center min-w-[11rem] ${className}`}
+      className={`flex flex-col gap-1 ${alignClass} ${S.wrapMin} ${className}`}
     >
       {label && (
         <label
           htmlFor={inputId}
-          className="text-xs font-medium text-zinc-600 dark:text-zinc-300 text-center"
+          className={`${S.label} font-medium text-zinc-600 dark:text-stone-400 ${labelAlign}`}
         >
           {label}
         </label>
       )}
 
-      <div className="flex items-center gap-2 select-none whitespace-nowrap">
+      <div className="flex items-center gap-1.5 select-none whitespace-nowrap">
         <button
           type="button"
-          className="h-8 px-3 rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+          className={`${S.btn} bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700`}
           onPointerDown={(e) => startHold('dec', e)}
           onPointerUp={stopHold}
           onPointerLeave={stopHold}
@@ -164,19 +182,13 @@ function NumberInputGroup({
           onKeyDown={(e) => {
             if (e.key === 'Enter') e.currentTarget.blur();
           }}
-          className="h-8 w-20 text-center border border-zinc-300 rounded-md bg-white dark:bg-zinc-900 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-zinc-300/20"
+          className={`${S.input} text-center border border-zinc-300 bg-white dark:bg-zinc-900 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-zinc-300/15`}
           style={{ MozAppearance: 'textfield' }}
         />
 
-        {unit && (
-          <span className="inline-flex h-8 items-center px-2 text-xs rounded-md border border-zinc-300 bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700">
-            {unit}
-          </span>
-        )}
-
         <button
           type="button"
-          className="h-8 px-3 rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+          className={`${S.btn} bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700`}
           onPointerDown={(e) => startHold('inc', e)}
           onPointerUp={stopHold}
           onPointerLeave={stopHold}
@@ -187,7 +199,7 @@ function NumberInputGroup({
         </button>
       </div>
 
-      <div className="text-[10px] text-zinc-500">
+      <div className={`${S.hint} text-zinc-500`}>
         Min {min} / Max {max} {unit ?? ''}
       </div>
     </div>

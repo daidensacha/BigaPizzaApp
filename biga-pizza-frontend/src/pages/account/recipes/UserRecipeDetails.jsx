@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { getRecipeById } from '@/services/recipeService';
 import { formatGrams } from '@/utils/recipeFormatting';
 import { formatLocalLabel } from '@/utils/dayjsConfig';
@@ -14,6 +14,8 @@ export default function UserRecipeDetails() {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id: recipeId } = useParams();
 
   useEffect(() => {
     if (user?.token) {
@@ -27,7 +29,26 @@ export default function UserRecipeDetails() {
     }
   }, [id, user]);
 
-  const handleBack = () => navigate('/my-recipes');
+  const openEditor = () => {
+    navigate(`/editor/${id}`, {
+      state: { backgroundLocation: location }, // <-- this is the “background” layer
+    });
+  };
+
+  useEffect(() => {
+    const handleRecipeUpdated = (e) => {
+      if (e.detail.id === recipeId) {
+        setRecipe(e.detail.recipe); // instantly replace old recipe data
+      }
+    };
+
+    window.addEventListener('recipe:updated', handleRecipeUpdated);
+    return () => {
+      window.removeEventListener('recipe:updated', handleRecipeUpdated);
+    };
+  }, [recipeId]);
+
+  const handleBack = () => navigate('/account/recipes');
   // console.log('👤 User in UserRecipeDetails:', user);
 
   if (loading) return <p className="p-4">Loading...</p>;
@@ -38,7 +59,7 @@ export default function UserRecipeDetails() {
   console.log('GET recipeById calculatiedData', calculatedData);
   console.log('GET recipeById scheduleData:', scheduleData);
   return (
-    <div className="print-wrapper space-y-6 p-6 max-w-4xl mx-auto">
+    <div className="print-wrapper space-y-6 px-2 lg:px-4 w-full">
       <div className="no-print flex items-center mb-6">
         <button
           onClick={handleBack}
@@ -147,11 +168,12 @@ export default function UserRecipeDetails() {
         >
           Print Recipe
         </button>
-        <Link to={`/account/recipes/${recipe._id}/edit`}>
-          <button className="px-4 py-2 mx-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white">
-            Edit Recipe
-          </button>
-        </Link>
+        <button
+          onClick={openEditor}
+          className="px-4 py-2 mx-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white"
+        >
+          Edit Recipe
+        </button>
         <Link
           to="/account"
           className="bg-gray-600 dark:bg-stone-700 px-4 py-2 rounded hover:bg-gray-500 dark:hover:bg-stone-600"

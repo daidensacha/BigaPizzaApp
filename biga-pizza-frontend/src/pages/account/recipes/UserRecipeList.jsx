@@ -32,7 +32,7 @@ export default function UserRecipeList() {
   if (loading) return <div className="p-4">Loading recipes...</div>;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="px-2 lg:px-4 w-full">
       <h2 className="text-2xl font-bold mb-4 text-stone-800 dark:text-amber-400">
         Your Saved Recipes
       </h2>
@@ -42,9 +42,15 @@ export default function UserRecipeList() {
           No recipes saved yet.
         </p>
       ) : (
-        <ul className="space-y-4">
+        <ul
+          className="w-full grid gap-5
+                 [grid-template-columns:repeat(auto-fill,minmax(420px,1fr))]
+        [justify-items:start]
+        [align-items:stretch]
+        [place-content:start]"
+        >
           {recipes.map((recipe) => (
-            <li key={recipe._id}>
+            <li key={recipe._id} className="min-w-0 w-full">
               <RecipeCard recipe={recipe} onDelete={handleDelete} />
             </li>
           ))}

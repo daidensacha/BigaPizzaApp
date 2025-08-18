@@ -18,13 +18,13 @@ const DoughDefaultsSchema = new mongoose.Schema(
 
     bigaYeastPercentOfBigaFlour: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
       max: 2,
     },
     refreshYeastPercentOfRefreshFlour: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
       max: 2,
     },

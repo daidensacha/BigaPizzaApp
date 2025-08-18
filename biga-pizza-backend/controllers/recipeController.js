@@ -162,6 +162,55 @@ const updateRecipeImage = async (req, res) => {
   }
 };
 
+// PATCH /api/recipes/:id/title
+// const updateRecipeTitle = async (req, res) => {
+//   try {
+//     const { title } = req.body;
+//     if (!title || !String(title).trim()) {
+//       return res.status(400).json({ message: 'Title is required.' });
+//     }
+
+//     const recipe = await Recipe.findById(req.params.id);
+//     if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+//     // (Optional) basic length guard
+//     recipe.title = String(title).slice(0, 180);
+//     const updated = await recipe.save();
+
+//     res.json({ _id: updated._id, title: updated.title });
+//   } catch (err) {
+//     console.error('🔥 updateRecipeTitle error:', err);
+//     res.status(500).json({ message: 'Failed to update title' });
+//   }
+// };
+
+// PATCH /api/recipes/:id/title
+const updateRecipeTitle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+
+    if (typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({ message: 'Title is required.' });
+    }
+
+    const recipe = await Recipe.findById(id);
+    if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+    // (Optional) ensure the authenticated user owns it
+    if (String(recipe.user) !== String(req.user.id)) {
+      return res.status(403).json({ message: 'Not allowed' });
+    }
+
+    recipe.title = title.trim();
+    const updated = await recipe.save();
+    return res.json(updated);
+  } catch (err) {
+    console.error('updateRecipeTitle error:', err);
+    return res.status(500).json({ message: 'Failed to update title' });
+  }
+};
+
 // Delete a recipe
 // DELETE /api/recipes/:id
 const deleteRecipe = asyncHandler(async (req, res) => {
@@ -189,5 +238,6 @@ export {
   updateRecipeNotes,
   uploadRecipeImage,
   updateRecipeImage,
+  updateRecipeTitle,
   deleteRecipe,
 };

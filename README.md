@@ -1,176 +1,153 @@
-# BigaPizzaApp 🍕
+# 🍕 Biga Pizza App
 
-A modern web app for generating and saving Neapolitan-style biga pizza dough recipes with a built-in prep timeline and fermentation scheduler.
+![Frontend](https://img.shields.io/badge/frontend-React-blue)
+![Backend](https://img.shields.io/badge/backend-Node.js-green)
+![Database](https://img.shields.io/badge/database-MongoDB-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+**A full-stack pizza dough calculator and recipe manager**
+Built to combine artisan pizza baking precision with modern web technology.
+Easily calculate dough formulas, plan fermentation schedules, and store your recipes securely.
 
 ---
 
-## 🗂 Project Structure
+## 📖 Overview
 
-```bash
-├── README.md                  # ← You’re reading this!
-├── biga-pizza-backend         # Express + MongoDB API backend
-│   ├── config
-│   │   └── db.js              # MongoDB connection setup
-│   ├── controllers
-│   │   ├── authController.js  # Register, login, and auth handling
-│   │   └── recipeController.js# CRUD operations for recipes
-│   ├── middleware
-│   │   └── authMiddleware.js  # Protect routes, validate user sessions
-│   ├── models
-│   │   ├── Recipe.js          # Mongoose model for recipes
-│   │   └── User.js            # Mongoose model for users
-│   ├── routes
-│   │   ├── authRoutes.js      # API routes for user auth
-│   │   └── recipeRoutes.js    # API routes for recipe actions
-│   ├── server.js              # Entry point to start the backend server
-│   └── utils
-│       ├── cookieOptions.js   # Centralized cookie settings
-│       └── scheduleCalculator.js # Server-side schedule generator
+The **Biga Pizza App** is a **React + Node.js + MongoDB** application for pizza enthusiasts and professionals.
+It allows users to:
 
-biga-pizza-frontend            # React frontend with Vite + Tailwind CSS
-├── README.md
-├── index.html
-├── public
-│   └── images/                # Pizza images used in the menu
-│       ├── margherita.jpeg
-│       ├── diavola.jpeg
-│       └── …
-└── src
-├── App.jsx                # Main app router and layout
-├── main.jsx               # React entry point
-├── index.css              # Tailwind + global styles
-├── styles/
-│   └── global.css         # Custom CSS overrides
-├── config/
-│   └── index.js           # App-wide config (e.g. API base URL)
-├── constants/             # Static app configs
-│   ├── defaultScheduleSettings.js
-│   ├── inputConfig.js
-│   ├── settingsConfig.js
-│   └── tooltips.js
-├── context/
-│   ├── AuthContext.jsx    # Auth state and user session
-│   ├── AuthModalContext.jsx
-│   └── RecipeContext.jsx  # Stores form and schedule data
-├── components/
-│   ├── Navbar.jsx
-│   ├── NavbarUserMenu.jsx
-│   ├── ScheduleInputGroup.jsx
-│   ├── ScheduleSettingsDrawer.jsx
-│   ├── FormLabelWithTooltip.jsx
-│   ├── auth/
-│   │   └── AuthModal.jsx
-│   ├── guidedinputflow/   # Step-by-step input flow
-│   │   ├── Step1BasicInfo.jsx
-│   │   ├── Step2Hydration.jsx
-│   │   ├── Step3Fermentation.jsx
-│   │   ├── Step4YeastType.jsx
-│   │   ├── Step5RecipePreview.jsx
-│   │   ├── Step6PrepSchedule.jsx
-│   │   ├── Step7FinalRecipe.jsx
-│   │   └── StepWrapper.jsx
-│   ├── hooks/             # Custom hooks (empty for now)
-│   ├── lib/
-│   │   └── utils.js       # General helper functions
-│   ├── pizzas/
-│   │   └── PizzaCard.jsx  # Pizza menu display component
-│   ├── recipes/           # Saved recipe-related components
-│   │   ├── RecipeCard.jsx
-│   │   ├── StarRating.jsx
-│   │   └── StarRatingInput.jsx
-│   ├── routes/
-│   │   └── ProtectedRoute.jsx
-│   └── ui/                # Generic reusable UI components
-│       ├── ConfirmDeleteDialog.jsx
-│       ├── GuidedInputField.jsx
-│       ├── InputTooltip.jsx
-│       ├── ThemeToggle.jsx
-│       ├── Tooltip.jsx
-│       ├── YeastTypePopoverSelector.jsx
-│       ├── YeastTypeToggleGroup.jsx
-│       ├── avatar.jsx
-│       └── dropdown-menu_backup.jsx
-├── data/
-│   ├── pizzaMenu.js       # Static list of pizza options
-│   └── recipeSteps.js     # Timeline steps + labels
-├── pages/                 # Top-level pages for routing
-│   ├── Home.jsx
-│   ├── pizzamenu/
-│   │   └── index.jsx
-│   ├── accounts/
-│   │   ├── AccountPage.jsx
-│   │   ├── AdminDashboard.jsx
-│   │   ├── UserAccount.jsx
-│   │   └── UserDashboard.jsx
-│   └── recipes/
-│       ├── CreateRecipe.jsx
-│       ├── EditRecipe.jsx
-│       ├── UserRecipeDetails.jsx
-│       └── UserRecipeList.jsx
-├── services/
-│   ├── authService.js     # API calls for auth
-│   └── recipeService.js   # API calls for recipes
-└── utils/
-    ├── dayjsConfig.js     # Shared dayjs formatting
-    ├── previewHelpers.js
-    ├── recipeFormatting.js
-    ├── scheduleCalculator.js
-    ├── scheduleLabels.js
-    ├── theme.js
-    ├── toastUtils.js
-    └── utils.js
-```
+- Create and customize pizza dough recipes (including Biga and Refresh stages)
+- Automatically calculate ingredient quantities based on baker’s percentages
+- Plan fermentation timelines with interactive scheduling
+- Save, edit, and delete recipes with secure authentication
+- Access recipes from any device via a clean, responsive UI
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
+
+- ⚛️ React (Vite)
+- 🎨 Tailwind CSS + Dark Mode
+- 🎭 Framer Motion (animations)
+- 🧭 React Router DOM
+
+**Backend**
+
+- 🟢 Node.js & Express
+- 🍃 MongoDB + Mongoose
+- 🔐 JWT Authentication & Protected Routes
+
+**Other Tools**
+
+- 📦 Axios
+- 📅 Day.js
+- 🍞 React Hot Toast (notifications)
 
 ---
 
 ## 🚀 Features
 
-- Step-by-step recipe builder for biga pizza dough
-- Automatic yeast % calculator (based on time, temp, and yeast type)
-- Fermentation and preparation timeline generation
-- User accounts, login/logout, recipe saving
-- Admin panel (in progress)
-- Dark mode toggle, tooltips, and clean UI
+- **Guided Input Flow** → Step-by-step recipe creation with validation
+- **Modal Recipe Editor** → Edit without leaving the recipe detail page
+- **User Dashboard** → View saved recipes, defaults, and profile info
+- **Dark/Light Theme** → Automatic and manual theme switching
+- **Responsive UI** → Fully mobile-friendly
 
 ---
 
-## 📦 Tech Stack
+## 📸 Screenshots
 
-- **Frontend:** React, Vite, Tailwind CSS, Headless UI, Framer Motion, Day.js
-- **Backend:** Node.js, Express, MongoDB, Mongoose
-- **Auth:** JWT cookies, session handling via context
-- **Deployment:** (Planned) Vercel for frontend, Render for backend
+### Dashboard (Dark Mode)
+
+![Dashboard Dark](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/dashboard-dark.jpg?raw=true)
+
+### Guided Input Flow
+
+![Guided Flow](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/guided-flow.jpg?raw=true)
+
+### Recipe Detail
+
+![Recipe Detail](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/recipe-detail.jpg?raw=true)
 
 ---
 
-## 🛠 Setup
+## 🔑 Installation
 
 ```bash
-# Frontend
-cd biga-pizza-frontend
-npm install
-npm run dev
+# Clone the repository
+git clone https://github.com/daidensacha/BigaPizzaApp.git
 
-# Backend
-cd ../biga-pizza-backend
+# Install frontend dependencies
+cd BigaPizzaApp/frontend
 npm install
-npm run dev
+
+# Install backend dependencies
+cd ../backend
+npm install
+
+# Run both servers (use separate terminals)
+npm run dev   # in frontend folder
+npm start     # in backend folder
 ```
 
-Make sure MongoDB is running locally or use a remote cluster with your .env properly configured.
+## 🤝 Contributing
 
-⸻
+Contributions, feedback, and pizza memes are welcome.
+Open an issue or discussion to get started!
 
-📌 To Do
-• Admin dashboard features
-• Image upload for user avatars
-• Timezone handling & iCal export
-• Pizza menu customization
-• Recipe sharing / public view
-• Mobile UI optimization
+## 🛠 Roadmap
 
-⸻
+- [ ] Recipe print/PDF export
+- [ ] Countdown baking timer ⏳
+- [ ] Achievement badges 🎖️
+- [ ] Admin dashboard (users, recipes, defaults)
+- [ ] Multi-language support 🌍
 
-🧑‍🍳 Author
+## 🏷️ Issue Labels
 
-Built by Daiden Sacha with help from Harry (aka ChatGPT), one pizza at a time.
+We use labels to keep issues organized and easy to track:
+
+| Label                | Description                               |
+| -------------------- | ----------------------------------------- |
+| **frontend**         | React, UI, Tailwind, animations           |
+| **backend**          | Node, Express, MongoDB, API routes        |
+| **database**         | Schema, migrations, queries               |
+| **auth**             | Login, registration, sessions, cookies    |
+| **dashboard**        | User or admin dashboards                  |
+| **ui/ux**            | Styling, layout, interactions             |
+| **feature**          | New functionality requests                |
+| **enhancement**      | Improvements to existing features         |
+| **bug**              | Something broken                          |
+| **docs**             | Documentation or README updates           |
+| **good first issue** | Easy wins for newcomers                   |
+| **discussion**       | Brainstorming ideas or planning           |
+| **blocked**          | Waiting on something else before progress |
+
+**Color scheme suggestion:**
+
+- 🍅 **Red** → `bug`
+- 🍕 **Yellow** → `feature`
+- 🍃 **Green** → `enhancement`
+- 📘 **Blue** → docs & discussions
+- 🟣 **Purple** → auth, dashboard, frontend/backend categories
+
+---
+
+---
+
+## 🌐 Connect
+
+- **LinkedIn:** [Daiden Sacha](https://www.linkedin.com/in/daidensacha)
+- **GitHub:** [github.com/daidensacha](https://github.com/daidensacha)
+
+---
+
+## 📜 License
+
+MIT License — feel free to fork and adapt.
+
+---
+
+> _“Code is like pizza dough — it’s all about how you shape it.”_
