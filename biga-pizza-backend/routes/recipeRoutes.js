@@ -1,7 +1,9 @@
+// src/routes/recipeRoutes.js
 import express from 'express';
 import multer from 'multer';
-const upload = multer({ dest: 'uploads/' }); // Temp local storage
+const upload = multer({ dest: 'uploads/' });
 
+import protect from '../middleware/authMiddleware.js';
 import {
   createRecipe,
   getRecipeById,
@@ -12,42 +14,50 @@ import {
   updateRecipeImage,
   updateRecipeTitle,
   deleteRecipe,
-  // Add more routes like update/delete later
 } from '../controllers/recipeController.js';
-
-import protect from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Create new recipe (only for authenticated users)
+// 🔒 helper: block non-ObjectId strings on :id routes
+const validateObjectId = (req, res, next) => {
+  const { id } = req.params;
+  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+    return res.status(400).json({ error: 'Invalid recipe id' });
+  }
+  next();
+};
+
+// Create new recipe
 router.post('/', protect, createRecipe);
 
-// Get all user recipes to diplay list in user dashboard
+// 🆕 Current user's recipes (place BEFORE any `/:id`)
+router.get('/mine', protect, getUserRecipes);
+
+// (optional) keep old path for now to avoid breaking calls
 router.get('/user', protect, getUserRecipes);
 
-// Get single recipe by ID (public or protected depending on your logic)
-router.get('/:id', protect, getRecipeById);
+// Single recipe by id
+router.get('/:id', protect, validateObjectId, getRecipeById);
 
-// PATCH /api/recipes/:id/notes
-router.patch('/:id/notes', protect, updateRecipeNotes);
+// Notes
+router.patch('/:id/notes', protect, validateObjectId, updateRecipeNotes);
 
-// PUT /api/recipes/:id (updates recipe)
-router.put('/:id', protect, updateRecipe);
+// Update full recipe
+router.put('/:id', protect, validateObjectId, updateRecipe);
 
-router.put('/:id/image', protect, updateRecipeImage);
+// Update image (metadata)
+router.put('/:id/image', protect, validateObjectId, updateRecipeImage);
 
-// PATCH upate recipe title
-router.patch('/:id/title', protect, updateRecipeTitle);
-
-// Upload image to recipe list view
+// Upload image file
 router.post(
   '/:id/upload-image',
   protect,
+  validateObjectId,
   upload.single('image'),
   uploadRecipeImage
 );
 
-// DELETE Recipe by id
-router.delete('/:id', protect, deleteRecipe);
+// Delete
+router.delete('/:id', protect, validateObjectId, deleteRecipe);
 
 export default router;

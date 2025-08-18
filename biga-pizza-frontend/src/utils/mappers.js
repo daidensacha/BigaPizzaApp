@@ -1,16 +1,22 @@
-// Convert backend yeast to the form's lowercase convention
-const normalizeYeastToForm = (val) => {
+// src/utils/mappers.js
+import {
+  defaultFormData,
+  defaultScheduleData,
+} from '@/constants/defaultInputSettings';
+
+// Normalize backend yeast → UI’s lowercase convention
+function normalizeYeastToForm(val) {
   if (!val) return 'idy';
   const v = String(val).toLowerCase();
   if (v.includes('fresh')) return 'fresh';
   if (v.includes('ady')) return 'ady';
   return 'idy';
-};
+}
 
-// Map backend doughDefaults -> your RecipeContext formData
+// Map backend doughDefaults ➜ UI formData, then layer system defaults
 export function mapDoughDefaultsToForm(d) {
-  if (!d) return {};
-  return {
+  if (!d) return { ...defaultFormData };
+  const mapped = {
     numPizzas: d.numberOfPizzas,
     ballWeight: d.ballWeightGrams,
     bigaHydration: d.bigaHydrationPercent,
@@ -23,14 +29,15 @@ export function mapDoughDefaultsToForm(d) {
     doughTime: d.doughFermentationHours,
     doughTemp: d.doughFermentationTempC,
     yeastType: normalizeYeastToForm(d.yeastType),
-    // Note: bakingDateTime / correction factors are managed elsewhere in your context
   };
+  return { ...defaultFormData, ...mapped };
 }
 
-// Map backend scheduleDefaults (minutes) -> your scheduleData
+// Map backend scheduleDefaults (minutes) ➜ UI scheduleData (hours where needed),
+// then layer system defaults (ensuring bakingDateTime default exists)
 export function mapScheduleDefaultsToState(s) {
-  if (!s) return {};
-  return {
+  if (!s) return { ...defaultScheduleData };
+  const mapped = {
     bigaPrepTime: s.bigaPrepTimeMin, // minutes
     bigaRisingTime: Math.round((s.bigaRisingTimeMin ?? 0) / 60), // hours
     autolyzeRefreshPrep: s.autolyzeRefreshPrepMin, // minutes
@@ -41,5 +48,10 @@ export function mapScheduleDefaultsToState(s) {
     ballsRisingTime: Math.round((s.ballsRisingTimeMin ?? 0) / 60), // hours
     preheatOvenDuration: s.preheatOvenDurationMin, // minutes
     toppingsPrepTime: s.toppingsPrepTimeMin, // minutes
+  };
+  return {
+    ...defaultScheduleData,
+    ...mapped,
+    bakingDateTime: s.bakingDateTime ?? defaultScheduleData.bakingDateTime,
   };
 }

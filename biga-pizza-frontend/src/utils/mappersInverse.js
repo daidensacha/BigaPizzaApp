@@ -1,4 +1,6 @@
-// using your current RecipeContext keys
+// src/utils/mappersInverse.js
+
+// UI formData ➜ backend doughDefaults
 export function mapFormToDoughDefaults(f) {
   return {
     numberOfPizzas: f.numPizzas,
@@ -13,14 +15,15 @@ export function mapFormToDoughDefaults(f) {
     doughFermentationTempC: f.doughTemp,
     saltPercentOfTotalFlour: f.saltPercent,
     maltPercentOfTotalFlour: f.maltPercent,
-    // keep other % (yeast) if you expose them in UI later:
-    // bigaYeastPercentOfBigaFlour: ...
-    // refreshYeastPercentOfRefreshFlour: ...
   };
 }
 
+// UI scheduleData ➜ backend scheduleDefaults (convert hours ➜ minutes)
 export function mapStateToScheduleDefaults(s) {
   return {
+    // If your backend accepts/needs bakingDateTime, include it here; otherwise omit.
+    // bakingDateTime: s.bakingDateTime,
+
     bigaPrepTimeMin: s.bigaPrepTime,
     bigaRisingTimeMin: Math.round((s.bigaRisingTime ?? 0) * 60),
     autolyzeRefreshPrepMin: s.autolyzeRefreshPrep,

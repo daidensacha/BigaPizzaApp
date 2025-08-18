@@ -1,5 +1,10 @@
 # 🍕 Biga Pizza App
 
+![Frontend](https://img.shields.io/badge/frontend-React-blue)
+![Backend](https://img.shields.io/badge/backend-Node.js-green)
+![Database](https://img.shields.io/badge/database-MongoDB-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 **A full-stack pizza dough calculator and recipe manager**
 Built to combine artisan pizza baking precision with modern web technology.
 Easily calculate dough formulas, plan fermentation schedules, and store your recipes securely.
@@ -56,15 +61,15 @@ It allows users to:
 
 ### Dashboard (Dark Mode)
 
-![Dashboard Dark](public/images/screenshots/dashboard-dark.png)
+![Dashboard Dark](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/dashboard-dark.jpg?raw=true)
 
 ### Guided Input Flow
 
-![Guided Flow](public/images/screenshots/guided-flow.png)
+![Guided Flow](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/guided-flow.jpg?raw=true)
 
 ### Recipe Detail
 
-![Recipe Detail](public/images/screenshots/recipe-detail.png)
+![Recipe Detail](https://github.com/daidensacha/BigaPizzaApp/blob/main/biga-pizza-frontend/public/images/screenshots/recipe-detail.jpg?raw=true)
 
 ---
 
@@ -86,6 +91,49 @@ npm install
 npm run dev   # in frontend folder
 npm start     # in backend folder
 ```
+
+## 🤝 Contributing
+
+Contributions, feedback, and pizza memes are welcome.
+Open an issue or discussion to get started!
+
+## 🛠 Roadmap
+
+- [ ] Recipe print/PDF export
+- [ ] Countdown baking timer ⏳
+- [ ] Achievement badges 🎖️
+- [ ] Admin dashboard (users, recipes, defaults)
+- [ ] Multi-language support 🌍
+
+## 🏷️ Issue Labels
+
+We use labels to keep issues organized and easy to track:
+
+| Label                | Description                               |
+| -------------------- | ----------------------------------------- |
+| **frontend**         | React, UI, Tailwind, animations           |
+| **backend**          | Node, Express, MongoDB, API routes        |
+| **database**         | Schema, migrations, queries               |
+| **auth**             | Login, registration, sessions, cookies    |
+| **dashboard**        | User or admin dashboards                  |
+| **ui/ux**            | Styling, layout, interactions             |
+| **feature**          | New functionality requests                |
+| **enhancement**      | Improvements to existing features         |
+| **bug**              | Something broken                          |
+| **docs**             | Documentation or README updates           |
+| **good first issue** | Easy wins for newcomers                   |
+| **discussion**       | Brainstorming ideas or planning           |
+| **blocked**          | Waiting on something else before progress |
+
+**Color scheme suggestion:**
+
+- 🍅 **Red** → `bug`
+- 🍕 **Yellow** → `feature`
+- 🍃 **Green** → `enhancement`
+- 📘 **Blue** → docs & discussions
+- 🟣 **Purple** → auth, dashboard, frontend/backend categories
+
+---
 
 ---
 

@@ -3,6 +3,16 @@
 @tailwind utilities;
 /* index.css or main.css */
 
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: transparent;
+  overflow-x: hidden;
+}
+
 @layer utilities {
   @media print {
     .print-details-open details {
@@ -11,6 +21,18 @@
     .print-hide-summary summary {
       display: none;
     }
+  }
+}
+\\@layer utilities {
+  .grid-fit-132 {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  }
+  /* (optional sizes if you ever need them) */
+  .grid-fit-120 {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .grid-fit-140 {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   }
 }
 

@@ -1,6 +1,6 @@
 const systemDefaults = {
   doughDefaults: {
-    numberOfPizzas: 4,
+    numberOfPizzas: 6,
     ballWeightGrams: 280,
     doughHydrationPercent: 65,
     doughBigaPercent: 50,

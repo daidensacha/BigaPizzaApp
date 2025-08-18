@@ -64,9 +64,43 @@ export default function AppInner() {
   }, [params, setParams, openAuthModal]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-red-100 dark:from-orange-950 dark:to-slate-950 transition-colors duration-500">
-      <Navbar />
+    <div className="min-h-screen relative">
+      {' '}
+      {/*
+        Background layering:
+        - Gradient is always present.
+        - Oven art is shown everywhere.
+        - On the Home page ONLY, we boost filters & fade-in
+          for extra warmth and vividness (special intro feel).
+        - Other pages keep the oven art calm & neutral.
+      */}
+      {/* Fixed background behind the whole app */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* Gradient */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br
+                from-red-100 to-yellow-100
+                dark:from-orange-950 dark:to-slate-950"
+        />
 
+        {/* Oven art (single image, styled per theme) */}
+        <div
+          className="absolute inset-0 bg-center bg-cover bg-no-repeat
+               opacity-95 mix-blend-multiply
+               [filter:contrast(1.22)_brightness(0.88)]
+               dark:opacity-70 dark:mix-blend-soft-light
+               dark:[filter:contrast(1.20)_brightness(1.25)]
+               transition-opacity"
+          style={{
+            backgroundImage:
+              "url('/images/oven-outline-2560-stone300-quant.png')",
+          }}
+        />
+
+        {/* Optional veil for subtle depth */}
+        <div className="absolute inset-0 bg-white/5 dark:bg-black/25" />
+      </div>
+      <Navbar />
       <main className={isHome ? '' : 'px-6 lg:px-8 py-8'}>
         {/* BASE LAYER — always rendered (keeps navbar/layout visible) */}
         <PageTransition>
