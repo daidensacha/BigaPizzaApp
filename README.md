@@ -73,24 +73,71 @@ It allows users to:
 
 ---
 
-## 🔑 Installation
+## 🔐 Environment Variables & Secrets (Phase-first)
+
+This project uses **Phase** as the primary mechanism for managing environment variables.
+
+### Why Phase?
+- No committed secrets
+- Same workflow for frontend & backend
+- Easy switching between Development / Production
+
+Each sub-project can still run **without Phase** using `.env` files if required,
+but Phase is the recommended default.
+
+---
+
+## ▶️ Running the Project (Recommended)
+
+### 1. Authenticate with Phase
 
 ```bash
-# Clone the repository
-git clone https://github.com/daidensacha/BigaPizzaApp.git
-
-# Install frontend dependencies
-cd BigaPizzaApp/frontend
-npm install
-
-# Install backend dependencies
-cd ../backend
-npm install
-
-# Run both servers (use separate terminals)
-npm run dev   # in frontend folder
-npm start     # in backend folder
+phase auth
 ```
+
+### 2. Frontend (Vite)
+
+```bash
+cd biga-pizza-frontend
+phase run "npm run dev"
+```
+
+Frontend runs at: http://localhost:5173
+
+### 3. Backend (Express)
+
+```bash
+cd biga-pizza-backend
+phase run "npm run dev"
+```
+
+Backend runs at: http://localhost:5000
+
+---
+
+## 🧪 Local Development Without Phase (Optional)
+
+Each sub-project includes:
+
+- `.env.example`
+- `.env.development.example`
+- `.env.production.example`
+
+If you prefer `.env` files:
+
+```bash
+cp .env.example .env
+```
+
+Then run normally:
+
+```bash
+npm run dev
+```
+
+> ⚠️ Do **not** commit `.env` files.
+
+---
 
 ## 🤝 Contributing
 

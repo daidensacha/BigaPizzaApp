@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // your backend
+        target: 'http://localhost:5001', // your backend
         changeOrigin: true,
       },
     },
@@ -16,11 +16,12 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'), // ✅ base alias
       '@components': path.resolve(__dirname, './src/components'),
-      '@auth': path.resolve(__dirname, './src/components/auth'),
+      '@auth': path.resolve(__dirname, './src/components/Auth'),
       '@guidedinputflow': path.resolve(
         __dirname,
-        './src/components/guidedinputflow'
+        './src/components/GuidedInputFlow'
       ),
+      '@GuidedInputFlow': path.resolve(__dirname, './src/components/GuidedInputFlow'),
       '@pizzas': path.resolve(__dirname, './src/components/pizzas'),
       '@routes': path.resolve(__dirname, './src/components/routes'),
       '@ui': path.resolve(__dirname, './src/components/ui'),

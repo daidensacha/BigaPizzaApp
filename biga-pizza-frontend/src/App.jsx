@@ -14,13 +14,14 @@ import ProtectedRoute from '@components/routes/ProtectedRoute';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import ModalRecipeEditor from '@/components/recipes/ModalRecipeEditor';
 import { useAuthModal } from '@/context/AuthModalContext';
-import AuthModal from '@/components/auth/AuthModal';
+import AuthModal from '@/components/Auth/AuthModal';
 import PageTransition from '@/components/motion/PageTransition';
 
 // Public pages
 import Home from '@pages/Home';
 import CreateRecipe from '@pages/guided/CreateRecipe';
-import PizzaMenu from '@pages/PizzaMenu';
+prj
+
 
 // Account pages
 import UserDashboard from '@/pages/account/UserDashboard';

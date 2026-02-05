@@ -1,0 +1,8 @@
+{
+  "version": "2",
+  "phaseApp": "biga-pizza-frontend",
+  "appId": "8ccbd9da-683a-4532-bff7-8621c2cb3536",
+  "defaultEnv": "Development",
+  "envId": "ef759dd0-1fe7-4872-869f-412509ddbb22",
+  "monorepoSupport": false
+}

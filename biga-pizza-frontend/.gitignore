@@ -14,8 +14,8 @@ biga-pizza-backend/.DS_Store
 # Root-level ignores
 node_modules/
 dist/
-.env
-.env.*
+.env*
+!.env.example
 .vscode/
 .DS_Store
 *.log

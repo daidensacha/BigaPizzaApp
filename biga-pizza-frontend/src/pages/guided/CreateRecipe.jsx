@@ -4,7 +4,7 @@ import {
   getLocalDateTimePlus24h,
   YEAST_CORRECTION_DEFAULTS,
 } from '@/utils/utils';
-import StepWrapper from '@guidedinputflow/StepWrapper';
+import StepWrapper from '@GuidedInputFlow/StepWrapper';
 import Step1BasicInfo from '@guidedinputflow/Step1BasicInfo';
 import Step2Hydration from '@guidedinputflow/Step2Hydration';
 import Step3Fermentation from '@guidedinputflow/Step3Fermentation';
